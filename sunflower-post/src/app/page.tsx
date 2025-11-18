@@ -338,6 +338,90 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* SUNFLOWER JOURNALS - Enhanced with reading badges */}
+        <section id="journals" className="space-y-5">
+          <div className="space-y-2">
+            <h2 className="text-lg md:text-xl font-semibold text-yellow-900">
+              Sunflower Journals 🪞
+            </h2>
+            <p className="text-xs md:text-sm text-[#5C4A33] max-w-2xl">
+              Long-form reflections, essays and interviews from selected writers,
+              educators and community members.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* Journal 1 */}
+            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#94A3B8_0,_transparent_70%)]" />
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50">
+                    Long Read • 12 min
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 space-y-2">
+                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
+                  Essay • Culture
+                </div>
+                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  On feeling invisible in a loud world
+                </h3>
+                <p className="text-xs text-[#7A674C] leading-relaxed">
+                  A gentle piece on being present, even when you don&apos;t feel seen.
+                </p>
+              </div>
+            </div>
+
+            {/* Journal 2 */}
+            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-rose-100 to-pink-200">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#FB7185_0,_transparent_70%)]" />
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-rose-700 text-rose-50">
+                    Short Read • 4 min
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 space-y-2">
+                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
+                  Essay • Community
+                </div>
+                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  Joy as quiet resistance
+                </h3>
+                <p className="text-xs text-[#7A674C] leading-relaxed">
+                  Why softness and laughter still matter in heavy times.
+                </p>
+              </div>
+            </div>
+
+            {/* Journal 3 */}
+            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-cyan-100 to-blue-200">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#06B6D4_0,_transparent_70%)]" />
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-cyan-700 text-cyan-50">
+                    Medium Read • 8 min
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 space-y-2">
+                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
+                  Behind the Scenes
+                </div>
+                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  Soft tech: building gentler online spaces
+                </h3>
+                <p className="text-xs text-[#7A674C] leading-relaxed">
+                  Notes from behind the scenes of The Sunflower Post.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* INSIDE THE CIRCLE */}
         <section id="inside-circle" className="space-y-5">
           <h2 className="text-lg md:text-xl font-semibold text-yellow-900">
@@ -430,90 +514,6 @@ export default function HomePage() {
                 Take part in Solution Rooms and Speak Up sessions that feed into
                 annual Sunflower Reports.
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* SUNFLOWER JOURNALS - Enhanced with reading badges */}
-        <section id="journals" className="space-y-5">
-          <div className="space-y-2">
-            <h2 className="text-lg md:text-xl font-semibold text-yellow-900">
-              Sunflower Journals 🪞
-            </h2>
-            <p className="text-xs md:text-sm text-[#5C4A33] max-w-2xl">
-              Long-form reflections, essays and interviews from selected writers,
-              educators and community members.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {/* Journal 1 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#94A3B8_0,_transparent_70%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50">
-                    Long Read • 12 min
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Essay • Culture
-                </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
-                  On feeling invisible in a loud world
-                </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
-                  A gentle piece on being present, even when you don&apos;t feel seen.
-                </p>
-              </div>
-            </div>
-
-            {/* Journal 2 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-rose-100 to-pink-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#FB7185_0,_transparent_70%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-rose-700 text-rose-50">
-                    Short Read • 4 min
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Essay • Community
-                </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
-                  Joy as quiet resistance
-                </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
-                  Why softness and laughter still matter in heavy times.
-                </p>
-              </div>
-            </div>
-
-            {/* Journal 3 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-cyan-100 to-blue-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#06B6D4_0,_transparent_70%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-cyan-700 text-cyan-50">
-                    Medium Read • 8 min
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Behind the Scenes
-                </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
-                  Soft tech: building gentler online spaces
-                </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
-                  Notes from behind the scenes of The Sunflower Post.
-                </p>
-              </div>
             </div>
           </div>
         </section>
