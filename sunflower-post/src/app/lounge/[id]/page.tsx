@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import { BouncyButton, Sunburst } from "@/components/ui";
 import Link from "next/link";
 
 type LoungePostType = "joy" | "pickmeup" | "softrant";
@@ -20,6 +21,12 @@ type LoungeReply = {
   author: string;
   timeAgo: string;
   body: string;
+};
+
+type UserReactions = {
+  warmth: boolean;
+  support: boolean;
+  here: boolean;
 };
 
 const POSTS: LoungePost[] = [
@@ -91,12 +98,30 @@ const INITIAL_REPLIES_BY_POST: Record<number, LoungeReply[]> = {
 function getBadgeStyles(type: LoungePostType) {
   switch (type) {
     case "joy":
-      return "bg-yellow-50 border-yellow-100 text-[#5C4A33]";
+      return "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900";
     case "pickmeup":
-      return "bg-[#FDF5FF] border-[#E7D3FF] text-[#5B4377]";
+      return "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-900";
     case "softrant":
-      return "bg-[#FDF4EC] border-[#F3C9A3] text-[#6C4A33]";
+      return "bg-gradient-to-br from-orange-100 to-orange-200 text-orange-900";
   }
+}
+
+// Helper to get author initials
+function getAuthorInitial(author: string): string {
+  return author.charAt(0).toUpperCase();
+}
+
+// Helper to get avatar color based on author name
+function getAvatarColor(author: string): string {
+  const colors = [
+    "bg-gradient-to-br from-yellow-200 to-amber-300",
+    "bg-gradient-to-br from-rose-200 to-pink-300",
+    "bg-gradient-to-br from-blue-200 to-indigo-300",
+    "bg-gradient-to-br from-green-200 to-emerald-300",
+    "bg-gradient-to-br from-purple-200 to-violet-300",
+  ];
+  const index = author.length % colors.length;
+  return colors[index];
 }
 
 type PageProps = {
@@ -110,6 +135,19 @@ export default function LoungeThreadPage({ params }: PageProps) {
 
   const [replies, setReplies] = useState<LoungeReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [reactions, setReactions] = useState<UserReactions>({
+    warmth: false,
+    support: false,
+    here: false,
+  });
+
+  // Toggle helper for reactions
+  function toggleReaction(key: keyof UserReactions) {
+    setReactions((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  }
 
   function handleReplySubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -138,7 +176,10 @@ export default function LoungeThreadPage({ params }: PageProps) {
         <div className="md:col-span-3 space-y-6">
           {/* BREADCRUMB */}
           <div className="text-[11px] text-[#A08960] flex items-center gap-2">
-            <Link href="/lounge" className="hover:underline">
+            <Link
+              href="/lounge"
+              className="hover:underline hover:text-yellow-900 transition-colors"
+            >
               The Lounge
             </Link>
             <span>/</span>
@@ -148,55 +189,86 @@ export default function LoungeThreadPage({ params }: PageProps) {
           </div>
 
           {/* MAIN POST CARD */}
-          <article className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3">
-            <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-              <span
-                className={`px-2 py-[2px] rounded-full border ${getBadgeStyles(
-                  post.type
-                )}`}
+          <article className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-start gap-3">
+              {/* Author Avatar */}
+              <div
+                className={`w-12 h-12 rounded-full ${getAvatarColor(
+                  post.author
+                )} flex items-center justify-center text-base font-semibold text-[#3A2E1F] shadow-md`}
               >
-                {post.type === "joy"
-                  ? "Small joy"
-                  : post.type === "pickmeup"
-                  ? "Pick-me-up"
-                  : "Soft rant"}
-              </span>
-              <span>{post.timeAgo}</span>
+                {getAuthorInitial(post.author)}
+              </div>
+
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-[#5C4A33]">
+                    {post.author}
+                  </span>
+                  <span className="text-[10px] text-[#A08960]">
+                    {post.timeAgo}
+                  </span>
+                </div>
+                <span
+                  className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${getBadgeStyles(
+                    post.type
+                  )}`}
+                >
+                  {post.type === "joy"
+                    ? "Small joy"
+                    : post.type === "pickmeup"
+                    ? "Pick-me-up"
+                    : "Soft rant"}
+                </span>
+              </div>
             </div>
 
-            <h1 className="text-base md:text-lg font-semibold text-yellow-900">
+            <h1 className="text-lg md:text-xl font-semibold text-yellow-900 leading-snug">
               {post.title}
             </h1>
-            <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
+            <p className="text-sm md:text-base text-[#5C4A33] whitespace-pre-line leading-relaxed">
               {post.body}
             </p>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#7A674C] pt-1">
-              <span>By {post.author}</span>
-              <div className="flex flex-wrap gap-2 text-[10px]">
-                <span className="px-2.5 py-1 rounded-full border border-yellow-100 bg-yellow-50 flex items-center gap-1">
-                  <span>🌻</span>
-                  <span>People sent warmth</span>
-                </span>
-                <span className="px-2.5 py-1 rounded-full border border-yellow-100 bg-[#F5F3FF] flex items-center gap-1">
-                  <span>🤍</span>
-                  <span>Gentle support</span>
-                </span>
-                <span className="px-2.5 py-1 rounded-full border border-yellow-100 bg-[#FEF3C7] flex items-center gap-1">
-                  <span>💛</span>
-                  <span>Here with you</span>
-                </span>
+            {/* INTERACTIVE REACTIONS */}
+            <div className="flex flex-col gap-3 pt-2 border-t border-yellow-200/40">
+              <div className="flex flex-wrap gap-2">
+                <Sunburst
+                  type="sunburst"
+                  isActive={reactions.warmth}
+                  onToggle={() => toggleReaction("warmth")}
+                  showLabel
+                  customLabel="Send warmth"
+                />
+                <Sunburst
+                  type="heart"
+                  isActive={reactions.support}
+                  onToggle={() => toggleReaction("support")}
+                  showLabel
+                  customLabel="Gentle support"
+                />
+                <Sunburst
+                  type="unity"
+                  isActive={reactions.here}
+                  onToggle={() => toggleReaction("here")}
+                  showLabel
+                  customLabel="Here with you"
+                />
               </div>
+              <p className="text-[9px] text-[#C0A987] italic">
+                Reactions are for care, not counts. Only you see what you&apos;ve
+                sent.
+              </p>
             </div>
           </article>
 
           {/* REPLIES SECTION */}
           <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold text-yellow-900">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <p className="text-sm font-semibold text-yellow-900">
                 Replies ({replies.length})
               </p>
-              <p className="text-[10px] text-[#A08960]">
+              <p className="text-[10px] text-[#A08960] italic">
                 Reply with care. Imagine the version of you who posted this.
               </p>
             </div>
@@ -205,21 +277,38 @@ export default function LoungeThreadPage({ params }: PageProps) {
               {replies.map((reply) => (
                 <div
                   key={reply.id}
-                  className="bg-white border border-yellow-100 rounded-2xl p-3 space-y-1 text-xs"
+                  className="bg-white border border-yellow-200/60 rounded-2xl p-4 space-y-3 text-sm shadow-md hover:shadow-lg transition-all"
                 >
-                  <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                    <span>By {reply.author}</span>
-                    <span>{reply.timeAgo}</span>
+                  <div className="flex items-start gap-3">
+                    {/* Reply Author Avatar */}
+                    <div
+                      className={`w-9 h-9 rounded-full ${getAvatarColor(
+                        reply.author
+                      )} flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-sm`}
+                    >
+                      {getAuthorInitial(reply.author)}
+                    </div>
+
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-[#5C4A33]">
+                          {reply.author}
+                        </span>
+                        <span className="text-[10px] text-[#A08960]">
+                          {reply.timeAgo}
+                        </span>
+                      </div>
+                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                        {reply.body}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-[#5C4A33] whitespace-pre-line">
-                    {reply.body}
-                  </p>
                 </div>
               ))}
 
               {replies.length === 0 && (
-                <div className="bg-white border border-dashed border-yellow-200 rounded-2xl p-4 text-[11px] text-[#7A674C]">
-                  <p className="font-semibold text-yellow-900 mb-1">
+                <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-dashed border-yellow-300/60 rounded-2xl p-5 text-sm text-[#7A674C] shadow-sm">
+                  <p className="font-semibold text-yellow-900 mb-2">
                     No replies yet.
                   </p>
                   <p>
@@ -232,33 +321,37 @@ export default function LoungeThreadPage({ params }: PageProps) {
           </section>
 
           {/* REPLY COMPOSER */}
-          <section className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-3 text-xs">
-            <p className="font-semibold text-yellow-900">
-              Add a gentle reply 💬
-            </p>
-            <p className="text-[11px] text-[#7A674C]">
-              You don&apos;t have to fix anything. A sentence or two of grounded
-              kindness is more than enough.
-            </p>
+          <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 shadow-lg">
+            <div className="space-y-2">
+              <p className="text-base font-semibold text-yellow-900">
+                Add a gentle reply 💬
+              </p>
+              <p className="text-sm text-[#7A674C] leading-relaxed">
+                You don&apos;t have to fix anything. A sentence or two of grounded
+                kindness is more than enough.
+              </p>
+            </div>
 
-            <form onSubmit={handleReplySubmit} className="space-y-3">
+            <form onSubmit={handleReplySubmit} className="space-y-4">
               <textarea
-                rows={3}
+                rows={4}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder="What would you say to yourself if you had posted this?"
-                className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
               />
 
-              <div className="flex items-center justify-between gap-3">
-                <button
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <BouncyButton
                   type="submit"
                   disabled={!replyText.trim()}
-                  className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-semibold shadow-sm"
+                  variant="primary"
+                  size="md"
+                  className="shadow-md"
                 >
                   Post reply
-                </button>
-                <p className="text-[10px] text-[#A08960]">
+                </BouncyButton>
+                <p className="text-[10px] text-[#A08960] italic">
                   In future, you&apos;ll also be able to reply with images or GIFs –
                   always within gentle boundaries.
                 </p>
