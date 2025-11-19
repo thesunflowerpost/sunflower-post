@@ -20,9 +20,11 @@ export type ReactionId =
   | "brighterDays"
   | "healing"
   // Music Room extras
-  | "vibes"
-  | "thisSlaps"
-  | "fellInLove"
+  | "onRepeat"
+  | "bigVibe"
+  | "feltThat"
+  | "instantMoodShift"
+  | "dopamineHit"
   // Book Club extras
   | "bookmark"
   | "thoughtful"
@@ -148,27 +150,43 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
   },
 
   // Music Room extras
-  vibes: {
-    id: "vibes",
-    emoji: "🎧",
-    label: "Vibes",
-    color: "text-blue-500",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
+  onRepeat: {
+    id: "onRepeat",
+    emoji: "🔁",
+    label: "On repeat",
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
   },
-  thisSlaps: {
-    id: "thisSlaps",
+  bigVibe: {
+    id: "bigVibe",
     emoji: "🔥",
-    label: "This slaps",
+    label: "Big vibe",
     color: "text-orange-500",
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200",
   },
-  fellInLove: {
-    id: "fellInLove",
-    emoji: "💛",
-    label: "Fell in love",
-    color: "text-yellow-400",
+  feltThat: {
+    id: "feltThat",
+    emoji: "😭",
+    label: "Felt that",
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+  },
+  instantMoodShift: {
+    id: "instantMoodShift",
+    emoji: "🌈",
+    label: "Instant mood shift",
+    color: "text-purple-500",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+  },
+  dopamineHit: {
+    id: "dopamineHit",
+    emoji: "⚡",
+    label: "Dopamine hit",
+    color: "text-yellow-500",
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
   },
@@ -302,13 +320,11 @@ export const roomReactions: Record<string, ReactionId[]> = {
     "healing",
   ],
   musicRoom: [
-    "sunburst",
-    "heart",
-    "withYou",
-    "shine",
-    "vibes",
-    "thisSlaps",
-    "fellInLove",
+    "onRepeat",
+    "bigVibe",
+    "feltThat",
+    "instantMoodShift",
+    "dopamineHit",
   ],
   bookClub: [
     "sunburst",

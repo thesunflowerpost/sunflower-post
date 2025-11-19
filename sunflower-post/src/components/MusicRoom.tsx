@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
+import { ReactionBar } from "./ui";
+import type { ReactionId } from "@/config/reactions";
 
 type MusicMood = string;
 type MoodFilter = "All moods" | MusicMood;
@@ -22,12 +24,8 @@ type TrackItem = {
   timeAgo: string;
 };
 
-type ReactionState = {
-  repeat: boolean; // 🔁 On repeat
-  vibe: boolean; // 🔥 Big vibe
-  felt: boolean; // 😭 Felt that
-  uplift: boolean; // 🌈 Instant mood shift
-};
+// User reactions are now stored as Record<ReactionId, boolean>
+type TrackReactions = Record<ReactionId, boolean>;
 
 type ThreadComment = {
   id: number;
@@ -120,7 +118,7 @@ export default function MusicRoom() {
   });
 
   // per-track reactions for this viewer
-  const [reactions, setReactions] = useState<Record<number, ReactionState>>({});
+  const [reactions, setReactions] = useState<Record<number, TrackReactions>>({});
   // per-track comments
   const [comments, setComments] =
     useState<Record<number, ThreadComment[]>>(INITIAL_COMMENTS);
@@ -190,22 +188,14 @@ export default function MusicRoom() {
     return "🎵";
   }
 
-  function toggleReaction(trackId: number, key: keyof ReactionState) {
+  function toggleReaction(trackId: number, reactionId: ReactionId, active: boolean) {
     setReactions((prev) => {
-      const current =
-        prev[trackId] ||
-        ({
-          repeat: false,
-          vibe: false,
-          felt: false,
-          uplift: false,
-        } as ReactionState);
-
+      const current = prev[trackId] || {};
       return {
         ...prev,
         [trackId]: {
           ...current,
-          [key]: !current[key],
+          [reactionId]: active,
         },
       };
     });
@@ -610,13 +600,7 @@ export default function MusicRoom() {
                 )}
 
                 {filteredTracks.map((track) => {
-                  const trackReactions =
-                    reactions[track.id] || {
-                      repeat: false,
-                      vibe: false,
-                      felt: false,
-                      uplift: false,
-                    };
+                  const trackReactions = reactions[track.id] || {};
 
                   const isInPlaylist = !!playlist[track.id];
                   const thread = comments[track.id] || [];
@@ -718,63 +702,18 @@ export default function MusicRoom() {
                         </button>
                       </div>
 
-                      {/* REACTIONS ROW */}
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              toggleReaction(track.id, "repeat")
-                            }
-                            className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                              trackReactions.repeat
-                                ? "bg-[#FEF3C7] border-[#FACC15] text-[#92400E]"
-                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                            }`}
-                          >
-                            <span>🔁</span>
-                            <span>On repeat</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => toggleReaction(track.id, "vibe")}
-                            className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                              trackReactions.vibe
-                                ? "bg-[#FEE2E2] border-[#FCA5A5] text-[#7F1D1D]"
-                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                            }`}
-                          >
-                            <span>🔥</span>
-                            <span>Big vibe</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => toggleReaction(track.id, "felt")}
-                            className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                              trackReactions.felt
-                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
-                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                            }`}
-                          >
-                            <span>😭</span>
-                            <span>Felt that</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              toggleReaction(track.id, "uplift")
-                            }
-                            className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                              trackReactions.uplift
-                                ? "bg-[#DCFCE7] border-[#BBF7D0] text-[#166534]"
-                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                            }`}
-                          >
-                            <span>🌈</span>
-                            <span>Instant mood shift</span>
-                          </button>
-                        </div>
-                        <p className="text-[9px] text-[#C0A987]">
+                      {/* REACTIONS - Using ReactionBar with Music Room config */}
+                      <div className="flex flex-col gap-2">
+                        <ReactionBar
+                          roomId="musicRoom"
+                          postId={track.id}
+                          reactions={trackReactions}
+                          onReactionToggle={(reactionId, active) =>
+                            toggleReaction(track.id, reactionId, active)
+                          }
+                          showLabels={true}
+                        />
+                        <p className="text-[9px] text-[#C0A987] italic">
                           Reactions &amp; playlist are just for you. No public
                           scores, just shared vibes.
                         </p>
@@ -782,29 +721,18 @@ export default function MusicRoom() {
 
                       {/* COMMENTS THREAD */}
                       {isOpen && (
-                        <div className="mt-2 border-t border-yellow-50 pt-3 space-y-2">
-                          {thread.length > 0 && (
-                            <div className="space-y-2">
-                              {thread.map((c) => (
-                                <div
-                                  key={c.id}
-                                  className="bg-[#FFFEFA] border border-yellow-50 rounded-xl px-3 py-2 text-[11px]"
-                                >
-                                  <p className="text-[#5C4A33] whitespace-pre-line">
-                                    {c.body}
-                                  </p>
-                                  <p className="mt-1 text-[10px] text-[#A08960]">
-                                    {c.author} · {c.timeAgo}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
+                        <div className="mt-2 border-t border-yellow-50 pt-3 space-y-3">
+                          {/* COMMENT FORM - Above existing comments */}
                           <form
                             className="space-y-2"
                             onSubmit={(e) => handleAddComment(track.id, e)}
                           >
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm">💬</span>
+                              <label className="text-[11px] font-medium text-[#5C4A33]">
+                                Add a reflection
+                              </label>
+                            </div>
                             <textarea
                               value={draft}
                               onChange={(e) =>
@@ -831,6 +759,28 @@ export default function MusicRoom() {
                               </p>
                             </div>
                           </form>
+
+                          {/* EXISTING COMMENTS - Below form */}
+                          {thread.length > 0 && (
+                            <div className="space-y-2 pt-2">
+                              <p className="text-[10px] text-[#A08960] font-medium">
+                                {thread.length} comment{thread.length === 1 ? "" : "s"}
+                              </p>
+                              {thread.map((c) => (
+                                <div
+                                  key={c.id}
+                                  className="bg-[#FFFEFA] border border-yellow-50 rounded-xl px-3 py-2 text-[11px]"
+                                >
+                                  <p className="text-[#5C4A33] whitespace-pre-line">
+                                    {c.body}
+                                  </p>
+                                  <p className="mt-1 text-[10px] text-[#A08960]">
+                                    {c.author} · {c.timeAgo}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </article>
