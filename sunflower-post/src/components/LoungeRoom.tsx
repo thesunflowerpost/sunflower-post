@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
+import { BouncyButton, ShimmerIcon, LoadingState, Sunburst } from "./ui";
 
 type LoungePostType = "joy" | "pickmeup" | "softrant";
 
@@ -191,15 +192,16 @@ export default function LoungeRoom() {
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs">
-              <button className="px-4 py-2.5 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#3A2E1F] font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105">
+              <BouncyButton variant="primary" size="md" className="shadow-md">
                 Share a small joy
-              </button>
-              <button
+              </BouncyButton>
+              <BouncyButton
                 onClick={() => setShowPickForm((s) => !s)}
-                className="px-4 py-2.5 rounded-xl border-2 border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] font-medium shadow-sm hover:shadow-md transition-all"
+                variant="secondary"
+                size="md"
               >
                 {showPickForm ? "Close pick-me-up form" : "Ask for a pick-me-up"}
-              </button>
+              </BouncyButton>
             </div>
           </section>
 
@@ -291,13 +293,15 @@ export default function LoungeRoom() {
                 </div>
 
                 <div className="flex items-center justify-between gap-3 pt-2">
-                  <button
+                  <BouncyButton
                     type="submit"
                     disabled={submitting || !pickForm.body.trim()}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 disabled:from-yellow-200 disabled:to-yellow-300 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105 disabled:hover:scale-100"
+                    variant="primary"
+                    size="md"
+                    className="shadow-md"
                   >
                     {submitting ? "Posting..." : "Post to Lounge"}
-                  </button>
+                  </BouncyButton>
                   <p className="text-[10px] text-[#A08960]">
                     Your post may be gently moderated for safety and tone.
                   </p>
@@ -409,51 +413,36 @@ export default function LoungeRoom() {
                           href={`/lounge/${post.id}`}
                           className="flex items-center gap-1.5 text-xs text-[#7A674C] hover:text-yellow-900 transition-colors w-fit"
                         >
-                          <span className="text-base">💬</span>
+                          <ShimmerIcon>
+                            <span className="text-base">💬</span>
+                          </ShimmerIcon>
                           <span className="font-medium">{post.replies} replies</span>
                         </Link>
 
-                        {/* REACTIONS ROW - Enhanced */}
+                        {/* REACTIONS ROW - Enhanced with Sunburst */}
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              onClick={() => toggleReaction(post.id, "warmth")}
-                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
-                                postReactions.warmth
-                                  ? "bg-gradient-to-br from-yellow-200 to-yellow-300 text-[#3A2E1F] shadow-md scale-105"
-                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:shadow-md hover:scale-105"
-                              }`}
-                            >
-                              <span className="text-base">🌻</span>
-                              <span>Send warmth</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                toggleReaction(post.id, "support")
-                              }
-                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
-                                postReactions.support
-                                  ? "bg-gradient-to-br from-purple-200 to-purple-300 text-purple-900 shadow-md scale-105"
-                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-purple-50 hover:shadow-md hover:scale-105"
-                              }`}
-                            >
-                              <span className="text-base">🤍</span>
-                              <span>Gentle support</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleReaction(post.id, "here")}
-                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
-                                postReactions.here
-                                  ? "bg-gradient-to-br from-amber-200 to-amber-300 text-amber-900 shadow-md scale-105"
-                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-amber-50 hover:shadow-md hover:scale-105"
-                              }`}
-                            >
-                              <span className="text-base">💛</span>
-                              <span>Here with you</span>
-                            </button>
+                            <Sunburst
+                              type="sunburst"
+                              isActive={postReactions.warmth}
+                              onToggle={() => toggleReaction(post.id, "warmth")}
+                              showLabel
+                              customLabel="Send warmth"
+                            />
+                            <Sunburst
+                              type="heart"
+                              isActive={postReactions.support}
+                              onToggle={() => toggleReaction(post.id, "support")}
+                              showLabel
+                              customLabel="Gentle support"
+                            />
+                            <Sunburst
+                              type="unity"
+                              isActive={postReactions.here}
+                              onToggle={() => toggleReaction(post.id, "here")}
+                              showLabel
+                              customLabel="Here with you"
+                            />
                           </div>
                           <p className="text-[9px] text-[#C0A987] italic">
                             Reactions are for care, not counts. Only you see what
