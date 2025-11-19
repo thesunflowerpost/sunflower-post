@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
-import { BouncyButton, ShimmerIcon, LoadingState, Sunburst } from "./ui";
+import { BouncyButton, ShimmerIcon, LoadingState, ReactionBar } from "./ui";
+import type { ReactionId } from "@/config/reactions";
 
 type LoungePostType = "joy" | "pickmeup" | "softrant";
 
@@ -50,11 +51,8 @@ const INITIAL_POSTS: LoungePost[] = [
   },
 ];
 
-type UserReactions = {
-  warmth: boolean;
-  support: boolean;
-  here: boolean;
-};
+// User reactions are now stored as Record<ReactionId, boolean>
+type UserReactions = Record<ReactionId, boolean>;
 
 export default function LoungeRoom() {
   const [posts, setPosts] = useState<LoungePost[]>(INITIAL_POSTS);
@@ -111,18 +109,14 @@ export default function LoungeRoom() {
   }
 
   // toggle helper for reactions
-  function toggleReaction(postId: number, key: keyof UserReactions) {
+  function toggleReaction(postId: number, reactionId: ReactionId, active: boolean) {
     setReactions((prev) => {
-      const current = prev[postId] || {
-        warmth: false,
-        support: false,
-        here: false,
-      };
+      const current = prev[postId] || {};
       return {
         ...prev,
         [postId]: {
           ...current,
-          [key]: !current[key],
+          [reactionId]: active,
         },
       };
     });
@@ -351,12 +345,7 @@ export default function LoungeRoom() {
                 )}
 
                 {visiblePosts.map((post) => {
-                  const postReactions =
-                    reactions[post.id] || {
-                      warmth: false,
-                      support: false,
-                      here: false,
-                    };
+                  const postReactions = reactions[post.id] || {};
 
                   return (
                     <article
@@ -419,36 +408,15 @@ export default function LoungeRoom() {
                           <span className="font-medium">{post.replies} replies</span>
                         </Link>
 
-                        {/* REACTIONS ROW - Enhanced with Sunburst */}
-                        <div className="flex flex-col gap-2">
-                          <div className="flex flex-wrap gap-2">
-                            <Sunburst
-                              type="sunburst"
-                              isActive={postReactions.warmth}
-                              onToggle={() => toggleReaction(post.id, "warmth")}
-                              showLabel
-                              customLabel="Send warmth"
-                            />
-                            <Sunburst
-                              type="heart"
-                              isActive={postReactions.support}
-                              onToggle={() => toggleReaction(post.id, "support")}
-                              showLabel
-                              customLabel="Gentle support"
-                            />
-                            <Sunburst
-                              type="unity"
-                              isActive={postReactions.here}
-                              onToggle={() => toggleReaction(post.id, "here")}
-                              showLabel
-                              customLabel="Here with you"
-                            />
-                          </div>
-                          <p className="text-[9px] text-[#C0A987] italic">
-                            Reactions are for care, not counts. Only you see what
-                            you&apos;ve sent.
-                          </p>
-                        </div>
+                        {/* REACTIONS - Using new ReactionBar with room-specific config */}
+                        <ReactionBar
+                          roomId="lounge"
+                          postId={post.id}
+                          reactions={postReactions}
+                          onReactionToggle={(reactionId, active) =>
+                            toggleReaction(post.id, reactionId, active)
+                          }
+                        />
                       </div>
                     </article>
                   );

@@ -1,0 +1,364 @@
+/**
+ * Reactions Configuration
+ *
+ * Dopamine-safe, low-pressure reaction system for Sunflower Post.
+ * Reactions are for care, not counts. Only the user sees what they've sent.
+ */
+
+export type ReactionId =
+  // Core reactions (used in all rooms)
+  | "sunburst"
+  | "heart"
+  | "withYou"
+  | "shine"
+  // Lounge extras
+  | "softExhale"
+  | "littleGrowth"
+  | "gentleSmile"
+  // Hope Bank extras
+  | "hopeful"
+  | "brighterDays"
+  | "healing"
+  // Music Room extras
+  | "vibes"
+  | "thisSlaps"
+  | "fellInLove"
+  // Book Club extras
+  | "bookmark"
+  | "thoughtful"
+  | "reflecting"
+  // TV & Movies extras
+  | "thisGotMe"
+  | "shocked"
+  | "cinematic"
+  // Pinterest Wall extras
+  | "beautiful"
+  | "inspired"
+  | "savedThis"
+  // Solution Rooms extras
+  | "helpful"
+  | "holdingSpace"
+  | "noted";
+
+export interface ReactionDefinition {
+  id: ReactionId;
+  emoji: string;
+  label: string;      // short, neutral e.g. "Warmth"
+  tooltip?: string;   // optional slightly longer text
+  // Visual theming (for Sunburst component)
+  color?: string;
+  bgColor?: string;
+  borderColor?: string;
+}
+
+/**
+ * Complete reaction definitions
+ * Primary UI: emojis
+ * Labels: short, neutral, optional (for tooltips/aria-labels)
+ */
+export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
+  // Core reactions (used in all rooms)
+  sunburst: {
+    id: "sunburst",
+    emoji: "🌻",
+    label: "Warmth",
+    tooltip: "Send warmth",
+    color: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+  },
+  heart: {
+    id: "heart",
+    emoji: "❤️",
+    label: "Love",
+    tooltip: "Send love",
+    color: "text-red-500",
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
+  },
+  withYou: {
+    id: "withYou",
+    emoji: "🤝",
+    label: "With you",
+    tooltip: "Here with you",
+    color: "text-purple-500",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+  },
+  shine: {
+    id: "shine",
+    emoji: "✨",
+    label: "Shine",
+    tooltip: "You shine",
+    color: "text-blue-400",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+  },
+
+  // Lounge extras
+  softExhale: {
+    id: "softExhale",
+    emoji: "😌",
+    label: "Soft exhale",
+    color: "text-green-500",
+    bgColor: "bg-green-50",
+    borderColor: "border-green-200",
+  },
+  littleGrowth: {
+    id: "littleGrowth",
+    emoji: "🌱",
+    label: "Little growth",
+    color: "text-emerald-500",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-200",
+  },
+  gentleSmile: {
+    id: "gentleSmile",
+    emoji: "😊",
+    label: "Gentle smile",
+    color: "text-amber-500",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+  },
+
+  // Hope Bank extras
+  hopeful: {
+    id: "hopeful",
+    emoji: "🌈",
+    label: "Hopeful",
+    color: "text-indigo-500",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-200",
+  },
+  brighterDays: {
+    id: "brighterDays",
+    emoji: "☀️",
+    label: "Brighter days",
+    color: "text-orange-400",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+  },
+  healing: {
+    id: "healing",
+    emoji: "🌿",
+    label: "Healing",
+    color: "text-teal-500",
+    bgColor: "bg-teal-50",
+    borderColor: "border-teal-200",
+  },
+
+  // Music Room extras
+  vibes: {
+    id: "vibes",
+    emoji: "🎧",
+    label: "Vibes",
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+  },
+  thisSlaps: {
+    id: "thisSlaps",
+    emoji: "🔥",
+    label: "This slaps",
+    color: "text-orange-500",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+  },
+  fellInLove: {
+    id: "fellInLove",
+    emoji: "💛",
+    label: "Fell in love",
+    color: "text-yellow-400",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+  },
+
+  // Book Club extras
+  bookmark: {
+    id: "bookmark",
+    emoji: "📖",
+    label: "Bookmark",
+    color: "text-brown-500",
+    bgColor: "bg-brown-50",
+    borderColor: "border-brown-200",
+  },
+  thoughtful: {
+    id: "thoughtful",
+    emoji: "🧠",
+    label: "Thoughtful",
+    color: "text-purple-400",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+  },
+  reflecting: {
+    id: "reflecting",
+    emoji: "💬",
+    label: "Reflecting",
+    color: "text-gray-500",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
+  },
+
+  // TV & Movies extras
+  thisGotMe: {
+    id: "thisGotMe",
+    emoji: "😂",
+    label: "This got me",
+    color: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+  },
+  shocked: {
+    id: "shocked",
+    emoji: "😮",
+    label: "Shocked",
+    color: "text-pink-500",
+    bgColor: "bg-pink-50",
+    borderColor: "border-pink-200",
+  },
+  cinematic: {
+    id: "cinematic",
+    emoji: "🎬",
+    label: "Cinematic",
+    color: "text-slate-600",
+    bgColor: "bg-slate-50",
+    borderColor: "border-slate-200",
+  },
+
+  // Pinterest Wall extras
+  beautiful: {
+    id: "beautiful",
+    emoji: "🌼",
+    label: "Beautiful",
+    color: "text-pink-400",
+    bgColor: "bg-pink-50",
+    borderColor: "border-pink-200",
+  },
+  inspired: {
+    id: "inspired",
+    emoji: "🎨",
+    label: "Inspired",
+    color: "text-violet-500",
+    bgColor: "bg-violet-50",
+    borderColor: "border-violet-200",
+  },
+  savedThis: {
+    id: "savedThis",
+    emoji: "📸",
+    label: "Saved this",
+    color: "text-cyan-500",
+    bgColor: "bg-cyan-50",
+    borderColor: "border-cyan-200",
+  },
+
+  // Solution Rooms extras
+  helpful: {
+    id: "helpful",
+    emoji: "🧩",
+    label: "Helpful",
+    color: "text-indigo-400",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-200",
+  },
+  holdingSpace: {
+    id: "holdingSpace",
+    emoji: "🫶",
+    label: "Holding space",
+    color: "text-rose-400",
+    bgColor: "bg-rose-50",
+    borderColor: "border-rose-200",
+  },
+  noted: {
+    id: "noted",
+    emoji: "📝",
+    label: "Noted",
+    color: "text-gray-600",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
+  },
+};
+
+/**
+ * Room-to-reactions mapping
+ * Defines which reactions are available in each room
+ */
+export const roomReactions: Record<string, ReactionId[]> = {
+  lounge: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "softExhale",
+    "littleGrowth",
+    "gentleSmile",
+  ],
+  hopeBank: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "hopeful",
+    "brighterDays",
+    "healing",
+  ],
+  musicRoom: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "vibes",
+    "thisSlaps",
+    "fellInLove",
+  ],
+  bookClub: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "bookmark",
+    "thoughtful",
+    "reflecting",
+  ],
+  tvAndMovies: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "thisGotMe",
+    "shocked",
+    "cinematic",
+  ],
+  pinterestWall: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "beautiful",
+    "inspired",
+    "savedThis",
+  ],
+  solutionRooms: [
+    "sunburst",
+    "heart",
+    "withYou",
+    "shine",
+    "helpful",
+    "holdingSpace",
+    "noted",
+  ],
+};
+
+/**
+ * Helper: Get reaction definitions for a specific room
+ */
+export function getReactionsForRoom(roomId: string): ReactionDefinition[] {
+  const reactionIds = roomReactions[roomId] || roomReactions.lounge;
+  return reactionIds.map((id) => reactionDefinitions[id]);
+}
+
+/**
+ * Helper: Get a single reaction definition by ID
+ */
+export function getReaction(id: ReactionId): ReactionDefinition {
+  return reactionDefinitions[id];
+}

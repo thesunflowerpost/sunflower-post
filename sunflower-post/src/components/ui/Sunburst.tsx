@@ -2,8 +2,25 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import type { ReactionId, ReactionDefinition } from '@/config/reactions';
+import { getReaction } from '@/config/reactions';
 
 interface SunburstProps {
+  reactionId: ReactionId;
+  onToggle?: (active: boolean) => void;
+  isActive?: boolean;
+  showCount?: boolean;
+  count?: number;
+  showLabel?: boolean;
+  customLabel?: string;
+  customTooltip?: string;
+}
+
+/**
+ * Legacy type support for backward compatibility
+ * @deprecated Use reactionId instead
+ */
+interface LegacySunburstProps {
   type?: 'sunburst' | 'fire' | 'heart' | 'unity' | 'vibe';
   onToggle?: (active: boolean) => void;
   isActive?: boolean;
@@ -13,57 +30,49 @@ interface SunburstProps {
   customLabel?: string;
 }
 
-const reactionConfig = {
-  sunburst: {
-    emoji: '🌻',
-    label: 'Sunburst',
-    color: 'text-yellow-500',
-    bgColor: 'bg-yellow-50',
-    borderColor: 'border-yellow-200',
-  },
-  fire: {
-    emoji: '🔥',
-    label: 'Fire',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-50',
-    borderColor: 'border-orange-200',
-  },
-  heart: {
-    emoji: '❤️',
-    label: 'Heart',
-    color: 'text-red-500',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-200',
-  },
-  unity: {
-    emoji: '🤝',
-    label: 'Unity',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-200',
-  },
-  vibe: {
-    emoji: '🎧',
-    label: 'Vibe',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-200',
-  },
+// Map legacy types to new ReactionIds
+const legacyTypeMap: Record<string, ReactionId> = {
+  sunburst: 'sunburst',
+  fire: 'thisSlaps',
+  heart: 'heart',
+  unity: 'withYou',
+  vibe: 'vibes',
 };
 
-export function Sunburst({
-  type = 'sunburst',
-  onToggle,
-  isActive = false,
-  showCount = false,
-  count = 0,
-  showLabel = false,
-  customLabel,
-}: SunburstProps) {
+export function Sunburst(
+  props: SunburstProps | LegacySunburstProps
+) {
+  // Handle both new and legacy prop formats
+  const reactionId = 'reactionId' in props
+    ? props.reactionId
+    : legacyTypeMap[props.type || 'sunburst'];
+
+  const {
+    onToggle,
+    isActive = false,
+    showCount = false,
+    count = 0,
+    showLabel = false,
+    customLabel,
+  } = props;
+
+  // customTooltip is only available in new SunburstProps
+  const customTooltip = 'customTooltip' in props ? props.customTooltip : undefined;
+
   const [localActive, setLocalActive] = useState(isActive);
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
-  const config = reactionConfig[type];
+  // Get reaction config from centralized config
+  const reactionDef = getReaction(reactionId);
+  const config = {
+    emoji: reactionDef.emoji,
+    label: reactionDef.label,
+    tooltip: reactionDef.tooltip,
+    color: reactionDef.color || 'text-gray-500',
+    bgColor: reactionDef.bgColor || 'bg-gray-50',
+    borderColor: reactionDef.borderColor || 'border-gray-200',
+  };
+
   const active = isActive ?? localActive;
 
   const handleClick = () => {
@@ -83,6 +92,9 @@ export function Sunburst({
     }
   };
 
+  const displayLabel = customLabel || config.label;
+  const displayTooltip = customTooltip || config.tooltip || displayLabel;
+
   return (
     <motion.button
       onClick={handleClick}
@@ -93,6 +105,8 @@ export function Sunburst({
       `}
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      title={displayTooltip}
+      aria-label={displayTooltip}
     >
       {/* Main emoji with expansion animation */}
       <motion.span
@@ -106,7 +120,7 @@ export function Sunburst({
       {/* Label (optional) */}
       {showLabel && (
         <span className={`text-xs font-medium ${active ? config.color : 'text-gray-600'}`}>
-          {customLabel || config.label}
+          {displayLabel}
         </span>
       )}
 
@@ -133,7 +147,7 @@ export function Sunburst({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
-            <span className="text-xs">{type === 'sunburst' ? '✨' : config.emoji}</span>
+            <span className="text-xs">{reactionId === 'sunburst' ? '✨' : config.emoji}</span>
           </motion.div>
         ))}
       </AnimatePresence>
