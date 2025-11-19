@@ -492,9 +492,49 @@ export default function BookDiscussionPage({ bookId }: Props) {
                     </p>
                   </div>
 
-                  {/* INLINE REPLIES (still here for quick replies) */}
+                  {/* ADD REPLY FORM - Above existing replies */}
+                  <form
+                    onSubmit={(e) => handleReplySubmit(e, topic.id)}
+                    className="border-t border-yellow-50 pt-3 space-y-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">🌿</span>
+                      <label className="text-[11px] font-medium text-[#5C4A33]">
+                        Add a reflection
+                      </label>
+                    </div>
+                    <textarea
+                      value={draftText}
+                      onChange={(e) =>
+                        setReplyDrafts((prev) => ({
+                          ...prev,
+                          [topic.id]: e.target.value,
+                        }))
+                      }
+                      rows={2}
+                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      placeholder="Offer a reflection, a 'same', or a gentle question. No need to be profound."
+                    />
+                    <div className="flex items-center justify-between gap-2">
+                      <button
+                        type="submit"
+                        disabled={isReplySubmitting || !draftText.trim()}
+                        className="px-3 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
+                      >
+                        {isReplySubmitting ? "Posting…" : "Post reply"}
+                      </button>
+                      <p className="text-[9px] text-[#C0A987]">
+                        Keep it kind and specific to the book, not the person.
+                      </p>
+                    </div>
+                  </form>
+
+                  {/* EXISTING REPLIES - Below form */}
                   {topic.replies.length > 0 && (
-                    <div className="border-t border-yellow-50 pt-2 space-y-2">
+                    <div className="border-t border-yellow-50 pt-3 space-y-2">
+                      <p className="text-[10px] text-[#A08960] font-medium">
+                        {topic.replies.length} {topic.replies.length === 1 ? "reply" : "replies"}
+                      </p>
                       <div className="space-y-1.5">
                         {topic.replies.map((reply) => (
                           <div
@@ -512,40 +552,6 @@ export default function BookDiscussionPage({ bookId }: Props) {
                       </div>
                     </div>
                   )}
-
-                  {/* ADD REPLY FORM */}
-                  <form
-                    onSubmit={(e) => handleReplySubmit(e, topic.id)}
-                    className="border-t border-yellow-50 pt-2 space-y-2"
-                  >
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
-                      Add a response
-                    </label>
-                    <textarea
-                      value={draftText}
-                      onChange={(e) =>
-                        setReplyDrafts((prev) => ({
-                          ...prev,
-                          [topic.id]: e.target.value,
-                        }))
-                      }
-                      rows={2}
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                      placeholder="Offer a reflection, a ‘same’, or a gentle question. No need to be profound."
-                    />
-                    <div className="flex items-center justify-between gap-2">
-                      <button
-                        type="submit"
-                        disabled={isReplySubmitting || !draftText.trim()}
-                        className="px-3 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
-                      >
-                        {isReplySubmitting ? "Posting…" : "Post reply"}
-                      </button>
-                      <p className="text-[9px] text-[#C0A987]">
-                        Keep it kind and specific to the book, not the person.
-                      </p>
-                    </div>
-                  </form>
                 </article>
               );
             })}

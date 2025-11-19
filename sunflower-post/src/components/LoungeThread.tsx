@@ -186,55 +186,7 @@ export default function LoungeThread({ postId }: Props) {
         <p className="text-[11px] text-[#7A674C]">By {post.author}</p>
       </section>
 
-      {/* REPLIES LIST */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-          <p className="font-semibold text-yellow-900">
-            {replies.length} replies
-          </p>
-          <p className="text-[10px] text-[#A08960]">
-            No pressure to fix, just respond with care.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {replies.map((reply) => (
-            <article
-              key={reply.id}
-              className="bg-white border border-yellow-100 rounded-2xl p-3 md:p-4 space-y-2"
-            >
-              <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#5C4A33]">
-                    {reply.author}
-                  </span>
-                  {reply.isOp && (
-                    <span className="px-2 py-[1px] rounded-full bg-yellow-50 border border-yellow-100">
-                      OP
-                    </span>
-                  )}
-                </div>
-                <span>{reply.timeAgo}</span>
-              </div>
-              <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
-                {reply.body}
-              </p>
-
-              {reply.imageUrl && (
-                <div className="mt-2">
-                  <img
-                    src={reply.imageUrl}
-                    alt="Reply attachment"
-                    className="rounded-xl max-h-56 w-auto object-cover border border-yellow-50"
-                  />
-                </div>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* REPLY FORM */}
+      {/* REPLY FORM - Above existing replies */}
       <section className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3 text-xs md:text-sm">
         <div className="flex items-center justify-between gap-2">
           <p className="font-semibold text-yellow-900">Write a reply 💬</p>
@@ -392,6 +344,54 @@ export default function LoungeThread({ postId }: Props) {
             </p>
           </div>
         </form>
+      </section>
+
+      {/* EXISTING REPLIES - Below form */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
+          <p className="font-semibold text-yellow-900">
+            {replies.length} {replies.length === 1 ? "reply" : "replies"}
+          </p>
+          <p className="text-[10px] text-[#A08960]">
+            No pressure to fix, just respond with care.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {replies.map((reply) => (
+            <article
+              key={reply.id}
+              className="bg-white border border-yellow-100 rounded-2xl p-3 md:p-4 space-y-2"
+            >
+              <div className="flex items-center justify-between text-[10px] text-[#A08960]">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#5C4A33]">
+                    {reply.author}
+                  </span>
+                  {reply.isOp && (
+                    <span className="px-2 py-[1px] rounded-full bg-yellow-50 border border-yellow-100">
+                      OP
+                    </span>
+                  )}
+                </div>
+                <span>{reply.timeAgo}</span>
+              </div>
+              <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
+                {reply.body}
+              </p>
+
+              {reply.imageUrl && (
+                <div className="mt-2">
+                  <img
+                    src={reply.imageUrl}
+                    alt="Reply attachment"
+                    className="rounded-xl max-h-56 w-auto object-cover border border-yellow-50"
+                  />
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
       </section>
     </div>
   );

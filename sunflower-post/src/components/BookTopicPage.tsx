@@ -345,6 +345,40 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
               </p>
             </div>
 
+            {/* ADD REPLY - Above existing replies */}
+            <form
+              onSubmit={handleReplySubmit}
+              className="bg-white border border-yellow-100 rounded-2xl p-3 space-y-2"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm">💬</span>
+                <label className="text-[11px] font-medium text-[#5C4A33]">
+                  Add a gentle reply
+                </label>
+              </div>
+              <textarea
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                rows={3}
+                className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                placeholder="You can share how this landed, a gentle disagreement, or a 'same'. No need to write an essay."
+              />
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="submit"
+                  disabled={submitting || !replyText.trim()}
+                  className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
+                >
+                  {submitting ? "Posting…" : "Post reply"}
+                </button>
+                <p className="text-[9px] text-[#C0A987]">
+                  Keep it kind, specific and grounded in the book – not the
+                  person reading it.
+                </p>
+              </div>
+            </form>
+
+            {/* EXISTING REPLIES - Below form */}
             {topic.replies.length > 0 && (
               <div className="space-y-2">
                 {topic.replies.map((reply) => (
@@ -362,36 +396,6 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
                 ))}
               </div>
             )}
-
-            {/* ADD REPLY */}
-            <form
-              onSubmit={handleReplySubmit}
-              className="bg-white border border-yellow-100 rounded-2xl p-3 space-y-2"
-            >
-              <label className="text-[11px] font-medium text-[#5C4A33]">
-                Add your response
-              </label>
-              <textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                rows={3}
-                className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                placeholder="You can share how this landed, a gentle disagreement, or a ‘same’. No need to write an essay."
-              />
-              <div className="flex items-center justify-between gap-2">
-                <button
-                  type="submit"
-                  disabled={submitting || !replyText.trim()}
-                  className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
-                >
-                  {submitting ? "Posting…" : "Post reply"}
-                </button>
-                <p className="text-[9px] text-[#C0A987]">
-                  Keep it kind, specific and grounded in the book – not the
-                  person reading it.
-                </p>
-              </div>
-            </form>
           </section>
         </div>
       </div>
