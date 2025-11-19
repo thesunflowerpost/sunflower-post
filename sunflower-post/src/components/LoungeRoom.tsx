@@ -24,7 +24,7 @@ const INITIAL_POSTS: LoungePost[] = [
     id: 1,
     type: "joy",
     title: "Tiny win: I actually folded my laundry the same day",
-    body: "It’s been staring at me for 4 days and today I just did it while on a call. 10/10 recommend low-stakes multitasking.",
+    body: "It's been staring at me for 4 days and today I just did it while on a call. 10/10 recommend low-stakes multitasking.",
     author: "Dani",
     timeAgo: "2 hours ago",
     replies: 3,
@@ -33,7 +33,7 @@ const INITIAL_POSTS: LoungePost[] = [
     id: 2,
     type: "pickmeup",
     title: "Soft pick-me-up for job hunting",
-    body: "Interviews keep falling through and I’m trying not to take it personally. Could use a gentle reminder that it’s not over for me.",
+    body: "Interviews keep falling through and I'm trying not to take it personally. Could use a gentle reminder that it's not over for me.",
     author: "Anon",
     timeAgo: "5 hours ago",
     replies: 7,
@@ -41,8 +41,8 @@ const INITIAL_POSTS: LoungePost[] = [
   {
     id: 3,
     type: "softrant",
-    title: "Everyone else seems to be ‘thriving’ online",
-    body: "Logically I know it’s curated, but lately social media has felt loud, performative and exhausting. Grateful this space exists tbh.",
+    title: "Everyone else seems to be 'thriving' online",
+    body: "Logically I know it's curated, but lately social media has felt loud, performative and exhausting. Grateful this space exists tbh.",
     author: "Leah",
     timeAgo: "Yesterday",
     replies: 5,
@@ -132,6 +132,24 @@ export default function LoungeRoom() {
     matchesSearch([post.title, post.body, post.author], search)
   );
 
+  // Helper to get author initials
+  function getAuthorInitial(author: string): string {
+    return author.charAt(0).toUpperCase();
+  }
+
+  // Helper to get avatar color based on author name
+  function getAvatarColor(author: string): string {
+    const colors = [
+      "bg-gradient-to-br from-yellow-200 to-amber-300",
+      "bg-gradient-to-br from-rose-200 to-pink-300",
+      "bg-gradient-to-br from-blue-200 to-indigo-300",
+      "bg-gradient-to-br from-green-200 to-emerald-300",
+      "bg-gradient-to-br from-purple-200 to-violet-300",
+    ];
+    const index = author.length % colors.length;
+    return colors[index];
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
       <div className="grid md:grid-cols-4 gap-6 items-start">
@@ -146,50 +164,50 @@ export default function LoungeRoom() {
           <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-3 md:max-w-xl">
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
                   Room
                 </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
+                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
                   The Lounge
                 </h1>
-                <p className="text-xs md:text-sm text-[#5C4A33] max-w-xl">
+                <p className="text-sm text-[#5C4A33] max-w-xl leading-relaxed">
                   A soft landing spot for the day. Share a small joy, ask for a
                   pick-me-up or gently rant about life without needing a perfect
                   takeaway.
                 </p>
               </div>
 
-              {/* NEW SEARCH BAR */}
-              <div className="flex items-center gap-2 bg-white border border-yellow-100 rounded-full px-3 py-1 shadow-sm">
-                <span>🔍</span>
+              {/* SEARCH BAR - Modernized */}
+              <div className="flex items-center gap-2 bg-white border border-yellow-200/60 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-yellow-300/50 focus-within:border-yellow-300">
+                <span className="text-base">🔍</span>
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search Lounge posts (e.g. job hunt, burnout, tiny wins)"
-                  className="flex-1 bg-transparent text-[11px] focus:outline-none placeholder:text-[#C0A987]"
+                  className="flex-1 bg-transparent text-xs focus:outline-none placeholder:text-[#C0A987]"
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[11px]">
-              <button className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm">
+            <div className="flex flex-wrap gap-2 text-xs">
+              <button className="px-4 py-2.5 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#3A2E1F] font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105">
                 Share a small joy
               </button>
               <button
                 onClick={() => setShowPickForm((s) => !s)}
-                className="px-3 py-2 rounded-full border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33]"
+                className="px-4 py-2.5 rounded-xl border-2 border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] font-medium shadow-sm hover:shadow-md transition-all"
               >
                 {showPickForm ? "Close pick-me-up form" : "Ask for a pick-me-up"}
               </button>
             </div>
           </section>
 
-          {/* PICK-ME-UP SUBMISSION FORM */}
+          {/* PICK-ME-UP SUBMISSION FORM - Modernized */}
           {showPickForm && (
-            <section className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3 text-xs md:text-sm">
+            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold text-yellow-900">
+                <p className="text-base font-semibold text-yellow-900">
                   Ask for a pick-me-up 💛
                 </p>
                 <p className="text-[10px] text-[#A08960]">
@@ -198,9 +216,9 @@ export default function LoungeRoom() {
                 </p>
               </div>
 
-              <form className="space-y-3" onSubmit={handlePickSubmit}>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-[#5C4A33]">
+              <form className="space-y-4" onSubmit={handlePickSubmit}>
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
                     Title (optional)
                   </label>
                   <input
@@ -210,12 +228,12 @@ export default function LoungeRoom() {
                       setPickForm((f) => ({ ...f, title: e.target.value }))
                     }
                     placeholder='e.g. "Feeling behind on everything and a bit lost"'
-                    className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-[#5C4A33]">
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
                     What would you like to share?
                   </label>
                   <textarea
@@ -225,13 +243,13 @@ export default function LoungeRoom() {
                     }
                     rows={3}
                     placeholder="You can say as little or as much as you want. No pressure to give all the context."
-                    className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3 items-start">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                <div className="grid md:grid-cols-2 gap-4 items-start">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Name (optional)
                     </label>
                     <input
@@ -244,22 +262,22 @@ export default function LoungeRoom() {
                         }))
                       }
                       placeholder="Leave blank or use an initial if you prefer."
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                     />
-                    <label className="inline-flex items-center gap-2 mt-1 text-[11px] text-[#7A674C]">
+                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
                       <input
                         type="checkbox"
                         checked={pickForm.isAnon}
                         onChange={(e) =>
                           setPickForm((f) => ({ ...f, isAnon: e.target.checked }))
                         }
-                        className="rounded border-yellow-300"
+                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
                       />
                       <span>Post as anonymous</span>
                     </label>
                   </div>
 
-                  <div className="space-y-1 text-[11px] text-[#7A674C]">
+                  <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
                     <p className="font-medium text-yellow-900">Gentle boundaries</p>
                     <ul className="space-y-1">
                       <li>• No graphic detail or explicit harm.</li>
@@ -272,11 +290,11 @@ export default function LoungeRoom() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 pt-1">
+                <div className="flex items-center justify-between gap-3 pt-2">
                   <button
                     type="submit"
                     disabled={submitting || !pickForm.body.trim()}
-                    className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-semibold shadow-sm"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 disabled:from-yellow-200 disabled:to-yellow-300 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105 disabled:hover:scale-100"
                   >
                     {submitting ? "Posting..." : "Post to Lounge"}
                   </button>
@@ -291,18 +309,18 @@ export default function LoungeRoom() {
           {/* MAIN LAYOUT */}
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* LEFT / CENTER: FEED */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* FILTERS */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-2">
+            <div className="lg:col-span-2 space-y-5">
+              {/* FILTERS - Modern Segmented Control */}
+              <div className="flex flex-col gap-4">
+                <div className="inline-flex items-center bg-white border border-yellow-200/60 rounded-2xl p-1.5 shadow-sm w-fit">
                   {FILTERS.map((filter) => (
                     <button
                       key={filter}
                       onClick={() => setActiveFilter(filter)}
-                      className={`px-3 py-1 rounded-full border text-[11px] ${
+                      className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${
                         activeFilter === filter
-                          ? "bg-yellow-100 border-yellow-200 text-[#5C4A33] font-medium"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                          ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-[#3A2E1F] shadow-md"
+                          : "text-[#7A674C] hover:text-[#5C4A33] hover:bg-yellow-50/50"
                       }`}
                     >
                       {filter}
@@ -314,10 +332,10 @@ export default function LoungeRoom() {
                 </p>
               </div>
 
-              {/* FEED CARDS */}
-              <div className="space-y-3">
+              {/* FEED CARDS - Modernized */}
+              <div className="space-y-4">
                 {visiblePosts.length === 0 && (
-                  <div className="bg-white border border-yellow-100 rounded-2xl p-4 text-[11px] text-[#7A674C]">
+                  <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
                       No posts match that yet.
                     </p>
@@ -339,59 +357,75 @@ export default function LoungeRoom() {
                   return (
                     <article
                       key={post.id}
-                      className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2 hover:border-yellow-200 transition"
+                      className="bg-white border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/60 transition-all hover:scale-[1.01] group"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                        <span
-                          className={`px-2 py-[2px] rounded-full border ${
-                            post.type === "joy"
-                              ? "bg-yellow-50 border-yellow-100 text-[#5C4A33]"
-                              : post.type === "pickmeup"
-                              ? "bg-[#FDF5FF] border-[#E7D3FF] text-[#5B4377]"
-                              : "bg-[#FDF4EC] border-[#F3C9A3] text-[#6C4A33]"
-                          }`}
-                        >
-                          {post.type === "joy"
-                            ? "Small joy"
-                            : post.type === "pickmeup"
-                            ? "Pick-me-up"
-                            : "Soft rant"}
-                        </span>
-                        <span>{post.timeAgo}</span>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          {/* Author Avatar */}
+                          <div
+                            className={`w-10 h-10 rounded-full ${getAvatarColor(
+                              post.author
+                            )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-sm`}
+                          >
+                            {getAuthorInitial(post.author)}
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-[#5C4A33]">
+                                {post.author}
+                              </span>
+                              <span className="text-[10px] text-[#A08960]">
+                                {post.timeAgo}
+                              </span>
+                            </div>
+                            <span
+                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+                                post.type === "joy"
+                                  ? "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900"
+                                  : post.type === "pickmeup"
+                                  ? "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-900"
+                                  : "bg-gradient-to-br from-orange-100 to-orange-200 text-orange-900"
+                              }`}
+                            >
+                              {post.type === "joy"
+                                ? "Small joy"
+                                : post.type === "pickmeup"
+                                ? "Pick-me-up"
+                                : "Soft rant"}
+                            </span>
+                          </div>
+                        </div>
                       </div>
 
-                      <h2 className="text-sm font-semibold text-yellow-900">
+                      <h2 className="text-base font-semibold text-yellow-900 leading-snug">
                         {post.title}
                       </h2>
-                      <p className="text-[#5C4A33] whitespace-pre-line">
+                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
                         {post.body}
                       </p>
 
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-                          <span>By {post.author}</span>
-                          <Link
-                            href={`/lounge/${post.id}`}
-                            className="flex items-center gap-1 hover:text-yellow-900"
-                          >
-                            <span>💬</span>
-                            <span>{post.replies} replies</span>
-                          </Link>
-                        </div>
+                      <div className="flex flex-col gap-3 pt-2">
+                        <Link
+                          href={`/lounge/${post.id}`}
+                          className="flex items-center gap-1.5 text-xs text-[#7A674C] hover:text-yellow-900 transition-colors w-fit"
+                        >
+                          <span className="text-base">💬</span>
+                          <span className="font-medium">{post.replies} replies</span>
+                        </Link>
 
-                        {/* REACTIONS ROW */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
+                        {/* REACTIONS ROW - Enhanced */}
+                        <div className="flex flex-col gap-2">
                           <div className="flex flex-wrap gap-2">
                             <button
                               type="button"
                               onClick={() => toggleReaction(post.id, "warmth")}
-                              className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
+                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
                                 postReactions.warmth
-                                  ? "bg-yellow-200 border-yellow-300 text-[#3A2E1F]"
-                                  : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                                  ? "bg-gradient-to-br from-yellow-200 to-yellow-300 text-[#3A2E1F] shadow-md scale-105"
+                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:shadow-md hover:scale-105"
                               }`}
                             >
-                              <span>🌻</span>
+                              <span className="text-base">🌻</span>
                               <span>Send warmth</span>
                             </button>
                             <button
@@ -399,29 +433,29 @@ export default function LoungeRoom() {
                               onClick={() =>
                                 toggleReaction(post.id, "support")
                               }
-                              className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
+                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
                                 postReactions.support
-                                  ? "bg-[#F5F3FF] border-[#D9D2FF] text-[#40325F]"
-                                  : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                                  ? "bg-gradient-to-br from-purple-200 to-purple-300 text-purple-900 shadow-md scale-105"
+                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-purple-50 hover:shadow-md hover:scale-105"
                               }`}
                             >
-                              <span>🤍</span>
+                              <span className="text-base">🤍</span>
                               <span>Gentle support</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => toggleReaction(post.id, "here")}
-                              className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
+                              className={`px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-medium transition-all ${
                                 postReactions.here
-                                  ? "bg-[#FEF3C7] border-[#FACC15] text-[#3A2E1F]"
-                                  : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                                  ? "bg-gradient-to-br from-amber-200 to-amber-300 text-amber-900 shadow-md scale-105"
+                                  : "bg-white border border-yellow-200/60 text-[#7A674C] hover:bg-amber-50 hover:shadow-md hover:scale-105"
                               }`}
                             >
-                              <span>💛</span>
+                              <span className="text-base">💛</span>
                               <span>Here with you</span>
                             </button>
                           </div>
-                          <p className="text-[9px] text-[#C0A987]">
+                          <p className="text-[9px] text-[#C0A987] italic">
                             Reactions are for care, not counts. Only you see what
                             you&apos;ve sent.
                           </p>
@@ -433,37 +467,61 @@ export default function LoungeRoom() {
               </div>
             </div>
 
-            {/* RIGHT: PROMPTS & BOUNDARIES */}
+            {/* RIGHT: PROMPTS & BOUNDARIES - Modernized */}
             <aside className="space-y-4">
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
+                <p className="text-xs font-semibold text-yellow-900">
                   What belongs here
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
-                  <li>• One-line joys and tiny wins</li>
-                  <li>• “I&apos;m finding today hard” check-ins</li>
-                  <li>• Soft rants that don&apos;t attack specific people</li>
-                  <li>• Gentle encouragement and validation</li>
+                <ul className="space-y-2 text-xs text-[#7A674C]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>One-line joys and tiny wins</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>"I&apos;m finding today hard" check-ins</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Soft rants that don&apos;t attack specific people</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Gentle encouragement and validation</span>
+                  </li>
                 </ul>
               </div>
 
-              <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50/30 border border-orange-200/60 rounded-2xl p-5 space-y-3 shadow-md">
+                <p className="text-xs font-semibold text-orange-900">
                   Need ideas?
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
-                  <li>• “Today I&apos;m grateful for…”</li>
-                  <li>• “One kind thing that happened recently was…”</li>
-                  <li>• “Something I&apos;m proud of but haven&apos;t said out loud is…”</li>
-                  <li>• “If you&apos;re reading this and struggling, here&apos;s a reminder…”</li>
+                <ul className="space-y-2 text-xs text-[#6C4A33]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"Today I&apos;m grateful for…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"One kind thing that happened recently was…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"Something I&apos;m proud of but haven&apos;t said out loud is…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"If you&apos;re reading this and struggling, here&apos;s a reminder…"</span>
+                  </li>
                 </ul>
               </div>
 
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-white border border-yellow-200/60 rounded-2xl p-5 space-y-2 shadow-md">
+                <p className="text-xs font-semibold text-yellow-900">
                   Gentle boundaries
                 </p>
-                <p className="text-[#7A674C]">
+                <p className="text-xs text-[#7A674C] leading-relaxed">
                   It&apos;s okay to be honest and messy here. Just keep details
                   non-graphic, avoid call-outs, and remember this isn&apos;t a crisis
                   line. Reach out to offline support if you&apos;re feeling unsafe.
