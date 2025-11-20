@@ -4,6 +4,8 @@ import { matchesSearch } from "@/lib/search";
 import { useState } from "react";
 import Link from "next/link";
 import CommunitySidebar from "./CommunitySidebar";
+import { BouncyButton, ShimmerIcon, ReactionBar } from "./ui";
+import type { ReactionId } from "@/config/reactions";
 
 type HopeStory = {
   id: number;
@@ -17,11 +19,8 @@ type HopeStory = {
   saves: number;
 };
 
-type UserReactions = {
-  warmth: boolean;
-  support: boolean;
-  here: boolean;
-};
+// User reactions are now stored as Record<ReactionId, boolean>
+type UserReactions = Record<ReactionId, boolean>;
 
 const STORIES: HopeStory[] = [
   {
@@ -93,21 +92,36 @@ export default function HopeBankRoom() {
     );
   });
 
-  function toggleReaction(storyId: number, key: keyof UserReactions) {
+  // toggle helper for reactions
+  function toggleReaction(storyId: number, reactionId: ReactionId, active: boolean) {
     setReactions((prev) => {
-      const current = prev[storyId] || {
-        warmth: false,
-        support: false,
-        here: false,
-      };
+      const current = prev[storyId] || {};
       return {
         ...prev,
         [storyId]: {
           ...current,
-          [key]: !current[key],
+          [reactionId]: active,
         },
       };
     });
+  }
+
+  // Helper to get author initials
+  function getAuthorInitial(author: string): string {
+    return author.charAt(0).toUpperCase();
+  }
+
+  // Helper to get avatar color based on author name
+  function getAvatarColor(author: string): string {
+    const colors = [
+      "bg-gradient-to-br from-yellow-200 to-amber-300",
+      "bg-gradient-to-br from-orange-200 to-orange-300",
+      "bg-gradient-to-br from-rose-200 to-pink-300",
+      "bg-gradient-to-br from-purple-200 to-violet-300",
+      "bg-gradient-to-br from-teal-200 to-emerald-300",
+    ];
+    const index = author.length % colors.length;
+    return colors[index];
   }
 
   return (
@@ -126,15 +140,15 @@ export default function HopeBankRoom() {
             {/* LEFT: TEXT + SEARCH */}
             <div className="space-y-3 md:max-w-xl">
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
                   Room
                 </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
+                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
                   Hope Bank
                 </h1>
-                <p className="text-xs md:text-sm text-[#5C4A33]">
+                <p className="text-sm text-[#5C4A33] leading-relaxed">
                   A library of real stories about things quietly getting better.
-                  For the days when you&apos;re tired of “it will all work out” and
+                  For the days when you&apos;re tired of "it will all work out" and
                   need proof from people who have been there.
                 </p>
               </div>
@@ -153,7 +167,7 @@ export default function HopeBankRoom() {
             </div>
 
             {/* RIGHT: HERO TILE + BUTTONS */}
-            <div className="flex flex-col items-stretch gap-3 text-[11px] w-full md:w-56">
+            <div className="flex flex-col items-stretch gap-3 text-xs w-full md:w-56">
               {/* Little dopamine / personality tile */}
               <div className="rounded-2xl bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100 border border-yellow-200/60 px-3 py-3 flex items-center gap-3 shadow-md">
                 <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-lg shadow-sm">
@@ -171,12 +185,12 @@ export default function HopeBankRoom() {
               </div>
 
               <div className="flex flex-wrap gap-2 justify-end md:justify-start">
-                <button className="px-3 py-2 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#3A2E1F] font-semibold shadow-md hover:shadow-lg transition-all">
+                <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
                   Share a hope story
-                </button>
-                <button className="px-3 py-2 rounded-full border border-yellow-200/60 bg-white hover:bg-yellow-50 text-[#5C4A33] shadow-sm hover:shadow-md transition-all">
+                </BouncyButton>
+                <BouncyButton variant="secondary" size="sm" className="text-xs">
                   Save this room
-                </button>
+                </BouncyButton>
               </div>
             </div>
           </section>
@@ -186,25 +200,27 @@ export default function HopeBankRoom() {
             {/* STORIES LIST */}
             <div className="lg:col-span-2 space-y-4">
               {/* FILTER BAR */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-4">
+                <div className="inline-flex items-center bg-white border border-yellow-200/60 rounded-2xl p-1.5 shadow-sm w-fit flex-wrap">
                   {CATEGORY_FILTERS.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-3 py-1.5 rounded-xl border text-[11px] transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all ${
                         activeCategory === cat
-                          ? "bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-200/60 text-[#3A2E1F] font-semibold shadow-sm"
-                          : "bg-white border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-300/60"
+                          ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-[#3A2E1F] shadow-md"
+                          : "text-[#7A674C] hover:text-[#5C4A33] hover:bg-yellow-50/50"
                       }`}
                     >
                       {cat}
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center gap-2 text-[11px] text-[#7A674C]">
-                  <span>Sort by</span>
-                  <select className="border border-yellow-200/60 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 shadow-sm hover:shadow-md transition-all">
+                <div className="flex items-center justify-between gap-3 text-[11px] text-[#7A674C]">
+                  <p className="text-[10px] text-[#A08960]">
+                    Stories are sorted by relevance and recency.
+                  </p>
+                  <select className="border border-yellow-200/60 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 shadow-sm hover:shadow-md transition-all text-[11px]">
                     <option>Most saved</option>
                     <option>Most recent</option>
                     <option>Most relevant</option>
@@ -227,106 +243,79 @@ export default function HopeBankRoom() {
                 )}
 
                 {filteredStories.map((story) => {
-                  const storyReactions =
-                    reactions[story.id] || {
-                      warmth: false,
-                      support: false,
-                      here: false,
-                    };
+                  const storyReactions = reactions[story.id] || {};
 
                   return (
                     <article
                       key={story.id}
-                      className="bg-white border border-yellow-200/60 rounded-2xl p-4 space-y-3 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group"
+                      className="bg-white border border-yellow-200/60 rounded-xl p-3 space-y-2 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                        <span className="px-2 py-1 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 border border-yellow-200/60 text-[#3A2E1F] font-medium shadow-sm">
-                          {story.category}
-                        </span>
-                        <span>{story.timeAgo}</span>
-                      </div>
-
-                      <h2 className="text-sm font-semibold text-yellow-900">
-                        {story.title}
-                      </h2>
-                      <p className="text-[#5C4A33]">{story.summary}</p>
-
-                      <p className="text-[11px] text-[#7A674C] italic">
-                        Turning point: {story.turningPoint}
-                      </p>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-                          <span className="font-medium">
-                            By{" "}
-                            {story.isAnon ? (
-                              <span>Anon</span>
-                            ) : (
-                              <span>{story.author}</span>
-                            )}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all">
-                              <span>📎</span>
-                              <span className="font-medium">Save</span>
-                              <span className="text-[10px] text-[#A08960]">
-                                {story.saves}
-                              </span>
-                            </button>
-                            <Link
-                              href={`/hope-bank/${story.id}`}
-                              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all font-medium"
-                            >
-                              <span>👁️</span>
-                              <span>View full story</span>
-                            </Link>
-                          </div>
+                      <div className="flex items-start gap-2">
+                        {/* Author Avatar */}
+                        <div
+                          className={`w-8 h-8 rounded-full ${getAvatarColor(
+                            story.author
+                          )} flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-sm flex-shrink-0`}
+                        >
+                          {getAuthorInitial(story.author)}
                         </div>
-
-                        {/* REACTIONS ROW – similar to Lounge */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              onClick={() => toggleReaction(story.id, "warmth")}
-                              className={`px-2.5 py-1.5 rounded-full border text-[10px] flex items-center gap-1 transition-all ${
-                                storyReactions.warmth
-                                  ? "bg-gradient-to-br from-yellow-200 to-yellow-300 border-yellow-300/60 text-[#3A2E1F] shadow-sm font-medium"
-                                  : "bg-white border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-300/60"
-                              }`}
-                            >
-                              <span>🌻</span>
-                              <span>Send warmth</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleReaction(story.id, "support")}
-                              className={`px-2.5 py-1.5 rounded-full border text-[10px] flex items-center gap-1 transition-all ${
-                                storyReactions.support
-                                  ? "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-200/60 text-[#40325F] shadow-sm font-medium"
-                                  : "bg-white border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-300/60"
-                              }`}
-                            >
-                              <span>🤍</span>
-                              <span>Gentle support</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleReaction(story.id, "here")}
-                              className={`px-2.5 py-1.5 rounded-full border text-[10px] flex items-center gap-1 transition-all ${
-                                storyReactions.here
-                                  ? "bg-gradient-to-br from-yellow-200 to-amber-200 border-yellow-300/60 text-[#3A2E1F] shadow-sm font-medium"
-                                  : "bg-white border-yellow-200/60 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-300/60"
-                              }`}
-                            >
-                              <span>💛</span>
-                              <span>Here with you</span>
-                            </button>
+                        <div className="flex-1 min-w-0 space-y-1.5">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-medium text-[#5C4A33]">
+                              {story.isAnon ? "Anon" : story.author}
+                            </span>
+                            <span className="text-[10px] text-[#A08960]">
+                              {story.timeAgo}
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 border border-yellow-200/60 text-[#3A2E1F] font-medium shadow-sm text-[9px]">
+                              {story.category}
+                            </span>
                           </div>
-                          <p className="text-[9px] text-[#C0A987]">
-                            Reactions are for care, not counts. Only you see what
-                            you&apos;ve sent.
+
+                          <h2 className="text-sm font-semibold text-yellow-900 leading-snug">
+                            {story.title}
+                          </h2>
+                          <p className="text-xs text-[#5C4A33] leading-relaxed">{story.summary}</p>
+
+                          <p className="text-[11px] text-[#7A674C] italic">
+                            Turning point: {story.turningPoint}
                           </p>
+
+                          <div className="flex items-center justify-between gap-3 pt-1 flex-wrap">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all">
+                                <ShimmerIcon>
+                                  <span>📎</span>
+                                </ShimmerIcon>
+                                <span className="font-medium text-[10px]">Save</span>
+                                <span className="text-[10px] text-[#A08960]">
+                                  {story.saves}
+                                </span>
+                              </button>
+                              <Link
+                                href={`/hope-bank/${story.id}`}
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all font-medium text-[10px]"
+                              >
+                                <ShimmerIcon>
+                                  <span>👁️</span>
+                                </ShimmerIcon>
+                                <span>View full story</span>
+                                <span>→</span>
+                              </Link>
+                            </div>
+                          </div>
+
+                          {/* REACTIONS ROW – Using new ReactionBar with room-specific config */}
+                          <div className="pt-1">
+                            <ReactionBar
+                              roomId="hopeBank"
+                              postId={story.id}
+                              reactions={storyReactions}
+                              onReactionToggle={(reactionId, active) =>
+                                toggleReaction(story.id, reactionId, active)
+                              }
+                            />
+                          </div>
                         </div>
                       </div>
                     </article>

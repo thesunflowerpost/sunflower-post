@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import Link from "next/link";
+import { BouncyButton, ShimmerIcon, ReactionBar } from "@/components/ui";
+import type { ReactionId } from "@/config/reactions";
 
 type HopeStory = {
   id: number;
@@ -23,11 +25,8 @@ type HopeReply = {
   body: string;
 };
 
-type UserReactions = {
-  warmth: boolean;
-  support: boolean;
-  here: boolean;
-};
+// User reactions are now stored as Record<ReactionId, boolean>
+type UserReactions = Record<ReactionId, boolean>;
 
 const STORIES: HopeStory[] = [
   {
@@ -112,11 +111,7 @@ export default function HopeBankStoryPage({ params }: PageProps) {
   const [replyText, setReplyText] = useState("");
 
   // per-story reactions for THIS viewer only
-  const [reactions, setReactions] = useState<UserReactions>({
-    warmth: false,
-    support: false,
-    here: false,
-  });
+  const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
 
   function handleReplySubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -133,11 +128,30 @@ export default function HopeBankStoryPage({ params }: PageProps) {
     setReplyText("");
   }
 
-  function toggleReaction(key: keyof UserReactions) {
+  // toggle helper for reactions
+  function toggleReaction(reactionId: ReactionId, active: boolean) {
     setReactions((prev) => ({
       ...prev,
-      [key]: !prev[key],
+      [reactionId]: active,
     }));
+  }
+
+  // Helper to get author initials
+  function getAuthorInitial(author: string): string {
+    return author.charAt(0).toUpperCase();
+  }
+
+  // Helper to get avatar color based on author name
+  function getAvatarColor(author: string): string {
+    const colors = [
+      "bg-gradient-to-br from-yellow-200 to-amber-300",
+      "bg-gradient-to-br from-orange-200 to-orange-300",
+      "bg-gradient-to-br from-rose-200 to-pink-300",
+      "bg-gradient-to-br from-purple-200 to-violet-300",
+      "bg-gradient-to-br from-teal-200 to-emerald-300",
+    ];
+    const index = author.length % colors.length;
+    return colors[index];
   }
 
   return (
@@ -151,117 +165,93 @@ export default function HopeBankStoryPage({ params }: PageProps) {
         {/* RIGHT: STORY CONTENT */}
         <div className="md:col-span-3 space-y-6">
           {/* BREADCRUMB */}
-          <div className="text-[11px] text-[#A08960] flex items-center gap-2">
-            <Link href="/hope-bank" className="hover:underline">
-              Hope Bank
+          <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
+            <Link
+              href="/hope-bank"
+              className="inline-flex items-center gap-1 hover:text-yellow-900"
+            >
+              <span>←</span>
+              <span>Back to Hope Bank</span>
             </Link>
-            <span>/</span>
-            <span className="text-[#7A674C] truncate">
-              {story.title || "Story"}
+            <span className="hidden sm:inline text-[#A08960]">
+              Reflections are for care, not debate.
             </span>
           </div>
 
           {/* HERO CARD */}
-          <section className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-[#A08960]">
-              <span className="px-2 py-[2px] rounded-full bg-yellow-50 border border-yellow-100 text-[#5C4A33]">
-                {story.category}
-              </span>
-              <span>{story.timeAgo}</span>
-            </div>
-
-            <h1 className="text-base md:text-lg font-semibold text-yellow-900">
-              {story.title}
-            </h1>
-
-            <p className="text-xs md:text-sm text-[#7A674C]">
-              Turning point:{" "}
-              <span className="italic">{story.turningPoint}</span>
-            </p>
-
-            <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
-              {story.fullStory}
-            </p>
-
-            {/* AUTHOR + SAVE + REACTIONS */}
-            <div className="space-y-3 pt-1">
-              <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#7A674C]">
-                <span>
-                  By{" "}
-                  {story.isAnon ? (
-                    <span>Anon</span>
-                  ) : (
-                    <span>{story.author}</span>
-                  )}
-                </span>
-                <div className="flex flex-wrap gap-2 text-[10px]">
-                  <button className="px-3 py-1 rounded-full border border-yellow-200 bg-yellow-50 flex items-center gap-1">
-                    <span>📎</span>
-                    <span>Save story</span>
-                  </button>
-                  <button className="px-3 py-1 rounded-full border border-yellow-100 bg-white hover:bg-yellow-50">
-                    Share (coming soon)
-                  </button>
-                </div>
+          <section className="bg-white border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 shadow-sm">
+            <div className="flex items-start gap-2">
+              {/* Author Avatar */}
+              <div
+                className={`w-10 h-10 rounded-full ${getAvatarColor(
+                  story.author
+                )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-sm flex-shrink-0`}
+              >
+                {getAuthorInitial(story.author)}
               </div>
-
-              {/* REACTIONS ROW – same vibe as Lounge & Hope Bank list */}
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => toggleReaction("warmth")}
-                    className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                      reactions.warmth
-                        ? "bg-yellow-200 border-yellow-300 text-[#3A2E1F]"
-                        : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                    }`}
-                  >
-                    <span>🌻</span>
-                    <span>Send warmth</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => toggleReaction("support")}
-                    className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                      reactions.support
-                        ? "bg-[#F5F3FF] border-[#D9D2FF] text-[#40325F]"
-                        : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                    }`}
-                  >
-                    <span>🤍</span>
-                    <span>Gentle support</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => toggleReaction("here")}
-                    className={`px-2.5 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                      reactions.here
-                        ? "bg-[#FEF3C7] border-[#FACC15] text-[#3A2E1F]"
-                        : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                    }`}
-                  >
-                    <span>💛</span>
-                    <span>Here with you</span>
-                  </button>
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-medium text-[#5C4A33]">
+                    {story.isAnon ? "Anon" : story.author}
+                  </span>
+                  <span className="text-[10px] text-[#A08960]">
+                    {story.timeAgo}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 border border-yellow-200/60 text-[#3A2E1F] font-medium shadow-sm text-[9px]">
+                    {story.category}
+                  </span>
                 </div>
-                <p className="text-[9px] text-[#C0A987]">
-                  Reactions are for care, not counts. Only you see what
-                  you&apos;ve sent.
+
+                <h1 className="text-base md:text-lg font-semibold text-yellow-900">
+                  {story.title}
+                </h1>
+
+                <p className="text-xs md:text-sm text-[#7A674C]">
+                  Turning point:{" "}
+                  <span className="italic">{story.turningPoint}</span>
                 </p>
+
+                <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                  {story.fullStory}
+                </p>
+
+                {/* SAVE + REACTIONS */}
+                <div className="space-y-3 pt-1">
+                  <div className="flex flex-wrap gap-2 text-[10px]">
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all">
+                      <ShimmerIcon>
+                        <span>📎</span>
+                      </ShimmerIcon>
+                      <span className="font-medium">Save story</span>
+                    </button>
+                    <button className="px-3 py-1.5 rounded-full border border-yellow-200/60 bg-white hover:bg-yellow-50 hover:shadow-sm transition-all">
+                      Share (coming soon)
+                    </button>
+                  </div>
+
+                  {/* REACTIONS ROW – Using new ReactionBar with room-specific config */}
+                  <div className="pt-1">
+                    <ReactionBar
+                      roomId="hopeBank"
+                      postId={story.id}
+                      reactions={reactions}
+                      onReactionToggle={toggleReaction}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
           {/* HOPE-FRAME */}
-          <section className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-2 text-xs">
+          <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-2 text-xs shadow-md">
             <p className="font-semibold text-yellow-900">
               For whoever needed this today
             </p>
-            <p className="text-[#5C4A33]">
+            <p className="text-[#5C4A33] leading-relaxed">
               You don&apos;t have to know how your story resolves yet. It&apos;s
               enough that you&apos;re still here, still curious whether things can
-              shift. Hope Bank is proof that “stuck” can be a chapter, not the
+              shift. Hope Bank is proof that "stuck" can be a chapter, not the
               whole book.
             </p>
           </section>
@@ -269,7 +259,7 @@ export default function HopeBankStoryPage({ params }: PageProps) {
           {/* REPLIES */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold text-yellow-900">
+              <p className="text-xs font-semibold text-yellow-900">
                 Reflections ({replies.length})
               </p>
               <p className="text-[10px] text-[#A08960]">
@@ -279,20 +269,37 @@ export default function HopeBankStoryPage({ params }: PageProps) {
             </div>
 
             <div className="space-y-3">
-              {replies.map((reply) => (
-                <div
-                  key={reply.id}
-                  className="bg-white border border-yellow-100 rounded-2xl p-3 space-y-1 text-xs"
-                >
-                  <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                    <span>By {reply.author}</span>
-                    <span>{reply.timeAgo}</span>
+              {replies.map((reply) => {
+                const replyAuthor = reply.author === "You" ? "You" : reply.author;
+                return (
+                  <div
+                    key={reply.id}
+                    className="bg-white border border-yellow-200/60 rounded-2xl p-3 space-y-2 text-xs shadow-sm"
+                  >
+                    <div className="flex items-start gap-2">
+                      {/* Reply Author Avatar */}
+                      <div
+                        className={`w-7 h-7 rounded-full ${getAvatarColor(
+                          replyAuthor
+                        )} flex items-center justify-center text-[11px] font-semibold text-[#3A2E1F] shadow-sm flex-shrink-0`}
+                      >
+                        {getAuthorInitial(replyAuthor)}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-center justify-between text-[10px] text-[#A08960]">
+                          <span className="font-medium text-[#5C4A33]">
+                            {replyAuthor}
+                          </span>
+                          <span>{reply.timeAgo}</span>
+                        </div>
+                        <p className="text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                          {reply.body}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[#5C4A33] whitespace-pre-line">
-                    {reply.body}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
 
               {replies.length === 0 && (
                 <div className="bg-white border border-dashed border-yellow-200 rounded-2xl p-4 text-[11px] text-[#7A674C]">
@@ -309,10 +316,15 @@ export default function HopeBankStoryPage({ params }: PageProps) {
           </section>
 
           {/* REPLY COMPOSER */}
-          <section className="bg-[#FFFDF6] border border-yellow-100 rounded-2xl p-4 space-y-3 text-xs">
-            <p className="font-semibold text-yellow-900">
-              Add a reflection 🌿
-            </p>
+          <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 text-xs shadow-md">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-semibold text-yellow-900">
+                Add a reflection 🌿
+              </p>
+              <p className="text-[10px] text-[#A08960]">
+                One or two sentences is plenty.
+              </p>
+            </div>
             <p className="text-[11px] text-[#7A674C]">
               You can share what part resonated, a similar moment from your own
               life, or a sentence you want future-you to remember.
@@ -323,18 +335,20 @@ export default function HopeBankStoryPage({ params }: PageProps) {
                 rows={3}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder='e.g. “This reminded me that my story isn’t over either.”'
-                className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                placeholder='e.g. "This reminded me that my story isn't over either."'
+                className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
               />
 
               <div className="flex items-center justify-between gap-3">
-                <button
+                <BouncyButton
                   type="submit"
                   disabled={!replyText.trim()}
-                  className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-semibold shadow-sm"
+                  variant="primary"
+                  size="sm"
+                  className="shadow-sm"
                 >
                   Post reflection
-                </button>
+                </BouncyButton>
                 <p className="text-[10px] text-[#A08960]">
                   In the future, some reflections may be included (with consent)
                   in Sunflower Reports.
