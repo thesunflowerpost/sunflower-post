@@ -59,6 +59,7 @@ export default function LoungeRoom() {
   const [activeFilter, setActiveFilter] =
     useState<(typeof FILTERS)[number]>("Today");
   const [showPickForm, setShowPickForm] = useState(false);
+  const [showJoyForm, setShowJoyForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // per-post reactions for *this* viewer only
@@ -68,6 +69,13 @@ export default function LoungeRoom() {
   const [expandedPosts, setExpandedPosts] = useState<Set<number>>(new Set());
 
   const [pickForm, setPickForm] = useState({
+    title: "",
+    body: "",
+    authorName: "",
+    isAnon: false,
+  });
+
+  const [joyForm, setJoyForm] = useState({
     title: "",
     body: "",
     authorName: "",
@@ -109,6 +117,40 @@ export default function LoungeRoom() {
     });
     setSubmitting(false);
     setShowPickForm(false);
+  }
+
+  function handleJoySubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!joyForm.body.trim() && !joyForm.title.trim()) return;
+
+    setSubmitting(true);
+
+    const newPost: LoungePost = {
+      id: posts.length + 1,
+      type: "joy",
+      title:
+        joyForm.title.trim() ||
+        "A small joy from today",
+      body:
+        joyForm.body.trim() ||
+        "Something good happened today.",
+      author:
+        joyForm.isAnon
+          ? "Anon"
+          : joyForm.authorName.trim() || "You",
+      timeAgo: "Just now",
+      replies: 0,
+    };
+
+    setPosts([newPost, ...posts]);
+    setJoyForm({
+      title: "",
+      body: "",
+      authorName: "",
+      isAnon: false,
+    });
+    setSubmitting(false);
+    setShowJoyForm(false);
   }
 
   // toggle helper for reactions
@@ -207,8 +249,13 @@ export default function LoungeRoom() {
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs">
-              <BouncyButton variant="primary" size="sm" className="shadow-md">
-                Share a small joy
+              <BouncyButton
+                onClick={() => setShowJoyForm((s) => !s)}
+                variant="primary"
+                size="sm"
+                className="shadow-md"
+              >
+                {showJoyForm ? "Close joy form" : "Share a small joy"}
               </BouncyButton>
               <BouncyButton
                 onClick={() => setShowPickForm((s) => !s)}
@@ -219,6 +266,111 @@ export default function LoungeRoom() {
               </BouncyButton>
             </div>
           </section>
+
+          {/* JOY SUBMISSION FORM */}
+          {showJoyForm && (
+            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-base font-semibold text-yellow-900">
+                  Share a small joy 🌻
+                </p>
+                <p className="text-[10px] text-[#A08960]">
+                  No joy is too small to celebrate.
+                </p>
+              </div>
+
+              <form className="space-y-4" onSubmit={handleJoySubmit}>
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    Title (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={joyForm.title}
+                    onChange={(e) =>
+                      setJoyForm((f) => ({ ...f, title: e.target.value }))
+                    }
+                    placeholder='e.g. "Made my bed for the first time this week"'
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    What would you like to share?
+                  </label>
+                  <textarea
+                    value={joyForm.body}
+                    onChange={(e) =>
+                      setJoyForm((f) => ({ ...f, body: e.target.value }))
+                    }
+                    rows={3}
+                    placeholder="Share something that went well, made you smile, or just felt a little lighter than usual."
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 items-start">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
+                      Your name (or initials)
+                    </label>
+                    <input
+                      type="text"
+                      value={joyForm.authorName}
+                      onChange={(e) =>
+                        setJoyForm((f) => ({
+                          ...f,
+                          authorName: e.target.value,
+                        }))
+                      }
+                      required={!joyForm.isAnon}
+                      disabled={joyForm.isAnon}
+                      placeholder='e.g. "Alex" or "A."'
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
+                    />
+                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
+                      <input
+                        type="checkbox"
+                        checked={joyForm.isAnon}
+                        onChange={(e) =>
+                          setJoyForm((f) => ({ ...f, isAnon: e.target.checked }))
+                        }
+                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
+                      />
+                      <span>Post anonymously (still linked to your account)</span>
+                    </label>
+                  </div>
+
+                  <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
+                    <p className="font-medium text-yellow-900">Gentle boundaries</p>
+                    <ul className="space-y-1">
+                      <li>• Keep it kind and authentic.</li>
+                      <li>• Don&apos;t name other people or organisations directly.</li>
+                      <li>
+                        • Small wins are welcome – you don&apos;t need a &quot;big&quot; achievement to share.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <BouncyButton
+                    type="submit"
+                    disabled={submitting || !joyForm.body.trim()}
+                    variant="primary"
+                    size="sm"
+                    className="shadow-md"
+                  >
+                    {submitting ? "Posting..." : "Post to Lounge"}
+                  </BouncyButton>
+                  <p className="text-[10px] text-[#A08960]">
+                    Your post may be gently moderated for safety and tone.
+                  </p>
+                </div>
+              </form>
+            </section>
+          )}
 
           {/* PICK-ME-UP SUBMISSION FORM - Modernized */}
           {showPickForm && (
