@@ -16,6 +16,7 @@ export default function ShareHopeStoryPage() {
     category: "Other" as Category,
     turningPoint: "",
     author: "",
+    isAnon: false,
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -76,6 +77,7 @@ export default function ShareHopeStoryPage() {
         category: "Other",
         turningPoint: "",
         author: "",
+        isAnon: false,
       });
       setImageFile(null);
       setImagePreview(null);
@@ -203,15 +205,26 @@ export default function ShareHopeStoryPage() {
                     name="author"
                     value={formData.author}
                     onChange={handleInputChange}
-                    required
+                    required={!formData.isAnon}
+                    disabled={formData.isAnon}
                     placeholder='e.g. "Sarah" or "S."'
-                    className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                    className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
                   />
-                  <p className="text-[10px] text-[#A08960] mt-2">
-                    Your story will be linked to your account
-                  </p>
                 </label>
               </div>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isAnon"
+                  checked={formData.isAnon}
+                  onChange={handleInputChange}
+                  className="rounded border-yellow-300 text-yellow-600 focus:ring-yellow-300/50"
+                />
+                <span className="text-[#5C4A33]">
+                  Post this anonymously (your story will still be linked to your account)
+                </span>
+              </label>
             </section>
 
             {/* SUMMARY */}

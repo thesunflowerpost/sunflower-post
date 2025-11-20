@@ -350,6 +350,9 @@ export default function HopeBankRoom() {
                   <li>Describe what was hard or felt impossible.</li>
                   <li>Mention the small or big turning point.</li>
                   <li>Share what you&apos;d tell someone in that place now.</li>
+                  <li>
+                    Choose to post with your name or anonymously.
+                  </li>
                 </ol>
               </div>
 
