@@ -335,27 +335,27 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Trending Post 1 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl p-4 hover:shadow-md transition-all hover:border-yellow-200 group">
+            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2 text-xs text-[#7A674C]">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
                     <span>🌻 The Lounge</span>
                     <span>•</span>
                     <span>2 hours ago</span>
                   </div>
-                  <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                     "Small joy: My neighbor brought me soup when I was feeling down"
                   </h3>
-                  <div className="flex items-center gap-3 text-[11px] text-[#A08960]">
+                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
                     <span>47 reactions</span>
                     <span>•</span>
                     <span>23 comments</span>
                   </div>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-pink-100 text-pink-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-pink-100 text-pink-700">
                     ⭐ Most heartwarming
                   </span>
                 </div>
@@ -363,25 +363,25 @@ export default function HomePage() {
             </div>
 
             {/* Trending Post 2 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl p-4 hover:shadow-md transition-all hover:border-yellow-200 group">
+            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2 text-xs text-[#7A674C]">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
                     <span>📚 Book Club</span>
                     <span>•</span>
                     <span>5 hours ago</span>
                   </div>
-                  <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                     "Chapter 3 discussion: The comfort zone myth"
                   </h3>
-                  <div className="flex items-center gap-3 text-[11px] text-[#A08960]">
+                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
                     <span>34 reactions</span>
                     <span>•</span>
                     <span>18 comments</span>
                   </div>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700">
                     💬 Most discussed
                   </span>
                 </div>
@@ -389,25 +389,25 @@ export default function HomePage() {
             </div>
 
             {/* Trending Post 3 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl p-4 hover:shadow-md transition-all hover:border-yellow-200 group">
+            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2 text-xs text-[#7A674C]">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
                     <span>🧩 Solution Room</span>
                     <span>•</span>
                     <span>1 day ago</span>
                   </div>
-                  <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                     "New SEND resource collaborative document"
                   </h3>
-                  <div className="flex items-center gap-3 text-[11px] text-[#A08960]">
+                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
                     <span>28 reactions</span>
                     <span>•</span>
                     <span>12 comments</span>
                   </div>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-orange-100 text-orange-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-orange-100 text-orange-700">
                     🚀 Trending
                   </span>
                 </div>

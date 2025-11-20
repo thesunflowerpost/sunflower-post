@@ -350,29 +350,27 @@ export default function LoungeRoom() {
                   return (
                     <article
                       key={post.id}
-                      className="bg-white border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/60 transition-all hover:scale-[1.01] group"
+                      className="bg-white border border-yellow-200/60 rounded-xl p-3 space-y-2 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          {/* Author Avatar */}
-                          <div
-                            className={`w-10 h-10 rounded-full ${getAvatarColor(
-                              post.author
-                            )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-sm`}
-                          >
-                            {getAuthorInitial(post.author)}
-                          </div>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-[#5C4A33]">
-                                {post.author}
-                              </span>
-                              <span className="text-[10px] text-[#A08960]">
-                                {post.timeAgo}
-                              </span>
-                            </div>
+                      <div className="flex items-start gap-2">
+                        {/* Author Avatar */}
+                        <div
+                          className={`w-8 h-8 rounded-full ${getAvatarColor(
+                            post.author
+                          )} flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-sm flex-shrink-0`}
+                        >
+                          {getAuthorInitial(post.author)}
+                        </div>
+                        <div className="flex-1 min-w-0 space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-[#5C4A33]">
+                              {post.author}
+                            </span>
+                            <span className="text-[10px] text-[#A08960]">
+                              {post.timeAgo}
+                            </span>
                             <span
-                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold ${
                                 post.type === "joy"
                                   ? "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900"
                                   : post.type === "pickmeup"
@@ -387,36 +385,36 @@ export default function LoungeRoom() {
                                 : "Soft rant"}
                             </span>
                           </div>
+
+                          <h2 className="text-sm font-semibold text-yellow-900 leading-snug">
+                            {post.title}
+                          </h2>
+                          <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                            {post.body}
+                          </p>
+
+                          <div className="flex items-center gap-3 pt-1">
+                            <Link
+                              href={`/lounge/${post.id}`}
+                              className="flex items-center gap-1 text-xs text-[#7A674C] hover:text-yellow-900 transition-colors"
+                            >
+                              <ShimmerIcon>
+                                <span className="text-sm">💬</span>
+                              </ShimmerIcon>
+                              <span className="font-medium">{post.replies}</span>
+                            </Link>
+
+                            {/* REACTIONS - Using new ReactionBar with room-specific config */}
+                            <ReactionBar
+                              roomId="lounge"
+                              postId={post.id}
+                              reactions={postReactions}
+                              onReactionToggle={(reactionId, active) =>
+                                toggleReaction(post.id, reactionId, active)
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
-
-                      <h2 className="text-base font-semibold text-yellow-900 leading-snug">
-                        {post.title}
-                      </h2>
-                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
-                        {post.body}
-                      </p>
-
-                      <div className="flex flex-col gap-3 pt-2">
-                        <Link
-                          href={`/lounge/${post.id}`}
-                          className="flex items-center gap-1.5 text-xs text-[#7A674C] hover:text-yellow-900 transition-colors w-fit"
-                        >
-                          <ShimmerIcon>
-                            <span className="text-base">💬</span>
-                          </ShimmerIcon>
-                          <span className="font-medium">{post.replies} replies</span>
-                        </Link>
-
-                        {/* REACTIONS - Using new ReactionBar with room-specific config */}
-                        <ReactionBar
-                          roomId="lounge"
-                          postId={post.id}
-                          reactions={postReactions}
-                          onReactionToggle={(reactionId, active) =>
-                            toggleReaction(post.id, reactionId, active)
-                          }
-                        />
                       </div>
                     </article>
                   );
