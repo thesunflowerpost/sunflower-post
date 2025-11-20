@@ -240,7 +240,7 @@ export default function ShareHopeStoryPage() {
                   value={formData.summary}
                   onChange={handleInputChange}
                   required
-                  placeholder='e.g. "I was convinced I'd missed my moment. The role I finally got didn't even exist when I started applying."'
+                  placeholder="e.g. &quot;I was convinced I'd missed my moment. The role I finally got didn't even exist when I started applying.&quot;"
                   className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                 />
                 <p className="text-[10px] text-[#A08960] mt-2">
