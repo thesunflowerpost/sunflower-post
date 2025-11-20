@@ -69,8 +69,8 @@ export function ReactionBar({
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-1.5">
+      <div className="flex flex-wrap gap-1.5">
         {reactionIds.map((reactionId) => (
           <Sunburst
             key={reactionId}
@@ -82,7 +82,7 @@ export function ReactionBar({
           />
         ))}
       </div>
-      <p className="text-[9px] text-[#C0A987] italic">
+      <p className="text-[8px] text-[#C0A987] italic">
         Reactions are for care, not counts. Only you see what you&apos;ve sent.
       </p>
     </div>

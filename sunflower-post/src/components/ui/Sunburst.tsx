@@ -99,7 +99,7 @@ export function Sunburst(
     <motion.button
       onClick={handleClick}
       className={`
-        relative flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 transition-all
+        relative flex items-center gap-1 px-2 py-1 rounded-full border transition-all
         ${active ? `${config.bgColor} ${config.borderColor}` : 'bg-white border-gray-200'}
         hover:scale-105
       `}
@@ -110,7 +110,7 @@ export function Sunburst(
     >
       {/* Main emoji with expansion animation */}
       <motion.span
-        className="text-lg"
+        className="text-sm"
         animate={active ? { scale: [1, 1.3, 1] } : {}}
         transition={{ duration: 0.3 }}
       >
