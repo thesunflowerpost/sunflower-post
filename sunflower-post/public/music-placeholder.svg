@@ -1,0 +1,31 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="400" height="400" fill="url(#gradient)"/>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FCD34D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Music note -->
+  <path d="M250 150C250 150 250 200 250 250C250 275 235 290 215 290C195 290 180 275 180 255C180 235 195 220 215 220C225 220 235 223 240 228V120L300 110V200C300 225 285 240 265 240C245 240 230 225 230 205C230 185 245 170 265 170C275 170 285 173 290 178V100L250 110V150Z" fill="#B45309" opacity="0.9"/>
+
+  <!-- Decorative sunflower -->
+  <g transform="translate(120, 120)">
+    <!-- Petals -->
+    <ellipse cx="0" cy="-25" rx="10" ry="20" fill="#F59E0B" opacity="0.7"/>
+    <ellipse cx="18" cy="-18" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(45 18 -18)"/>
+    <ellipse cx="25" cy="0" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(90 25 0)"/>
+    <ellipse cx="18" cy="18" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(135 18 18)"/>
+    <ellipse cx="0" cy="25" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(180 0 25)"/>
+    <ellipse cx="-18" cy="18" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(225 -18 18)"/>
+    <ellipse cx="-25" cy="0" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(270 -25 0)"/>
+    <ellipse cx="-18" cy="-18" rx="10" ry="20" fill="#F59E0B" opacity="0.7" transform="rotate(315 -18 -18)"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="15" fill="#92400E"/>
+  </g>
+
+  <!-- Text -->
+  <text x="200" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#78350F" text-anchor="middle">🎵 Music Share 🎵</text>
+</svg>

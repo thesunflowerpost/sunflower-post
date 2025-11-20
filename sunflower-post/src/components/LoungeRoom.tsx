@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
 import { BouncyButton, ShimmerIcon, LoadingState, ReactionBar } from "./ui";
@@ -17,6 +17,7 @@ type LoungePost = {
   author: string;
   timeAgo: string;
   replies: number;
+  imageUrl?: string;
 };
 
 const FILTERS = ["Today", "This week", "All time", "Needs love"] as const;
@@ -82,8 +83,23 @@ export default function LoungeRoom() {
     isAnon: false,
   });
 
+  // Image upload state for joy form
+  const [joyMediaUrl, setJoyMediaUrl] = useState("");
+  const [joyFilePreviewUrl, setJoyFilePreviewUrl] = useState<string | null>(null);
+  const [showJoyUrlInput, setShowJoyUrlInput] = useState(false);
+  const joyFileInputRef = useRef<HTMLInputElement>(null);
+
   // NEW: search state
   const [search, setSearch] = useState("");
+
+  function handleJoyFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    setJoyFilePreviewUrl(url);
+    setJoyMediaUrl("");
+  }
 
   function handlePickSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -125,6 +141,8 @@ export default function LoungeRoom() {
 
     setSubmitting(true);
 
+    const finalImageUrl = joyFilePreviewUrl || joyMediaUrl.trim() || undefined;
+
     const newPost: LoungePost = {
       id: posts.length + 1,
       type: "joy",
@@ -140,6 +158,7 @@ export default function LoungeRoom() {
           : joyForm.authorName.trim() || "You",
       timeAgo: "Just now",
       replies: 0,
+      imageUrl: finalImageUrl,
     };
 
     setPosts([newPost, ...posts]);
@@ -149,6 +168,9 @@ export default function LoungeRoom() {
       authorName: "",
       isAnon: false,
     });
+    setJoyMediaUrl("");
+    setJoyFilePreviewUrl(null);
+    setShowJoyUrlInput(false);
     setSubmitting(false);
     setShowJoyForm(false);
   }
@@ -308,6 +330,102 @@ export default function LoungeRoom() {
                     placeholder="Share something that went well, made you smile, or just felt a little lighter than usual."
                     className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
                   />
+                </div>
+
+                {/* IMAGE UPLOAD SECTION */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    Add an image (optional)
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => joyFileInputRef.current?.click()}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>📷</span>
+                      <span>Upload image</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowJoyUrlInput((s) => !s)}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>🎵</span>
+                      <span>Add album art / link</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setJoyMediaUrl("/music-placeholder.svg");
+                        setJoyFilePreviewUrl(null);
+                        setShowJoyUrlInput(false);
+                      }}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>🌻</span>
+                      <span>Use default image</span>
+                    </button>
+
+                    <span className="text-[10px] text-[#A08960]">
+                      Perfect for song shares or adding atmosphere!
+                    </span>
+                  </div>
+
+                  {/* Hidden file input */}
+                  <input
+                    ref={joyFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleJoyFileChange}
+                  />
+
+                  {/* URL input */}
+                  {showJoyUrlInput && (
+                    <div className="space-y-1">
+                      <input
+                        type="url"
+                        value={joyMediaUrl}
+                        onChange={(e) => {
+                          setJoyMediaUrl(e.target.value);
+                          if (joyFilePreviewUrl) {
+                            setJoyFilePreviewUrl(null);
+                          }
+                        }}
+                        placeholder="Paste a link to album art or an image (e.g. from Spotify, Apple Music, or direct image URL)"
+                        className="w-full border border-yellow-200 rounded-xl px-4 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                      />
+                      <p className="text-[10px] text-[#A08960]">
+                        Tip: Find album art on Spotify or Apple Music, right-click the image, and copy the image link.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* PREVIEW */}
+                  {(joyFilePreviewUrl || joyMediaUrl.trim()) && (
+                    <div className="bg-white border border-yellow-200 rounded-xl p-3 flex items-start gap-3">
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-yellow-50 flex items-center justify-center flex-shrink-0">
+                        {joyFilePreviewUrl || joyMediaUrl.trim() ? (
+                          <img
+                            src={joyFilePreviewUrl || joyMediaUrl.trim()}
+                            alt="Image preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-2xl">🌻</span>
+                        )}
+                      </div>
+                      <div className="flex-1 text-[10px] text-[#7A674C] space-y-1">
+                        <p className="font-medium text-yellow-900">Image preview</p>
+                        <p>
+                          This will appear with your post. If it doesn&apos;t look right, you can change or clear it before posting.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 items-start">
@@ -581,6 +699,17 @@ export default function LoungeRoom() {
                               </button>
                             )}
                           </div>
+
+                          {/* POST IMAGE */}
+                          {post.imageUrl && (
+                            <div className="mt-2">
+                              <img
+                                src={post.imageUrl}
+                                alt="Post image"
+                                className="w-full max-w-xs h-auto rounded-xl object-cover border border-yellow-100 shadow-sm"
+                              />
+                            </div>
+                          )}
 
                           <div className="flex items-center justify-between gap-3 pt-1">
                             {/* REACTIONS - Using new ReactionBar with room-specific config */}

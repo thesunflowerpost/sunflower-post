@@ -12,6 +12,7 @@ type ThreadPost = {
   body: string;
   author: string;
   timeAgo: string;
+  imageUrl?: string;
 };
 
 type Reply = {
@@ -182,6 +183,17 @@ export default function LoungeThread({ postId }: Props) {
         <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
           {post.body}
         </p>
+
+        {/* POST IMAGE */}
+        {post.imageUrl && (
+          <div className="mt-2">
+            <img
+              src={post.imageUrl}
+              alt="Post image"
+              className="w-full max-w-sm h-auto rounded-xl object-cover border border-yellow-100 shadow-sm"
+            />
+          </div>
+        )}
 
         <p className="text-[11px] text-[#7A674C]">By {post.author}</p>
       </section>
