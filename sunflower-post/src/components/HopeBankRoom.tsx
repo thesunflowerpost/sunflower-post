@@ -166,34 +166,16 @@ export default function HopeBankRoom() {
               </div>
             </div>
 
-            {/* RIGHT: HERO TILE + BUTTONS */}
-            <div className="flex flex-col items-stretch gap-3 text-xs w-full md:w-56">
-              {/* Little dopamine / personality tile */}
-              <div className="rounded-2xl bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100 border border-yellow-200/60 px-3 py-3 flex items-center gap-3 shadow-md">
-                <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-lg shadow-sm">
-                  😊
-                </div>
-                <div className="space-y-1">
-                  <p className="font-semibold text-[#3A2E1F] text-[11px]">
-                    Borrow some hope
-                  </p>
-                  <p className="text-[10px] text-[#7A674C]">
-                    These are real humans whose "it got better" didn&apos;t look
-                    perfect either.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 justify-end md:justify-start">
-                <Link href="/hope-bank/share">
-                  <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
-                    Share a hope story
-                  </BouncyButton>
-                </Link>
-                <BouncyButton variant="secondary" size="sm" className="text-xs">
-                  Save this room
+            {/* RIGHT: BUTTONS */}
+            <div className="flex flex-wrap gap-2 justify-end md:justify-start text-xs">
+              <Link href="/hope-bank/share">
+                <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
+                  Share a hope story
                 </BouncyButton>
-              </div>
+              </Link>
+              <BouncyButton variant="secondary" size="sm" className="text-xs">
+                Save this room
+              </BouncyButton>
             </div>
           </section>
 
@@ -328,6 +310,22 @@ export default function HopeBankRoom() {
 
             {/* RIGHT SIDEBAR */}
             <aside className="space-y-4">
+              {/* BORROW SOME HOPE */}
+              <div className="rounded-2xl bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100 border border-yellow-200/60 px-4 py-4 flex items-center gap-3 shadow-md">
+                <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-lg shadow-sm flex-shrink-0">
+                  😊
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-[#3A2E1F] text-xs">
+                    Borrow some hope
+                  </p>
+                  <p className="text-[10px] text-[#7A674C] leading-relaxed">
+                    These are real humans whose "it got better" didn&apos;t look
+                    perfect either.
+                  </p>
+                </div>
+              </div>
+
               {/* WHAT IS HOPE BANK */}
               <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
                 <p className="text-xs font-semibold text-yellow-900">
@@ -352,9 +350,6 @@ export default function HopeBankRoom() {
                   <li>Describe what was hard or felt impossible.</li>
                   <li>Mention the small or big turning point.</li>
                   <li>Share what you&apos;d tell someone in that place now.</li>
-                  <li>
-                    Choose whether to post with your name or anonymously.
-                  </li>
                 </ol>
               </div>
 
