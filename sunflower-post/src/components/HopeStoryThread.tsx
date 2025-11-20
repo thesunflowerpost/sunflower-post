@@ -156,49 +156,6 @@ export default function HopeStoryThread({ storyId }: Props) {
         </p>
       </section>
 
-      {/* REPLIES / REFLECTIONS */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-          <p className="font-semibold text-yellow-900">
-            Reflections &amp; encouragement ({replies.length})
-          </p>
-          <p className="text-[10px] text-[#A08960]">
-            You don&apos;t need to have all the answers — a few kind sentences is enough.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {replies.length === 0 && (
-            <div className="bg-white border border-yellow-100 rounded-2xl p-3 text-[11px] text-[#7A674C]">
-              <p className="font-semibold text-yellow-900 mb-1">
-                Be the first to respond 🌻
-              </p>
-              <p>
-                You can share how this story landed for you, or offer a sentence of encouragement
-                to anyone reading from a similar place.
-              </p>
-            </div>
-          )}
-
-          {replies.map((reply) => (
-            <article
-              key={reply.id}
-              className="bg-white border border-yellow-100 rounded-2xl p-3 md:p-4 space-y-2"
-            >
-              <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                <span className="font-medium text-[#5C4A33]">
-                  {reply.author}
-                </span>
-                <span>{reply.timeAgo}</span>
-              </div>
-              <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
-                {reply.body}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* REPLY FORM */}
       <section className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3 text-xs md:text-sm">
         <div className="flex items-center justify-between gap-2">
@@ -268,6 +225,49 @@ export default function HopeStoryThread({ storyId }: Props) {
             </p>
           </div>
         </form>
+      </section>
+
+      {/* REPLIES / REFLECTIONS */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
+          <p className="font-semibold text-yellow-900">
+            Reflections &amp; encouragement ({replies.length})
+          </p>
+          <p className="text-[10px] text-[#A08960]">
+            You don&apos;t need to have all the answers — a few kind sentences is enough.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {replies.length === 0 && (
+            <div className="bg-white border border-yellow-100 rounded-2xl p-3 text-[11px] text-[#7A674C]">
+              <p className="font-semibold text-yellow-900 mb-1">
+                Be the first to respond 🌻
+              </p>
+              <p>
+                You can share how this story landed for you, or offer a sentence of encouragement
+                to anyone reading from a similar place.
+              </p>
+            </div>
+          )}
+
+          {replies.map((reply) => (
+            <article
+              key={reply.id}
+              className="bg-white border border-yellow-100 rounded-2xl p-3 md:p-4 space-y-2"
+            >
+              <div className="flex items-center justify-between text-[10px] text-[#A08960]">
+                <span className="font-medium text-[#5C4A33]">
+                  {reply.author}
+                </span>
+                <span>{reply.timeAgo}</span>
+              </div>
+              <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line">
+                {reply.body}
+              </p>
+            </article>
+          ))}
+        </div>
       </section>
     </div>
   );

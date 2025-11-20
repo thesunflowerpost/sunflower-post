@@ -393,26 +393,29 @@ export default function LoungeRoom() {
                             {post.body}
                           </p>
 
-                          <div className="flex items-center gap-3 pt-1">
+                          <div className="flex items-center justify-between gap-3 pt-1">
+                            {/* REACTIONS - Using new ReactionBar with room-specific config */}
+                            <div className="flex-1">
+                              <ReactionBar
+                                roomId="lounge"
+                                postId={post.id}
+                                reactions={postReactions}
+                                onReactionToggle={(reactionId, active) =>
+                                  toggleReaction(post.id, reactionId, active)
+                                }
+                              />
+                            </div>
+
                             <Link
                               href={`/lounge/${post.id}`}
-                              className="flex items-center gap-1 text-xs text-[#7A674C] hover:text-yellow-900 transition-colors"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-xs font-medium text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-sm"
                             >
                               <ShimmerIcon>
                                 <span className="text-sm">💬</span>
                               </ShimmerIcon>
-                              <span className="font-medium">{post.replies}</span>
+                              <span>{post.replies} {post.replies === 1 ? 'reply' : 'replies'}</span>
+                              <span>→</span>
                             </Link>
-
-                            {/* REACTIONS - Using new ReactionBar with room-specific config */}
-                            <ReactionBar
-                              roomId="lounge"
-                              postId={post.id}
-                              reactions={postReactions}
-                              onReactionToggle={(reactionId, active) =>
-                                toggleReaction(post.id, reactionId, active)
-                              }
-                            />
                           </div>
                         </div>
                       </div>
