@@ -2,7 +2,7 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* HERO SECTION - Magazine-style with full-width image */}
-      <section className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-b-3xl">
+      <section className="relative w-full h-[320px] md:h-[380px] overflow-hidden rounded-b-2xl">
         {/* Hero Image Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100">
           {/* Placeholder for hero image - replace with actual image */}
@@ -13,226 +13,232 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
         {/* Hero Text Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 md:px-8 pb-8 md:pb-12">
-          <div className="max-w-2xl space-y-4">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-yellow-200">
+        <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-6 md:pb-8">
+          <div className="max-w-2xl space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-yellow-200">
               A softer corner of the internet
             </p>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white leading-tight">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white leading-tight">
               Good news still exists.
               <br />
               You just needed a room to find it.
             </h1>
-            <p className="text-sm md:text-base text-white/90 max-w-xl">
+            <p className="text-xs md:text-sm text-white/90 max-w-xl leading-relaxed">
               The Sunflower Post is a joy-first community and journal space where
               people share small joys, kind ideas and real solutions for a kinder
               world – outside the noise of social media.
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-2 pt-1">
               <a
-                href="#join-circle"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-xs font-semibold text-[#3A2E1F] shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                href="/signup"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[10px] font-semibold text-[#3A2E1F] shadow-lg transition-all hover:shadow-xl hover:scale-105"
               >
-                Join the Sunflower Circle
+                Sign up
+              </a>
+              <a
+                href="/login"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm text-[10px] font-semibold text-white hover:bg-white/20 transition-all"
+              >
+                Login
               </a>
               <a
                 href="#journals"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-all"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-white/60 text-[10px] font-medium text-white hover:bg-white/10 transition-all"
               >
-                Read the latest journal
+                Read journals
               </a>
             </div>
 
-            <p className="text-[11px] text-white/80 pt-1">
+            <p className="text-[10px] text-white/80 pt-0.5">
               No algorithms. No doomscrolling. Just letters, laughter and light.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="px-4 py-10 md:py-14 space-y-10 md:space-y-14">
+      <div className="px-4 py-6 md:py-8 space-y-6 md:space-y-8">
         {/* THIS WEEK'S SUNFLOWER POST */}
         <section className="max-w-4xl mx-auto">
-          <div className="bg-white border border-yellow-100 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-shadow">
-            <p className="text-xs font-semibold text-yellow-900 uppercase tracking-wide">
+          <div className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
+            <p className="text-[10px] font-semibold text-yellow-900 uppercase tracking-wide">
               This Week&apos;s Sunflower Post 💌
             </p>
-            <h2 className="text-xl md:text-2xl font-semibold text-[#3A2E1F]">
+            <h2 className="text-base md:text-lg font-semibold text-[#3A2E1F]">
               Twelve tiny joys that don&apos;t depend on your productivity levels.
             </h2>
-            <p className="text-sm md:text-base text-[#5C4A33] leading-relaxed">
+            <p className="text-xs md:text-sm text-[#5C4A33] leading-relaxed">
               A gentle list of everyday moments you&apos;re still allowed to enjoy,
               even when you&apos;re tired, behind or figuring things out.
             </p>
-            <button className="inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-xs font-semibold text-[#3A2E1F] shadow-sm transition-all hover:shadow-md hover:scale-105">
+            <button className="inline-flex items-center justify-center px-3.5 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[10px] font-semibold text-[#3A2E1F] shadow-sm transition-all hover:shadow-md hover:scale-105">
               Preview the bulletin →
             </button>
           </div>
         </section>
 
         {/* WHAT'S BLOOMING THIS WEEK - Featured Section */}
-        <section className="space-y-6">
-          <div className="text-center space-y-2">
-            <h2 className="text-xl md:text-2xl font-semibold text-yellow-900">
+        <section className="space-y-4">
+          <div className="text-center space-y-1">
+            <h2 className="text-base md:text-lg font-semibold text-yellow-900">
               What&apos;s Blooming This Week 🌻
             </h2>
-            <p className="text-sm text-[#7A674C]">
+            <p className="text-xs text-[#7A674C]">
               Highlights from across the Circle
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Featured Journal */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-40 bg-gradient-to-br from-amber-100 to-orange-100">
+            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-28 bg-gradient-to-br from-amber-100 to-orange-100">
                 <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#FFE27A_0,_transparent_60%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-yellow-900 text-yellow-50">
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-yellow-900 text-yellow-50">
                     Long Read
                   </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-2xl">📖</span>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-xl">📖</span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+              <div className="p-3 space-y-1.5">
+                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
                   <span className="font-semibold">JOURNAL</span>
                   <span>•</span>
                   <span>12 min read</span>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                   On feeling invisible in a loud world
                 </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
+                <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   A gentle piece on being present, even when you don&apos;t feel seen.
                 </p>
-                <div className="pt-2 text-[11px] text-[#A08960]">
+                <div className="pt-1 text-[10px] text-[#A08960]">
                   24 comments
                 </div>
               </div>
             </div>
 
             {/* Featured Book Club */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-indigo-100">
+            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-28 bg-gradient-to-br from-blue-100 to-indigo-100">
                 <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#93C5FD_0,_transparent_60%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-blue-900 text-blue-50">
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-blue-900 text-blue-50">
                     Now Reading
                   </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-2xl">📚</span>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-xl">📚</span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+              <div className="p-3 space-y-1.5">
+                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
                   <span className="font-semibold">BOOK CLUB</span>
                   <span>•</span>
                   <span>Chapter 5</span>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                   The Power of Now
                 </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
+                <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Join the discussion on presence and mindfulness.
                 </p>
-                <div className="pt-2 text-[11px] text-[#A08960]">
+                <div className="pt-1 text-[10px] text-[#A08960]">
                   15 members discussing
                 </div>
               </div>
             </div>
 
             {/* Featured Music */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-40 bg-gradient-to-br from-purple-100 to-pink-100">
+            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-28 bg-gradient-to-br from-purple-100 to-pink-100">
                 <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#DDD6FE_0,_transparent_60%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-purple-900 text-purple-50">
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-purple-900 text-purple-50">
                     Playlist
                   </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-2xl">🎧</span>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-xl">🎧</span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+              <div className="p-3 space-y-1.5">
+                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
                   <span className="font-semibold">MUSIC ROOM</span>
                   <span>•</span>
                   <span>8 tracks</span>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                   Diaspora Sounds
                 </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
+                <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Songs that connect us to our roots and journeys.
                 </p>
-                <div className="pt-2 text-[11px] text-[#A08960]">
+                <div className="pt-1 text-[10px] text-[#A08960]">
                   12 listens this week
                 </div>
               </div>
             </div>
 
             {/* Featured Guide */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-40 bg-gradient-to-br from-green-100 to-emerald-100">
+            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
+              <div className="relative h-28 bg-gradient-to-br from-green-100 to-emerald-100">
                 <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#86EFAC_0,_transparent_60%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-green-900 text-green-50">
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-green-900 text-green-50">
                     New Resource
                   </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-2xl">🗺️</span>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-xl">🗺️</span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+              <div className="p-3 space-y-1.5">
+                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
                   <span className="font-semibold">GUIDES</span>
                   <span>•</span>
                   <span>Toolkit</span>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                   Mental Health Kit for Parents
                 </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
+                <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Practical resources for supporting your child&apos;s wellbeing.
                 </p>
-                <div className="pt-2 text-[11px] text-[#A08960]">
+                <div className="pt-1 text-[10px] text-[#A08960]">
                   8 resources
                 </div>
               </div>
             </div>
 
             {/* Featured Lounge Post */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group md:col-span-2 lg:col-span-1">
-              <div className="relative h-40 bg-gradient-to-br from-yellow-100 to-amber-100">
+            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group md:col-span-2 lg:col-span-1">
+              <div className="relative h-28 bg-gradient-to-br from-yellow-100 to-amber-100">
                 <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#FDE68A_0,_transparent_60%)]" />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-red-500 text-white">
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-red-500 text-white">
                     🔥 Trending
                   </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-2xl">🌻</span>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-xl">🌻</span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+              <div className="p-3 space-y-1.5">
+                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
                   <span className="font-semibold">THE LOUNGE</span>
                   <span>•</span>
                   <span>2h ago</span>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
                   My neighbor brought me soup today
                 </h3>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
+                <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Small acts of kindness that restore faith in humanity.
                 </p>
-                <div className="pt-2 text-[11px] text-[#A08960]">
+                <div className="pt-1 text-[10px] text-[#A08960]">
                   47 reactions • 23 comments
                 </div>
               </div>
