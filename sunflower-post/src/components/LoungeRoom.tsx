@@ -64,6 +64,9 @@ export default function LoungeRoom() {
   // per-post reactions for *this* viewer only
   const [reactions, setReactions] = useState<Record<number, UserReactions>>({});
 
+  // track which posts are expanded
+  const [expandedPosts, setExpandedPosts] = useState<Set<number>>(new Set());
+
   const [pickForm, setPickForm] = useState({
     title: "",
     body: "",
@@ -143,6 +146,24 @@ export default function LoungeRoom() {
     ];
     const index = author.length % colors.length;
     return colors[index];
+  }
+
+  // Toggle post expansion
+  function togglePostExpansion(postId: number) {
+    setExpandedPosts((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  }
+
+  // Check if post body is long (more than ~280 characters, roughly 3-4 lines)
+  function shouldTruncate(text: string): boolean {
+    return text.length > 280;
   }
 
   return (
@@ -346,6 +367,8 @@ export default function LoungeRoom() {
 
                 {visiblePosts.map((post) => {
                   const postReactions = reactions[post.id] || {};
+                  const isExpanded = expandedPosts.has(post.id);
+                  const needsTruncation = shouldTruncate(post.body);
 
                   return (
                     <article
@@ -389,9 +412,21 @@ export default function LoungeRoom() {
                           <h2 className="text-sm font-semibold text-yellow-900 leading-snug">
                             {post.title}
                           </h2>
-                          <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
-                            {post.body}
-                          </p>
+                          <div>
+                            <p className={`text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed ${
+                              needsTruncation && !isExpanded ? 'line-clamp-4' : ''
+                            }`}>
+                              {post.body}
+                            </p>
+                            {needsTruncation && (
+                              <button
+                                onClick={() => togglePostExpansion(post.id)}
+                                className="text-[10px] text-yellow-700 hover:text-yellow-900 font-medium mt-1 hover:underline"
+                              >
+                                {isExpanded ? '...show less' : '...read full post'}
+                              </button>
+                            )}
+                          </div>
 
                           <div className="flex items-center justify-between gap-3 pt-1">
                             {/* REACTIONS - Using new ReactionBar with room-specific config */}
