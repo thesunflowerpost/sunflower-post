@@ -256,6 +256,48 @@ export default function HopeBankStoryPage({ params }: PageProps) {
             </p>
           </section>
 
+          {/* REPLY COMPOSER */}
+          <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 text-xs shadow-md">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-semibold text-yellow-900">
+                Add a reflection 🌿
+              </p>
+              <p className="text-[10px] text-[#A08960]">
+                One or two sentences is plenty.
+              </p>
+            </div>
+            <p className="text-[11px] text-[#7A674C]">
+              You can share what part resonated, a similar moment from your own
+              life, or a sentence you want future-you to remember.
+            </p>
+
+            <form onSubmit={handleReplySubmit} className="space-y-3">
+              <textarea
+                rows={3}
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder='e.g. "This reminded me that my story isn't over either."'
+                className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+              />
+
+              <div className="flex items-center justify-between gap-3">
+                <BouncyButton
+                  type="submit"
+                  disabled={!replyText.trim()}
+                  variant="primary"
+                  size="sm"
+                  className="shadow-sm"
+                >
+                  Post reflection
+                </BouncyButton>
+                <p className="text-[10px] text-[#A08960]">
+                  In the future, some reflections may be included (with consent)
+                  in Sunflower Reports.
+                </p>
+              </div>
+            </form>
+          </section>
+
           {/* REPLIES */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
@@ -313,48 +355,6 @@ export default function HopeBankStoryPage({ params }: PageProps) {
                 </div>
               )}
             </div>
-          </section>
-
-          {/* REPLY COMPOSER */}
-          <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 text-xs shadow-md">
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold text-yellow-900">
-                Add a reflection 🌿
-              </p>
-              <p className="text-[10px] text-[#A08960]">
-                One or two sentences is plenty.
-              </p>
-            </div>
-            <p className="text-[11px] text-[#7A674C]">
-              You can share what part resonated, a similar moment from your own
-              life, or a sentence you want future-you to remember.
-            </p>
-
-            <form onSubmit={handleReplySubmit} className="space-y-3">
-              <textarea
-                rows={3}
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder='e.g. "This reminded me that my story isn't over either."'
-                className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
-              />
-
-              <div className="flex items-center justify-between gap-3">
-                <BouncyButton
-                  type="submit"
-                  disabled={!replyText.trim()}
-                  variant="primary"
-                  size="sm"
-                  className="shadow-sm"
-                >
-                  Post reflection
-                </BouncyButton>
-                <p className="text-[10px] text-[#A08960]">
-                  In the future, some reflections may be included (with consent)
-                  in Sunflower Reports.
-                </p>
-              </div>
-            </form>
           </section>
         </div>
       </div>
