@@ -335,7 +335,7 @@ export default function HopeBankStoryPage({ params }: PageProps) {
                 rows={3}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder='e.g. "This reminded me that my story isn't over either."'
+                placeholder="e.g. 'This reminded me that my story isn't over either.'"
                 className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
               />
 
