@@ -207,13 +207,13 @@ export default function LoungeRoom() {
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs">
-              <BouncyButton variant="primary" size="md" className="shadow-md">
+              <BouncyButton variant="primary" size="sm" className="shadow-md">
                 Share a small joy
               </BouncyButton>
               <BouncyButton
                 onClick={() => setShowPickForm((s) => !s)}
                 variant="secondary"
-                size="md"
+                size="sm"
               >
                 {showPickForm ? "Close pick-me-up form" : "Ask for a pick-me-up"}
               </BouncyButton>
@@ -312,7 +312,7 @@ export default function LoungeRoom() {
                     type="submit"
                     disabled={submitting || !pickForm.body.trim()}
                     variant="primary"
-                    size="md"
+                    size="sm"
                     className="shadow-md"
                   >
                     {submitting ? "Posting..." : "Post to Lounge"}
