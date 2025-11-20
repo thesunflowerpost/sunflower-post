@@ -16,7 +16,6 @@ export default function ShareHopeStoryPage() {
     category: "Other" as Category,
     turningPoint: "",
     author: "",
-    isAnon: false,
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -77,7 +76,6 @@ export default function ShareHopeStoryPage() {
         category: "Other",
         turningPoint: "",
         author: "",
-        isAnon: false,
       });
       setImageFile(null);
       setImagePreview(null);
@@ -205,27 +203,15 @@ export default function ShareHopeStoryPage() {
                     name="author"
                     value={formData.author}
                     onChange={handleInputChange}
-                    required={!formData.isAnon}
-                    disabled={formData.isAnon}
+                    required
                     placeholder='e.g. "Sarah" or "S."'
-                    className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
+                    className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                   />
+                  <p className="text-[10px] text-[#A08960] mt-2">
+                    Your story will be linked to your account
+                  </p>
                 </label>
               </div>
-
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="isAnon"
-                  checked={formData.isAnon}
-                  onChange={handleInputChange}
-                  className="rounded border-yellow-300 text-yellow-600 focus:ring-yellow-300/50"
-                />
-                <span className="text-[#5C4A33]">
-                  Post this anonymously (we&apos;ll show &quot;Anon&quot;
-                  instead of your name)
-                </span>
-              </label>
             </section>
 
             {/* SUMMARY */}
@@ -363,33 +349,31 @@ export default function ShareHopeStoryPage() {
                     Ready to share?
                   </p>
                   <p className="text-[10px] text-[#7A674C]">
-                    Your story will be reviewed by our team (usually within 24
-                    hours) before being published to Hope Bank.
+                    Your story will be published immediately to Hope Bank. If flagged by the community, we'll review it.
                   </p>
                 </div>
                 <BouncyButton
                   type="submit"
                   disabled={isSubmitting || showSuccess}
                   variant="primary"
-                  size="md"
+                  size="sm"
                   className="shadow-md whitespace-nowrap"
                 >
                   {isSubmitting
-                    ? "Submitting..."
+                    ? "Publishing..."
                     : showSuccess
-                      ? "✓ Submitted!"
-                      : "Submit story"}
+                      ? "✓ Published!"
+                      : "Publish story"}
                 </BouncyButton>
               </div>
 
               {showSuccess && (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-green-800">
                   <p className="font-semibold mb-1">
-                    Thank you for sharing your story! 🌻
+                    Your story is now live! 🌻
                   </p>
                   <p className="text-[10px]">
-                    We&apos;ll review it and let you know when it&apos;s live on
-                    Hope Bank.
+                    Thank you for sharing hope with the community.
                   </p>
                 </div>
               )}

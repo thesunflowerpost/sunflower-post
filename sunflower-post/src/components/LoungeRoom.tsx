@@ -71,7 +71,6 @@ export default function LoungeRoom() {
     title: "",
     body: "",
     authorName: "",
-    isAnon: true,
   });
 
   // NEW: search state
@@ -92,10 +91,7 @@ export default function LoungeRoom() {
       body:
         pickForm.body.trim() ||
         "Just having one or two kind words would mean a lot today.",
-      author:
-        pickForm.isAnon || !pickForm.authorName.trim()
-          ? "Anon"
-          : pickForm.authorName.trim(),
+      author: pickForm.authorName.trim() || "You",
       timeAgo: "Just now",
       replies: 0,
     };
@@ -105,7 +101,6 @@ export default function LoungeRoom() {
       title: "",
       body: "",
       authorName: "",
-      isAnon: true,
     });
     setSubmitting(false);
     setShowPickForm(false);
@@ -267,7 +262,7 @@ export default function LoungeRoom() {
                 <div className="grid md:grid-cols-2 gap-4 items-start">
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-[#5C4A33]">
-                      Name (optional)
+                      Your name (or initials)
                     </label>
                     <input
                       type="text"
@@ -278,20 +273,13 @@ export default function LoungeRoom() {
                           authorName: e.target.value,
                         }))
                       }
-                      placeholder="Leave blank or use an initial if you prefer."
+                      required
+                      placeholder='e.g. "Sarah" or "S."'
                       className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                     />
-                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
-                      <input
-                        type="checkbox"
-                        checked={pickForm.isAnon}
-                        onChange={(e) =>
-                          setPickForm((f) => ({ ...f, isAnon: e.target.checked }))
-                        }
-                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
-                      />
-                      <span>Post as anonymous</span>
-                    </label>
+                    <p className="text-[10px] text-[#A08960] mt-1">
+                      Your post will be linked to your account
+                    </p>
                   </div>
 
                   <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
