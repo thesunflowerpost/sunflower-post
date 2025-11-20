@@ -185,9 +185,11 @@ export default function HopeBankRoom() {
               </div>
 
               <div className="flex flex-wrap gap-2 justify-end md:justify-start">
-                <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
-                  Share a hope story
-                </BouncyButton>
+                <Link href="/hope-bank/share">
+                  <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
+                    Share a hope story
+                  </BouncyButton>
+                </Link>
                 <BouncyButton variant="secondary" size="sm" className="text-xs">
                   Save this room
                 </BouncyButton>
