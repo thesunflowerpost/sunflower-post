@@ -90,156 +90,196 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Featured Journal */}
-            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-28 bg-gradient-to-br from-amber-100 to-orange-100">
-                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#FFE27A_0,_transparent_60%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              {/* Image */}
+              <div className="relative h-40 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=600&h=400&fit=crop"
+                  alt="Journal"
+                  className="w-full h-full object-cover opacity-90"
+                />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-yellow-900 text-yellow-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50 shadow-md">
                     Long Read
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2">
-                  <span className="text-xl">📖</span>
-                </div>
               </div>
-              <div className="p-3 space-y-1.5">
-                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
-                  <span className="font-semibold">JOURNAL</span>
-                  <span>•</span>
-                  <span>12 min read</span>
+              <div className="p-3 space-y-2">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    E
+                  </div>
+                  <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
+                    <span className="font-semibold">Emma R.</span>
+                    <span>•</span>
+                    <span>12 min read</span>
+                  </div>
                 </div>
-                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   On feeling invisible in a loud world
                 </h3>
                 <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   A gentle piece on being present, even when you don&apos;t feel seen.
                 </p>
                 <div className="pt-1 text-[10px] text-[#A08960]">
-                  24 comments
+                  💬 24 comments
                 </div>
               </div>
             </div>
 
             {/* Featured Book Club */}
-            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-28 bg-gradient-to-br from-blue-100 to-indigo-100">
-                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#93C5FD_0,_transparent_60%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              {/* Book Cover Image */}
+              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&h=400&fit=crop"
+                  alt="Book"
+                  className="w-full h-full object-cover opacity-80"
+                />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-blue-900 text-blue-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-blue-900 text-blue-50 shadow-md">
                     Now Reading
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2">
-                  <span className="text-xl">📚</span>
-                </div>
               </div>
-              <div className="p-3 space-y-1.5">
-                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
-                  <span className="font-semibold">BOOK CLUB</span>
-                  <span>•</span>
-                  <span>Chapter 5</span>
+              <div className="p-3 space-y-2">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-200 to-indigo-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    S
+                  </div>
+                  <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
+                    <span className="font-semibold">Sofia</span>
+                    <span>•</span>
+                    <span>Chapter 5</span>
+                  </div>
                 </div>
-                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   The Power of Now
                 </h3>
                 <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Join the discussion on presence and mindfulness.
                 </p>
                 <div className="pt-1 text-[10px] text-[#A08960]">
-                  15 members discussing
+                  💬 15 members discussing
                 </div>
               </div>
             </div>
 
             {/* Featured Music */}
-            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-28 bg-gradient-to-br from-purple-100 to-pink-100">
-                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#DDD6FE_0,_transparent_60%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              {/* Album Art Image */}
+              <div className="relative h-40 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=600&h=400&fit=crop"
+                  alt="Music"
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-purple-900 text-purple-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-purple-900 text-purple-50 shadow-md">
                     Playlist
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2">
-                  <span className="text-xl">🎧</span>
-                </div>
               </div>
-              <div className="p-3 space-y-1.5">
-                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
-                  <span className="font-semibold">MUSIC ROOM</span>
-                  <span>•</span>
-                  <span>8 tracks</span>
+              <div className="p-3 space-y-2">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-200 to-violet-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    M
+                  </div>
+                  <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
+                    <span className="font-semibold">Maya</span>
+                    <span>•</span>
+                    <span>8 tracks</span>
+                  </div>
                 </div>
-                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   Diaspora Sounds
                 </h3>
                 <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Songs that connect us to our roots and journeys.
                 </p>
                 <div className="pt-1 text-[10px] text-[#A08960]">
-                  12 listens this week
+                  🎧 12 listens this week
                 </div>
               </div>
             </div>
 
             {/* Featured Guide */}
-            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-28 bg-gradient-to-br from-green-100 to-emerald-100">
-                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#86EFAC_0,_transparent_60%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              {/* Guide Image */}
+              <div className="relative h-40 bg-gradient-to-br from-green-100 to-emerald-100 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop"
+                  alt="Guide"
+                  className="w-full h-full object-cover opacity-70"
+                />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-green-900 text-green-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-green-900 text-green-50 shadow-md">
                     New Resource
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2">
-                  <span className="text-xl">🗺️</span>
-                </div>
               </div>
-              <div className="p-3 space-y-1.5">
-                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
-                  <span className="font-semibold">GUIDES</span>
-                  <span>•</span>
-                  <span>Toolkit</span>
+              <div className="p-3 space-y-2">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-green-200 to-emerald-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    A
+                  </div>
+                  <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
+                    <span className="font-semibold">Aisha</span>
+                    <span>•</span>
+                    <span>Toolkit</span>
+                  </div>
                 </div>
-                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   Mental Health Kit for Parents
                 </h3>
                 <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Practical resources for supporting your child&apos;s wellbeing.
                 </p>
                 <div className="pt-1 text-[10px] text-[#A08960]">
-                  8 resources
+                  📚 8 resources
                 </div>
               </div>
             </div>
 
             {/* Featured Lounge Post */}
-            <div className="bg-white border border-yellow-100 rounded-xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group md:col-span-2 lg:col-span-1">
-              <div className="relative h-28 bg-gradient-to-br from-yellow-100 to-amber-100">
-                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_#FDE68A_0,_transparent_60%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group md:col-span-2 lg:col-span-1">
+              {/* Post Image */}
+              <div className="relative h-40 bg-gradient-to-br from-yellow-100 to-amber-100 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&h=400&fit=crop"
+                  alt="Lounge post"
+                  className="w-full h-full object-cover opacity-80"
+                />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-red-500 text-white">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-red-500 text-white shadow-md">
                     🔥 Trending
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2">
-                  <span className="text-xl">🌻</span>
-                </div>
               </div>
-              <div className="p-3 space-y-1.5">
-                <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
-                  <span className="font-semibold">THE LOUNGE</span>
-                  <span>•</span>
-                  <span>2h ago</span>
+              <div className="p-3 space-y-2">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-200 to-amber-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    D
+                  </div>
+                  <div className="flex items-center gap-2 text-[9px] text-[#7A674C]">
+                    <span className="font-semibold">Dani</span>
+                    <span>•</span>
+                    <span>2h ago</span>
+                  </div>
                 </div>
-                <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   My neighbor brought me soup today
                 </h3>
                 <p className="text-[11px] text-[#7A674C] leading-relaxed">
                   Small acts of kindness that restore faith in humanity.
                 </p>
                 <div className="pt-1 text-[10px] text-[#A08960]">
-                  47 reactions • 23 comments
+                  💛 47 reactions • 💬 23 comments
                 </div>
               </div>
             </div>
@@ -260,20 +300,31 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {/* Journal 1 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#94A3B8_0,_transparent_70%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=600&h=400&fit=crop"
+                  alt="Journal cover"
+                  className="w-full h-full object-cover opacity-90"
+                />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50 shadow-md">
                     Long Read • 12 min
                   </span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Essay • Culture
+              <div className="p-4 space-y-2.5">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    E
+                  </div>
+                  <div className="text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">Emma R.</span>
+                    <span className="text-[#A08960]"> • Essay • Culture</span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-sm font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   On feeling invisible in a loud world
                 </h3>
                 <p className="text-xs text-[#7A674C] leading-relaxed">
@@ -283,20 +334,31 @@ export default function HomePage() {
             </div>
 
             {/* Journal 2 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-rose-100 to-pink-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#FB7185_0,_transparent_70%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-rose-100 to-pink-200 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1499728603263-13726abce5fd?w=600&h=400&fit=crop"
+                  alt="Journal cover"
+                  className="w-full h-full object-cover opacity-85"
+                />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-rose-700 text-rose-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-rose-700 text-rose-50 shadow-md">
                     Short Read • 4 min
                   </span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Essay • Community
+              <div className="p-4 space-y-2.5">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-rose-200 to-pink-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    L
+                  </div>
+                  <div className="text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">Leah M.</span>
+                    <span className="text-[#A08960]"> • Essay • Community</span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-sm font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   Joy as quiet resistance
                 </h3>
                 <p className="text-xs text-[#7A674C] leading-relaxed">
@@ -306,20 +368,31 @@ export default function HomePage() {
             </div>
 
             {/* Journal 3 */}
-            <div className="bg-white border border-yellow-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-cyan-100 to-blue-200">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_#06B6D4_0,_transparent_70%)]" />
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-cyan-100 to-blue-200 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&h=400&fit=crop"
+                  alt="Journal cover"
+                  className="w-full h-full object-cover opacity-80"
+                />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-cyan-700 text-cyan-50">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-cyan-700 text-cyan-50 shadow-md">
                     Medium Read • 8 min
                   </span>
                 </div>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="text-[10px] text-[#A08960] font-semibold uppercase tracking-wide">
-                  Behind the Scenes
+              <div className="p-4 space-y-2.5">
+                {/* Author Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-200 to-blue-300 flex items-center justify-center text-[10px] font-semibold text-[#3A2E1F] ring-2 ring-white shadow-sm">
+                    T
+                  </div>
+                  <div className="text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">The Team</span>
+                    <span className="text-[#A08960]"> • Behind the Scenes</span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                <h3 className="text-sm font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                   Soft tech: building gentler online spaces
                 </h3>
                 <p className="text-xs text-[#7A674C] leading-relaxed">
@@ -341,81 +414,99 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {/* Trending Post 1 */}
-            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-1">
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-4 hover:shadow-xl transition-all hover:border-yellow-300/80 group">
+              <div className="flex items-start gap-3">
+                {/* Author Avatar */}
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-200 to-amber-300 flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white">
+                  D
+                </div>
+                <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">Dani</span>
+                    <span>•</span>
                     <span>🌻 The Lounge</span>
                     <span>•</span>
                     <span>2 hours ago</span>
                   </div>
-                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                     "Small joy: My neighbor brought me soup when I was feeling down"
                   </h3>
-                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
-                    <span>47 reactions</span>
-                    <span>•</span>
-                    <span>23 comments</span>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
+                      <span>💛 47 reactions</span>
+                      <span>•</span>
+                      <span>💬 23 comments</span>
+                    </div>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-semibold bg-pink-100 text-pink-700 shadow-sm">
+                      ⭐ Most heartwarming
+                    </span>
                   </div>
-                </div>
-                <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-pink-100 text-pink-700">
-                    ⭐ Most heartwarming
-                  </span>
                 </div>
               </div>
             </div>
 
             {/* Trending Post 2 */}
-            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-1">
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-4 hover:shadow-xl transition-all hover:border-yellow-300/80 group">
+              <div className="flex items-start gap-3">
+                {/* Author Avatar */}
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-200 to-indigo-300 flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white">
+                  S
+                </div>
+                <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">Sofia</span>
+                    <span>•</span>
                     <span>📚 Book Club</span>
                     <span>•</span>
                     <span>5 hours ago</span>
                   </div>
-                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                     "Chapter 3 discussion: The comfort zone myth"
                   </h3>
-                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
-                    <span>34 reactions</span>
-                    <span>•</span>
-                    <span>18 comments</span>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
+                      <span>💛 34 reactions</span>
+                      <span>•</span>
+                      <span>💬 18 comments</span>
+                    </div>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-semibold bg-blue-100 text-blue-700 shadow-sm">
+                      💬 Most discussed
+                    </span>
                   </div>
-                </div>
-                <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700">
-                    💬 Most discussed
-                  </span>
                 </div>
               </div>
             </div>
 
             {/* Trending Post 3 */}
-            <div className="bg-white border border-yellow-100 rounded-xl p-3 hover:shadow-md transition-all hover:border-yellow-200 group">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 space-y-1">
+            <div className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-4 hover:shadow-xl transition-all hover:border-yellow-300/80 group">
+              <div className="flex items-start gap-3">
+                {/* Author Avatar */}
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-200 to-emerald-300 flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white">
+                  A
+                </div>
+                <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-center gap-2 text-[10px] text-[#7A674C]">
+                    <span className="font-semibold">Aisha</span>
+                    <span>•</span>
                     <span>🧩 Solution Room</span>
                     <span>•</span>
                     <span>1 day ago</span>
                   </div>
-                  <h3 className="text-xs font-semibold text-[#3A2E1F] group-hover:text-yellow-900 transition-colors">
+                  <h3 className="text-xs font-bold text-yellow-900 group-hover:text-yellow-700 transition-colors leading-snug">
                     "New SEND resource collaborative document"
                   </h3>
-                  <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
-                    <span>28 reactions</span>
-                    <span>•</span>
-                    <span>12 comments</span>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2 text-[10px] text-[#A08960]">
+                      <span>💛 28 reactions</span>
+                      <span>•</span>
+                      <span>💬 12 comments</span>
+                    </div>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-semibold bg-orange-100 text-orange-700 shadow-sm">
+                      🚀 Trending
+                    </span>
                   </div>
-                </div>
-                <div className="flex-shrink-0">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wide bg-orange-100 text-orange-700">
-                    🚀 Trending
-                  </span>
                 </div>
               </div>
             </div>
