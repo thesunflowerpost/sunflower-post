@@ -276,67 +276,76 @@ export default function BookDiscussionPage({ bookId }: Props) {
         <div className="md:col-span-3 space-y-8">
           {/* HEADER / BOOK SUMMARY */}
           <section className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-              {/* COVER */}
-              <div className="w-24 h-32 md:w-28 md:h-40 rounded-xl overflow-hidden bg-[#FFF7D6] border border-yellow-100 flex items-center justify-center text-[11px] text-[#A08960]">
-                {book.coverUrl ? (
-                  <img
-                    src={book.coverUrl}
-                    alt={`Cover of ${book.title}`}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span>Book cover</span>
-                )}
-              </div>
-
-              <div className="flex-1 space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
-                  Book discussion
-                </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
-                  {book.title}
-                </h1>
-                <p className="text-xs md:text-sm text-[#5C4A33]">
-                  {book.author}
-                </p>
-
-                <div className="flex flex-wrap gap-2 text-[10px] mt-1">
-                  <span
-                    className={`px-2 py-[2px] rounded-full border ${statusBadge(
-                      book.status
-                    )}`}
-                  >
-                    {book.status}
-                  </span>
-                  {book.mood && (
-                    <span className="px-2 py-[2px] rounded-full bg-[#FFFEFA] border border-yellow-100 text-[#5C4A33]">
-                      {book.mood}
-                    </span>
-                  )}
-                  {book.theme && (
-                    <span className="px-2 py-[2px] rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#7C2D12]">
-                      {book.theme}
-                    </span>
+            {/* Beautiful Hero Card */}
+            <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+                {/* COVER - Larger and more prominent */}
+                <div className="w-32 h-44 md:w-40 md:h-56 rounded-xl overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5] border border-yellow-200 flex items-center justify-center text-[11px] text-[#A08960] shadow-xl flex-shrink-0">
+                  {book.coverUrl ? (
+                    <img
+                      src={book.coverUrl}
+                      alt={`Cover of ${book.title}`}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-center p-3">Book cover</span>
                   )}
                 </div>
 
-                {book.note && (
-                  <p className="text-xs text-[#5C4A33] mt-2">
-                    {book.note}
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">📖</span>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-semibold">
+                      Book discussion
+                    </p>
+                  </div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-yellow-900">
+                    {book.title}
+                  </h1>
+                  <p className="text-sm md:text-base text-[#5C4A33] font-medium">
+                    by {book.author}
                   </p>
-                )}
 
-                <p className="text-[10px] text-[#A08960] mt-1">
-                  Shared by {book.sharedBy || "Anon"} · {book.timeAgo}
-                </p>
+                  <div className="flex flex-wrap gap-2 text-[10px]">
+                    <span
+                      className={`px-3 py-1.5 rounded-full border font-medium ${statusBadge(
+                        book.status
+                      )}`}
+                    >
+                      {book.status}
+                    </span>
+                    {book.mood && (
+                      <span className="px-3 py-1.5 rounded-full bg-[#FFFEFA] border border-yellow-100 text-[#5C4A33] font-medium">
+                        {book.mood}
+                      </span>
+                    )}
+                    {book.theme && (
+                      <span className="px-3 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#7C2D12] font-medium">
+                        {book.theme}
+                      </span>
+                    )}
+                  </div>
+
+                  {book.note && (
+                    <p className="text-xs md:text-sm text-[#5C4A33] bg-white/50 rounded-xl p-3 border border-yellow-100">
+                      {book.note}
+                    </p>
+                  )}
+
+                  <p className="text-[11px] text-[#A08960]">
+                    Shared by <span className="font-medium">{book.sharedBy || "Anon"}</span> · {book.timeAgo}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-3 text-[11px] text-[#7A674C] space-y-1">
-              <p className="font-semibold text-yellow-900">
-                How this discussion works
-              </p>
+            <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 text-xs text-[#7A674C] space-y-2 shadow-sm">
+              <div className="flex items-center gap-2">
+                <span>💡</span>
+                <p className="font-semibold text-yellow-900">
+                  How this discussion works
+                </p>
+              </div>
               <p>
                 Start a topic for a chapter, theme, quote or feeling this book
                 stirred up. You can mark it as containing spoilers so people
@@ -407,26 +416,31 @@ export default function BookDiscussionPage({ bookId }: Props) {
               return (
                 <article
                   key={topic.id}
-                  className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-3"
+                  className="bg-white border border-yellow-100 rounded-2xl p-5 space-y-4 hover:border-yellow-300 hover:shadow-lg transition-all duration-200"
                 >
-                  <div className="flex items-center justify-between gap-2 text-[10px] text-[#A08960]">
-                    <p className="font-semibold text-[#5C4A33]">
-                      {topic.title}
-                    </p>
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg mt-0.5">💭</span>
+                      <h3 className="font-semibold text-sm md:text-base text-yellow-900">
+                        {topic.title}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-[#A08960] flex-shrink-0">
                       {topic.containsSpoilers && (
-                        <span className="px-2 py-[2px] rounded-full bg-[#FEF2F2] border border-[#FCA5A5] text-[#7F1D1D] text-[9px]">
+                        <span className="px-2.5 py-1 rounded-full bg-[#FEF2F2] border border-[#FCA5A5] text-[#7F1D1D] font-medium">
                           Contains spoilers
                         </span>
                       )}
-                      <span>{topic.timeAgo}</span>
+                      <span className="font-medium">{topic.timeAgo}</span>
                     </div>
                   </div>
 
-                  <p className="text-[#5C4A33] whitespace-pre-line">
+                  <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
                     {topic.body}
                   </p>
-                  <p className="text-[10px] text-[#A08960]">{topic.author}</p>
+                  <p className="text-[11px] text-[#A08960]">
+                    — <span className="font-medium">{topic.author}</span>
+                  </p>
 
                   {/* META: counts + open full topic */}
                   <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-[#7A674C] border-t border-yellow-50 pt-2">
@@ -447,15 +461,15 @@ export default function BookDiscussionPage({ bookId }: Props) {
                   </div>
 
                   {/* REACTIONS ROW */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] border-t border-yellow-50 pt-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] border-t border-yellow-100 pt-3">
                     <div className="flex flex-wrap gap-2">
                       <button
                         type="button"
                         onClick={() => toggleReaction(topic.id, "warmth")}
-                        className={`px-2.5 py-1 rounded-full border flex items-center gap-1 ${
+                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
                           topicReactions.warmth
-                            ? "bg-yellow-200 border-yellow-300 text-[#3A2E1F]"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                            ? "bg-yellow-200 border-yellow-300 text-[#3A2E1F] shadow-sm"
+                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
                         }`}
                       >
                         <span>🌻</span>
@@ -464,10 +478,10 @@ export default function BookDiscussionPage({ bookId }: Props) {
                       <button
                         type="button"
                         onClick={() => toggleReaction(topic.id, "support")}
-                        className={`px-2.5 py-1 rounded-full border flex items-center gap-1 ${
+                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
                           topicReactions.support
-                            ? "bg-[#F5F3FF] border-[#D9D2FF] text-[#40325F]"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                            ? "bg-[#F5F3FF] border-[#D9D2FF] text-[#40325F] shadow-sm"
+                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
                         }`}
                       >
                         <span>🤍</span>
@@ -476,17 +490,17 @@ export default function BookDiscussionPage({ bookId }: Props) {
                       <button
                         type="button"
                         onClick={() => toggleReaction(topic.id, "here")}
-                        className={`px-2.5 py-1 rounded-full border flex items-center gap-1 ${
+                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
                           topicReactions.here
-                            ? "bg-[#FEF3C7] border-[#FACC15] text-[#3A2E1F]"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                            ? "bg-[#FEF3C7] border-[#FACC15] text-[#3A2E1F] shadow-sm"
+                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
                         }`}
                       >
                         <span>💛</span>
                         <span>Here with you</span>
                       </button>
                     </div>
-                    <p className="text-[9px] text-[#C0A987]">
+                    <p className="text-[9px] text-[#C0A987] italic">
                       Reactions are for care, not counts. Only you see what
                       you&apos;ve sent.
                     </p>
@@ -495,11 +509,11 @@ export default function BookDiscussionPage({ bookId }: Props) {
                   {/* ADD REPLY FORM - Above existing replies */}
                   <form
                     onSubmit={(e) => handleReplySubmit(e, topic.id)}
-                    className="border-t border-yellow-50 pt-3 space-y-2"
+                    className="border-t border-yellow-100 pt-4 space-y-3 bg-gradient-to-br from-[#FFFEF9] to-white rounded-b-xl -mx-5 -mb-5 px-5 pb-4 mt-4"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">🌿</span>
-                      <label className="text-[11px] font-medium text-[#5C4A33]">
+                      <span className="text-base">🌿</span>
+                      <label className="text-xs font-semibold text-yellow-900">
                         Add a reflection
                       </label>
                     </div>
@@ -511,19 +525,19 @@ export default function BookDiscussionPage({ bookId }: Props) {
                           [topic.id]: e.target.value,
                         }))
                       }
-                      rows={2}
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      rows={3}
+                      className="w-full border border-yellow-100 rounded-xl px-4 py-3 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300 transition-all shadow-sm"
                       placeholder="Offer a reflection, a 'same', or a gentle question. No need to be profound."
                     />
                     <div className="flex items-center justify-between gap-2">
                       <button
                         type="submit"
                         disabled={isReplySubmitting || !draftText.trim()}
-                        className="px-3 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
+                        className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-md hover:shadow-lg transition-all disabled:shadow-sm"
                       >
                         {isReplySubmitting ? "Posting…" : "Post reply"}
                       </button>
-                      <p className="text-[9px] text-[#C0A987]">
+                      <p className="text-[9px] text-[#C0A987] italic">
                         Keep it kind and specific to the book, not the person.
                       </p>
                     </div>
@@ -531,20 +545,23 @@ export default function BookDiscussionPage({ bookId }: Props) {
 
                   {/* EXISTING REPLIES - Below form */}
                   {topic.replies.length > 0 && (
-                    <div className="border-t border-yellow-50 pt-3 space-y-2">
-                      <p className="text-[10px] text-[#A08960] font-medium">
-                        {topic.replies.length} {topic.replies.length === 1 ? "reply" : "replies"}
-                      </p>
-                      <div className="space-y-1.5">
+                    <div className="border-t border-yellow-100 pt-4 space-y-3 -mx-5 px-5 -mb-5 pb-5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">💬</span>
+                        <p className="text-[11px] text-[#A08960] font-semibold">
+                          {topic.replies.length} {topic.replies.length === 1 ? "reply" : "replies"}
+                        </p>
+                      </div>
+                      <div className="space-y-2">
                         {topic.replies.map((reply) => (
                           <div
                             key={reply.id}
-                            className="rounded-xl bg-[#FFFCF5] border border-yellow-100 px-3 py-2"
+                            className="rounded-xl bg-gradient-to-br from-[#FFFCF5] to-white border border-yellow-100 px-4 py-3 hover:border-yellow-200 transition-all shadow-sm"
                           >
-                            <p className="text-[#5C4A33] whitespace-pre-line">
+                            <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
                               {reply.body}
                             </p>
-                            <p className="text-[9px] text-[#A08960] mt-1">
+                            <p className="text-[10px] text-[#A08960] mt-2 font-medium">
                               {reply.author} · {reply.timeAgo}
                             </p>
                           </div>
@@ -558,21 +575,25 @@ export default function BookDiscussionPage({ bookId }: Props) {
           </section>
 
           {/* START A TOPIC */}
-          <section className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3 text-xs md:text-sm">
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold text-yellow-900">
-                Start a topic about this book 💬
-              </p>
-              <p className="text-[10px] text-[#A08960]">
+          <section className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border border-yellow-200 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">💬</span>
+                <h2 className="text-base font-bold text-yellow-900">
+                  Start a topic about this book
+                </h2>
+              </div>
+              <p className="text-[11px] text-[#A08960] italic">
                 It can be one question, one quote, or one feeling – it doesn&apos;t
                 need to be deep to matter.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-[#5C4A33]">
-                  Topic title (optional)
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-yellow-900 flex items-center gap-1">
+                  <span>✏️</span>
+                  <span>Topic title (optional)</span>
                 </label>
                 <input
                   type="text"
@@ -580,28 +601,29 @@ export default function BookDiscussionPage({ bookId }: Props) {
                   onChange={(e) =>
                     setDraft((prev) => ({ ...prev, title: e.target.value }))
                   }
-                  className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                  className="w-full border border-yellow-100 rounded-xl px-4 py-3 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300 shadow-sm transition-all"
                   placeholder='e.g. "Chapter 3 – mothers & daughters", "That one line about fear"'
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-[#5C4A33]">
-                  What would you like to say?
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-yellow-900 flex items-center gap-1">
+                  <span>📝</span>
+                  <span>What would you like to say?</span>
                 </label>
                 <textarea
                   value={draft.body}
                   onChange={(e) =>
                     setDraft((prev) => ({ ...prev, body: e.target.value }))
                   }
-                  rows={3}
-                  className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                  placeholder="Share a quote that stayed with you, a question you can’t shake, or how this book landed in your body."
+                  rows={4}
+                  className="w-full border border-yellow-100 rounded-xl px-4 py-3 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300 shadow-sm transition-all"
+                  placeholder="Share a quote that stayed with you, a question you can't shake, or how this book landed in your body."
                 />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <label className="inline-flex items-center gap-2 text-[11px] text-[#7A674C]">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <label className="inline-flex items-center gap-2 text-xs text-[#7A674C] font-medium cursor-pointer">
                   <input
                     type="checkbox"
                     checked={draft.containsSpoilers}
@@ -611,9 +633,9 @@ export default function BookDiscussionPage({ bookId }: Props) {
                         containsSpoilers: e.target.checked,
                       }))
                     }
-                    className="rounded border-yellow-300"
+                    className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
                   />
-                  <span>This topic contains spoilers</span>
+                  <span>⚠️ This topic contains spoilers</span>
                 </label>
                 <button
                   type="submit"
@@ -621,17 +643,19 @@ export default function BookDiscussionPage({ bookId }: Props) {
                     submitting ||
                     (!draft.title.trim() && !draft.body.trim())
                   }
-                  className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-semibold shadow-sm"
+                  className="px-5 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-bold shadow-md hover:shadow-lg transition-all disabled:shadow-sm"
                 >
                   {submitting ? "Posting…" : "Post topic"}
                 </button>
               </div>
 
-              <p className="text-[10px] text-[#A08960]">
-                Please keep details non-graphic, be kind to other readers, and
-                use the spoiler toggle when you&apos;re talking about later
-                chapters or endings.
-              </p>
+              <div className="bg-white/50 border border-yellow-100 rounded-xl p-3">
+                <p className="text-[10px] text-[#A08960] italic">
+                  💛 Please keep details non-graphic, be kind to other readers, and
+                  use the spoiler toggle when you&apos;re talking about later
+                  chapters or endings.
+                </p>
+              </div>
             </form>
           </section>
         </div>
