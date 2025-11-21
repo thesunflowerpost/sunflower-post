@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef, type FormEvent, useEffect } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
 import { BouncyButton, ReactionBar } from "./ui";
@@ -11,6 +11,8 @@ type MusicMood = string;
 type MoodFilter = "All moods" | MusicMood;
 type EraFilter = "Any era" | string;
 type SourceFilter = "Any source" | string;
+type ActivityTag = string;
+type SortOption = "newest" | "most_commented" | "random" | "popular";
 
 type TrackItem = {
   id: number;
@@ -26,6 +28,10 @@ type TrackItem = {
   timeAgo: string;
   imageUrl?: string; // Album art or uploaded image
   replies?: number; // Number of comments/replies
+  activities?: ActivityTag[]; // Activity tags like "Workout", "Cleaning", etc.
+  favoriteLyric?: string; // Favorite lyric from the song
+  playlistAdds?: number; // How many people added to their playlist
+  timestamp?: number; // For sorting
 };
 
 // User reactions are now stored as Record<ReactionId, boolean>
@@ -47,6 +53,17 @@ const BASE_MOODS: MusicMood[] = [
   "Other",
 ];
 
+const ACTIVITY_TAGS = [
+  { id: "workout", label: "Workout", emoji: "🏃" },
+  { id: "cleaning", label: "Cleaning", emoji: "🧹" },
+  { id: "study", label: "Study/Focus", emoji: "📚" },
+  { id: "roadtrip", label: "Road trip", emoji: "🚗" },
+  { id: "latenight", label: "Late night", emoji: "🌙" },
+  { id: "morning", label: "Morning energy", emoji: "☕" },
+  { id: "walking", label: "Walking", emoji: "🚶" },
+  { id: "cooking", label: "Cooking", emoji: "🍳" },
+];
+
 const INITIAL_TRACKS: TrackItem[] = [
   {
     id: 1,
@@ -56,11 +73,16 @@ const INITIAL_TRACKS: TrackItem[] = [
     era: "90s / 2000s",
     genre: "R&B / Pop",
     source: "Everywhere tbh",
+    link: "https://www.youtube.com/watch?v=sQgd6MccwZc",
     sharedBy: "S.",
     note: "Instant throwback energy. Great for cleaning or getting ready.",
     timeAgo: "Shared 3 days ago",
     replies: 3,
     imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
+    activities: ["cleaning", "morning"],
+    favoriteLyric: "Say my name, say my name...",
+    playlistAdds: 12,
+    timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000,
   },
   {
     id: 2,
@@ -70,10 +92,15 @@ const INITIAL_TRACKS: TrackItem[] = [
     era: "2000s",
     genre: "Soul",
     source: "Spotify / YouTube",
+    link: "https://open.spotify.com/track/6mFkJmJqdDVQ1REhVfGgd1",
     sharedBy: "Anon",
     note: "For when you're processing feelings and need a good reflective cry.",
     timeAgo: "Shared 1 week ago",
     replies: 1,
+    activities: ["latenight"],
+    favoriteLyric: "We're just ordinary people...",
+    playlistAdds: 8,
+    timestamp: Date.now() - 7 * 24 * 60 * 60 * 1000,
   },
   {
     id: 3,
@@ -88,6 +115,10 @@ const INITIAL_TRACKS: TrackItem[] = [
     timeAgo: "Shared 2 weeks ago",
     replies: 0,
     imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop",
+    activities: ["walking", "morning", "workout"],
+    favoriteLyric: "I'm going to be just fine...",
+    playlistAdds: 15,
+    timestamp: Date.now() - 14 * 24 * 60 * 60 * 1000,
   },
 ];
 
@@ -96,7 +127,7 @@ const INITIAL_COMMENTS: Record<number, ThreadComment[]> = {
     {
       id: 1,
       author: "You",
-      body: "As soon as the beat drops I’m back in my childhood kitchen 😂",
+      body: "As soon as the beat drops I'm back in my childhood kitchen 😂",
       timeAgo: "2 days ago",
     },
   ],
@@ -104,16 +135,116 @@ const INITIAL_COMMENTS: Record<number, ThreadComment[]> = {
   3: [],
 };
 
+// Helper function to extract embeddable music URLs
+function getEmbedUrl(link: string): { type: 'spotify' | 'youtube' | 'apple' | null; embedUrl: string | null } {
+  if (!link) return { type: null, embedUrl: null };
+
+  // Spotify
+  const spotifyMatch = link.match(/spotify\.com\/track\/([a-zA-Z0-9]+)/);
+  if (spotifyMatch) {
+    return {
+      type: 'spotify',
+      embedUrl: `https://open.spotify.com/embed/track/${spotifyMatch[1]}?utm_source=generator&theme=0`,
+    };
+  }
+
+  // YouTube
+  const youtubeMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (youtubeMatch) {
+    return {
+      type: 'youtube',
+      embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}`,
+    };
+  }
+
+  // Apple Music
+  const appleMusicMatch = link.match(/music\.apple\.com\/[a-z]{2}\/album\/[^/]+\/(\d+)\?i=(\d+)/);
+  if (appleMusicMatch) {
+    return {
+      type: 'apple',
+      embedUrl: link,
+    };
+  }
+
+  return { type: null, embedUrl: null };
+}
+
+// Get time-based recommendation
+function getTimeBasedRecommendation(): { time: string; emoji: string; mood: string; description: string } {
+  const hour = new Date().getHours();
+
+  if (hour >= 6 && hour < 12) {
+    return {
+      time: "Morning",
+      emoji: "☕",
+      mood: "Morning energy",
+      description: "Start your day with uplifting, energizing tracks",
+    };
+  } else if (hour >= 12 && hour < 17) {
+    return {
+      time: "Afternoon",
+      emoji: "☀️",
+      mood: "Feel-good",
+      description: "Keep the momentum with feel-good vibes",
+    };
+  } else if (hour >= 17 && hour < 21) {
+    return {
+      time: "Evening",
+      emoji: "🌆",
+      mood: "Soft background",
+      description: "Wind down with relaxing, mellow tunes",
+    };
+  } else {
+    return {
+      time: "Late Night",
+      emoji: "🌙",
+      mood: "Cry then feel better",
+      description: "Reflective tracks for those deep night feels",
+    };
+  }
+}
+
+// Find similar tracks based on mood, genre, and activities
+function findSimilarTracks(track: TrackItem, allTracks: TrackItem[]): TrackItem[] {
+  return allTracks
+    .filter((t) => t.id !== track.id)
+    .map((t) => {
+      let score = 0;
+      // Same mood
+      if (t.mood === track.mood) score += 3;
+      // Same genre
+      if (t.genre && track.genre && t.genre === track.genre) score += 2;
+      // Shared activities
+      const sharedActivities = (t.activities || []).filter((a) =>
+        (track.activities || []).includes(a)
+      );
+      score += sharedActivities.length;
+      // Same era
+      if (t.era && track.era && t.era === track.era) score += 1;
+
+      return { track: t, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(({ track }) => track);
+}
+
 export default function MusicRoom() {
   const [tracks, setTracks] = useState<TrackItem[]>(INITIAL_TRACKS);
   const [search, setSearch] = useState("");
   const [moodFilter, setMoodFilter] = useState<MoodFilter>("All moods");
   const [eraFilter, setEraFilter] = useState<EraFilter>("Any era");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("Any source");
+  const [activityFilter, setActivityFilter] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>("newest");
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
+
+  const [expandedPlayerId, setExpandedPlayerId] = useState<number | null>(null);
+  const [showSimilarFor, setShowSimilarFor] = useState<number | null>(null);
 
   const [newTrack, setNewTrack] = useState({
     title: "",
@@ -126,6 +257,8 @@ export default function MusicRoom() {
     note: "",
     sharedBy: "",
     isAnon: false,
+    activities: [] as string[],
+    favoriteLyric: "",
   });
 
   // Image upload state
@@ -163,7 +296,9 @@ export default function MusicRoom() {
   ) as string[];
   const sourceFilters: SourceFilter[] = ["Any source", ...sources];
 
-  const filteredTracks = tracks.filter((track) => {
+  const timeRecommendation = getTimeBasedRecommendation();
+
+  let filteredTracks = tracks.filter((track) => {
     // mood filter
     const moodMatch =
       moodFilter === "All moods" || track.mood === moodFilter;
@@ -179,6 +314,11 @@ export default function MusicRoom() {
       sourceFilter === "Any source" || track.source === sourceFilter;
     if (!sourceMatch) return false;
 
+    // activity filter
+    if (activityFilter && !(track.activities || []).includes(activityFilter)) {
+      return false;
+    }
+
     // search
     return matchesSearch(
       [
@@ -190,10 +330,29 @@ export default function MusicRoom() {
         track.source || "",
         track.note || "",
         track.sharedBy,
+        track.favoriteLyric || "",
+        ...(track.activities || []),
       ],
       search
     );
   });
+
+  // Apply sorting
+  if (sortOption === "newest") {
+    filteredTracks = [...filteredTracks].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  } else if (sortOption === "most_commented") {
+    filteredTracks = [...filteredTracks].sort((a, b) => (b.replies || 0) - (a.replies || 0));
+  } else if (sortOption === "popular") {
+    filteredTracks = [...filteredTracks].sort((a, b) => (b.playlistAdds || 0) - (a.playlistAdds || 0));
+  } else if (sortOption === "random") {
+    filteredTracks = [...filteredTracks].sort(() => Math.random() - 0.5);
+  }
+
+  // Hidden gems: tracks with high quality (playlist adds) but few comments
+  const hiddenGems = [...tracks]
+    .filter((t) => (t.playlistAdds || 0) > 5 && (t.replies || 0) < 3)
+    .sort((a, b) => (b.playlistAdds || 0) - (a.playlistAdds || 0))
+    .slice(0, 3);
 
   function moodEmoji(mood: MusicMood) {
     const lower = mood.toLowerCase();
@@ -246,10 +405,44 @@ export default function MusicRoom() {
   }
 
   function togglePlaylist(trackId: number) {
+    const wasInPlaylist = playlist[trackId];
+
     setPlaylist((prev) => ({
       ...prev,
       [trackId]: !prev[trackId],
     }));
+
+    // Update playlistAdds count
+    setTracks((prev) =>
+      prev.map((t) =>
+        t.id === trackId
+          ? { ...t, playlistAdds: (t.playlistAdds || 0) + (wasInPlaylist ? -1 : 1) }
+          : t
+      )
+    );
+  }
+
+  function handleSurpriseMe() {
+    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+    setMoodFilter(randomTrack.mood);
+    setActivityFilter(null);
+    setSearch("");
+    setSortOption("random");
+  }
+
+  function exportPlaylist() {
+    const playlistTracks = tracks.filter((t) => playlist[t.id]);
+    const playlistText = playlistTracks
+      .map((t) => `${t.title} - ${t.artist}${t.link ? ` (${t.link})` : ""}`)
+      .join("\n");
+
+    const blob = new Blob([playlistText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sunflower-music-playlist.txt";
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   function handleAddTrack(e: FormEvent<HTMLFormElement>) {
@@ -293,6 +486,10 @@ export default function MusicRoom() {
       timeAgo: "Just now",
       imageUrl: finalImageUrl,
       replies: 0,
+      activities: newTrack.activities.length > 0 ? newTrack.activities : undefined,
+      favoriteLyric: newTrack.favoriteLyric.trim() || undefined,
+      playlistAdds: 0,
+      timestamp: Date.now(),
     };
 
     setTracks([track, ...tracks]);
@@ -312,6 +509,8 @@ export default function MusicRoom() {
       note: "",
       sharedBy: "",
       isAnon: false,
+      activities: [],
+      favoriteLyric: "",
     });
     setTrackMediaUrl("");
     setTrackFilePreviewUrl(null);
@@ -384,7 +583,7 @@ export default function MusicRoom() {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by song, artist, mood, era, genre…"
+                  placeholder="Search by song, artist, mood, era, genre, lyrics, activity…"
                   className="flex-1 bg-transparent text-xs focus:outline-none placeholder:text-[#C0A987]"
                 />
               </div>
@@ -402,6 +601,40 @@ export default function MusicRoom() {
               >
                 {showAddForm ? "Close add form" : "Add a song"}
               </BouncyButton>
+              {Object.keys(playlist).some((id) => playlist[Number(id)]) && (
+                <BouncyButton
+                  onClick={exportPlaylist}
+                  variant="secondary"
+                  size="sm"
+                  className="shadow-md"
+                >
+                  Export Playlist ({Object.values(playlist).filter(Boolean).length})
+                </BouncyButton>
+              )}
+            </div>
+          </section>
+
+          {/* TIME-BASED RECOMMENDATION BANNER */}
+          <section className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-yellow-300/60 rounded-2xl p-4 md:p-5 shadow-lg">
+            <div className="flex items-start gap-3">
+              <div className="text-3xl">{timeRecommendation.emoji}</div>
+              <div className="flex-1 space-y-1">
+                <h3 className="text-sm font-semibold text-yellow-900">
+                  {timeRecommendation.time} Vibes
+                </h3>
+                <p className="text-xs text-[#7A674C]">
+                  {timeRecommendation.description}
+                </p>
+                <button
+                  onClick={() => {
+                    setMoodFilter(timeRecommendation.mood);
+                    setActivityFilter(null);
+                  }}
+                  className="text-xs text-yellow-700 hover:text-yellow-900 font-medium underline underline-offset-2"
+                >
+                  Show {timeRecommendation.mood} tracks →
+                </button>
+              </div>
             </div>
           </section>
 
@@ -565,6 +798,57 @@ export default function MusicRoom() {
                     className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
                     placeholder="Is it a cleaning song, walk song, cry song, shower concert song…?"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    Favorite lyric (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={newTrack.favoriteLyric}
+                    onChange={(e) =>
+                      setNewTrack((prev) => ({
+                        ...prev,
+                        favoriteLyric: e.target.value,
+                      }))
+                    }
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                    placeholder="A line from the song that hits different…"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    When do you listen to this? (optional)
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {ACTIVITY_TAGS.map((activity) => {
+                      const isSelected = newTrack.activities.includes(activity.id);
+                      return (
+                        <button
+                          key={activity.id}
+                          type="button"
+                          onClick={() => {
+                            setNewTrack((prev) => ({
+                              ...prev,
+                              activities: isSelected
+                                ? prev.activities.filter((a) => a !== activity.id)
+                                : [...prev.activities, activity.id],
+                            }));
+                          }}
+                          className={`px-3 py-2 rounded-xl border text-xs flex items-center gap-1.5 transition-all ${
+                            isSelected
+                              ? "bg-yellow-100 border-yellow-300 text-yellow-900 font-medium shadow-sm"
+                              : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
+                          }`}
+                        >
+                          <span>{activity.emoji}</span>
+                          <span>{activity.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* IMAGE UPLOAD SECTION */}
@@ -735,30 +1019,83 @@ export default function MusicRoom() {
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* TRACK LIST */}
             <div className="lg:col-span-2 space-y-4">
-              {/* FILTERS */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              {/* FILTERS - MOOD */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">Mood</p>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {moodFilters.map((mood) => (
                     <button
                       key={mood}
-                      onClick={() => setMoodFilter(mood)}
-                      className={`px-3 py-1 rounded-full border text-[11px] ${
+                      onClick={() => {
+                        setMoodFilter(mood);
+                        setActivityFilter(null);
+                      }}
+                      className={`px-3 py-1.5 rounded-full border text-[11px] transition-all ${
                         moodFilter === mood
-                          ? "bg-yellow-100 border-yellow-200 text-[#5C4A33] font-medium"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                          ? "bg-yellow-100 border-yellow-300 text-[#5C4A33] font-semibold shadow-sm"
+                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
                       }`}
                     >
                       {mood}
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* FILTERS - ACTIVITY */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">Activity</p>
+                  {activityFilter && (
+                    <button
+                      onClick={() => setActivityFilter(null)}
+                      className="text-[10px] text-yellow-700 hover:text-yellow-900 underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-2">
+                  {ACTIVITY_TAGS.map((activity) => (
+                    <button
+                      key={activity.id}
+                      onClick={() => {
+                        setActivityFilter(activityFilter === activity.id ? null : activity.id);
+                        setMoodFilter("All moods");
+                      }}
+                      className={`px-3 py-1.5 rounded-xl border text-[11px] flex items-center gap-1.5 transition-all ${
+                        activityFilter === activity.id
+                          ? "bg-gradient-to-br from-yellow-100 to-amber-100 border-yellow-300 text-yellow-900 font-semibold shadow-md"
+                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
+                      }`}
+                    >
+                      <span>{activity.emoji}</span>
+                      <span>{activity.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* SORT & DISCOVERY */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-yellow-100">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className="text-[11px] text-[#A08960] font-medium">Sort by:</label>
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value as SortOption)}
+                    className="border border-yellow-200 rounded-xl px-3 py-1.5 bg-white text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300 shadow-sm"
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="most_commented">Most Commented</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="random">Random</option>
+                  </select>
                   <select
                     value={eraFilter}
-                    onChange={(e) =>
-                      setEraFilter(e.target.value as EraFilter)
-                    }
-                    className="border border-yellow-100 rounded-full px-2 py-1 bg-[#FFFEFA] text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    onChange={(e) => setEraFilter(e.target.value as EraFilter)}
+                    className="border border-yellow-200 rounded-xl px-3 py-1.5 bg-white text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300 shadow-sm"
                   >
                     {eraFilters.map((era) => (
                       <option key={era} value={era}>
@@ -768,10 +1105,8 @@ export default function MusicRoom() {
                   </select>
                   <select
                     value={sourceFilter}
-                    onChange={(e) =>
-                      setSourceFilter(e.target.value as SourceFilter)
-                    }
-                    className="border border-yellow-100 rounded-full px-2 py-1 bg-[#FFFEFA] text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    onChange={(e) => setSourceFilter(e.target.value as SourceFilter)}
+                    className="border border-yellow-200 rounded-xl px-3 py-1.5 bg-white text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300 shadow-sm"
                   >
                     {sourceFilters.map((source) => (
                       <option key={source} value={source}>
@@ -779,6 +1114,15 @@ export default function MusicRoom() {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSurpriseMe}
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 text-purple-900 text-[11px] font-medium hover:shadow-md transition-all flex items-center gap-1"
+                  >
+                    <span>✨</span>
+                    <span>Surprise Me</span>
+                  </button>
                 </div>
               </div>
 
@@ -799,11 +1143,14 @@ export default function MusicRoom() {
                 {filteredTracks.map((track) => {
                   const trackReactions = reactions[track.id] || {};
                   const isInPlaylist = !!playlist[track.id];
+                  const embedInfo = track.link ? getEmbedUrl(track.link) : { type: null, embedUrl: null };
+                  const isPlayerExpanded = expandedPlayerId === track.id;
+                  const similarTracks = showSimilarFor === track.id ? findSimilarTracks(track, tracks) : [];
 
                   return (
                     <article
                       key={track.id}
-                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
+                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
                     >
                       <div className="flex items-start gap-3">
                         {/* Author Avatar */}
@@ -834,6 +1181,25 @@ export default function MusicRoom() {
                             )}
                           </div>
 
+                          {/* Activity Tags */}
+                          {track.activities && track.activities.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {track.activities.map((actId) => {
+                                const activity = ACTIVITY_TAGS.find((a) => a.id === actId);
+                                if (!activity) return null;
+                                return (
+                                  <span
+                                    key={actId}
+                                    className="px-2 py-1 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-orange-200/60 text-[10px] text-orange-900 flex items-center gap-1"
+                                  >
+                                    <span>{activity.emoji}</span>
+                                    <span>{activity.label}</span>
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+
                           <div className="flex gap-3">
                             {/* Album art thumbnail */}
                             {track.imageUrl && (
@@ -863,17 +1229,82 @@ export default function MusicRoom() {
                                   </span>
                                 )}
                               </p>
+
+                              {/* Playlist Adds Count */}
+                              {(track.playlistAdds || 0) > 0 && (
+                                <p className="text-[10px] text-purple-700 mt-1 flex items-center gap-1">
+                                  <span>🎧</span>
+                                  <span>{track.playlistAdds} {track.playlistAdds === 1 ? 'person' : 'people'} added to playlist</span>
+                                </p>
+                              )}
+
                               {track.note && (
                                 <p className="text-xs text-[#5C4A33] mt-2 leading-relaxed">
                                   {track.note}
                                 </p>
                               )}
-                              {track.link && (
+
+                              {/* Favorite Lyric */}
+                              {track.favoriteLyric && (
+                                <blockquote className="mt-2 pl-3 border-l-2 border-yellow-300 text-xs italic text-[#7A674C] leading-relaxed">
+                                  "{track.favoriteLyric}"
+                                </blockquote>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Embedded Music Player */}
+                          {embedInfo.embedUrl && (
+                            <div className="space-y-2">
+                              <button
+                                onClick={() => setExpandedPlayerId(isPlayerExpanded ? null : track.id)}
+                                className="text-[11px] text-yellow-700 hover:text-yellow-900 font-medium underline underline-offset-2 flex items-center gap-1"
+                              >
+                                <span>🎵</span>
+                                <span>{isPlayerExpanded ? 'Hide player' : 'Show player'}</span>
+                              </button>
+                              {isPlayerExpanded && (
+                                <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-yellow-200">
+                                  {embedInfo.type === 'spotify' && (
+                                    <iframe
+                                      src={embedInfo.embedUrl}
+                                      width="100%"
+                                      height="152"
+                                      frameBorder="0"
+                                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                      loading="lazy"
+                                    ></iframe>
+                                  )}
+                                  {embedInfo.type === 'youtube' && (
+                                    <iframe
+                                      width="100%"
+                                      height="200"
+                                      src={embedInfo.embedUrl}
+                                      frameBorder="0"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                      allowFullScreen
+                                    ></iframe>
+                                  )}
+                                  {embedInfo.type === 'apple' && (
+                                    <div className="p-4 bg-white text-center">
+                                      <a
+                                        href={track.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-yellow-700 hover:text-yellow-900 font-medium"
+                                      >
+                                        Open in Apple Music →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              {!isPlayerExpanded && track.link && (
                                 <a
                                   href={track.link}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 mt-2 text-[11px] text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
+                                  className="inline-flex items-center gap-1 text-[11px] text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
                                 >
                                   <span>🎵</span>
                                   <span>Listen to song</span>
@@ -881,11 +1312,11 @@ export default function MusicRoom() {
                                 </a>
                               )}
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between gap-3 pt-1">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-1">
                         {/* REACTIONS - Using ReactionBar with Music Room config */}
                         <div className="flex-1">
                           <ReactionBar
@@ -898,13 +1329,13 @@ export default function MusicRoom() {
                           />
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button
                             type="button"
                             onClick={() => togglePlaylist(track.id)}
-                            className={`px-3 py-1.5 rounded-xl border text-[10px] flex items-center gap-1 ${
+                            className={`px-3 py-1.5 rounded-xl border text-[10px] flex items-center gap-1 transition-all ${
                               isInPlaylist
-                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
+                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
                                 : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
                             }`}
                           >
@@ -916,16 +1347,42 @@ export default function MusicRoom() {
                             </span>
                           </button>
 
+                          <button
+                            type="button"
+                            onClick={() => setShowSimilarFor(showSimilarFor === track.id ? null : track.id)}
+                            className="px-3 py-1.5 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[10px] text-purple-900 flex items-center gap-1 transition-all"
+                          >
+                            <span>✨</span>
+                            <span>Similar vibes</span>
+                          </button>
+
                           <Link
                             href={`/music-room/${track.id}`}
-                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95"
+                            className="flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-[10px] md:text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95"
                           >
                             <span>💬</span>
-                            <span>{track.replies || 0} {track.replies === 1 ? 'comment' : 'comments'}</span>
+                            <span className="hidden sm:inline">{track.replies || 0} {track.replies === 1 ? 'comment' : 'comments'}</span>
+                            <span className="sm:hidden">{track.replies || 0}</span>
                             <span className="group-hover:translate-x-0.5 transition-transform">→</span>
                           </Link>
                         </div>
                       </div>
+
+                      {/* Similar Vibes Section */}
+                      {showSimilarFor === track.id && similarTracks.length > 0 && (
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-3 space-y-2">
+                          <p className="text-xs font-semibold text-purple-900">Similar Vibes:</p>
+                          <div className="space-y-2">
+                            {similarTracks.map((similar) => (
+                              <div key={similar.id} className="flex items-center gap-2 text-[11px]">
+                                <span className="text-purple-600">•</span>
+                                <span className="font-medium text-purple-900">{similar.title}</span>
+                                <span className="text-purple-700">by {similar.artist}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       <p className="text-[9px] text-[#C0A987] italic">
                         Reactions &amp; playlist are just for you. No public
@@ -939,6 +1396,40 @@ export default function MusicRoom() {
 
             {/* SIDEBAR INFO - Modernized */}
             <aside className="space-y-4">
+              {/* Hidden Gems */}
+              {hiddenGems.length > 0 && (
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-300/60 rounded-2xl p-5 space-y-3 shadow-md">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">💎</span>
+                    <p className="text-xs font-semibold text-purple-900">
+                      Hidden Gems
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-purple-700">
+                    Loved by many, but quietly waiting to be discovered
+                  </p>
+                  <div className="space-y-2">
+                    {hiddenGems.map((gem) => (
+                      <button
+                        key={gem.id}
+                        onClick={() => {
+                          setSearch(gem.title);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="w-full text-left p-2 rounded-lg bg-white/60 hover:bg-white border border-purple-200 hover:border-purple-300 transition-all group"
+                      >
+                        <p className="text-xs font-medium text-purple-900 group-hover:text-purple-950">
+                          {gem.title}
+                        </p>
+                        <p className="text-[10px] text-purple-700">
+                          {gem.artist} · {gem.playlistAdds} adds
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
                 <p className="text-xs font-semibold text-yellow-900">
                   How people use this room
@@ -959,6 +1450,10 @@ export default function MusicRoom() {
                   <li className="flex items-start gap-2">
                     <span className="text-yellow-600">•</span>
                     <span>Swap "I forgot about this banger" tracks</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Discover new tracks through activity tags</span>
                   </li>
                 </ul>
               </div>
@@ -990,6 +1485,10 @@ export default function MusicRoom() {
                   <li className="flex items-start gap-2">
                     <span className="text-orange-600">💭</span>
                     <span>"A song that makes cleaning less annoying…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"My go-to workout hype track…"</span>
                   </li>
                 </ul>
               </div>
