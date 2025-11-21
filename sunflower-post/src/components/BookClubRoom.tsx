@@ -285,46 +285,113 @@ export default function BookClubRoom() {
         {/* RIGHT: BOOK CLUB CONTENT */}
         <div className="md:col-span-3 space-y-8">
           {/* HEADER */}
-          <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div className="space-y-3 md:max-w-xl">
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
-                  Room
-                </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
-                  Book Club
-                </h1>
-                <p className="text-xs md:text-sm text-[#5C4A33] max-w-xl">
-                  A gentle book club for people who read slowly, re-read
-                  favourite lines and sometimes just want to listen to others
-                  talk about the book. No pressure to be ‘well read’.
-                </p>
+          <section className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+              <div className="space-y-3 md:max-w-xl">
+                <div className="space-y-2">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
+                    Room
+                  </p>
+                  <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
+                    Book Club
+                  </h1>
+                  <p className="text-xs md:text-sm text-[#5C4A33] max-w-xl">
+                    A gentle book club for people who read slowly, re-read
+                    favourite lines and sometimes just want to listen to others
+                    talk about the book. No pressure to be 'well read'.
+                  </p>
+                </div>
+
+                {/* SEARCH BAR – now sees books *and* discussion topics */}
+                <div className="flex items-center gap-2 bg-white border border-yellow-100 rounded-full px-3 py-1 shadow-sm">
+                  <span>🔍</span>
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search by title, author, theme or discussion topic…"
+                    className="flex-1 bg-transparent text-[11px] focus:outline-none placeholder:text-[#C0A987]"
+                  />
+                </div>
               </div>
 
-              {/* SEARCH BAR – now sees books *and* discussion topics */}
-              <div className="flex items-center gap-2 bg-white border border-yellow-100 rounded-full px-3 py-1 shadow-sm">
-                <span>🔍</span>
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by title, author, theme or discussion topic…"
-                  className="flex-1 bg-transparent text-[11px] focus:outline-none placeholder:text-[#C0A987]"
-                />
+              <div className="flex flex-wrap gap-2 text-[11px]">
+                <button
+                  onClick={() => {
+                    setShowAddForm((s) => !s);
+                    setAddError(null);
+                  }}
+                  className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm transition-all hover:shadow-md"
+                >
+                  {showAddForm ? "Close add book form" : "Add a book"}
+                </button>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[11px]">
-              <button
-                onClick={() => {
-                  setShowAddForm((s) => !s);
-                  setAddError(null);
-                }}
-                className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm"
-              >
-                {showAddForm ? "Close add book form" : "Add a book"}
-              </button>
-            </div>
+            {/* HERO: CURRENTLY READING */}
+            {books.filter((b) => b.status === "Reading").length > 0 && (
+              <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">📖</span>
+                    <h2 className="text-base md:text-lg font-semibold text-yellow-900">
+                      Currently Reading
+                    </h2>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {books
+                      .filter((b) => b.status === "Reading")
+                      .slice(0, 3)
+                      .map((book) => (
+                        <a
+                          key={book.id}
+                          href={`/book-club/${book.id}`}
+                          className="group bg-white border border-yellow-100 rounded-2xl p-4 hover:border-yellow-300 hover:shadow-md transition-all duration-200"
+                        >
+                          <div className="flex gap-3">
+                            <div className="w-20 h-28 rounded-lg overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5] border border-yellow-200 flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
+                              {book.coverUrl ? (
+                                <img
+                                  src={book.coverUrl}
+                                  alt={`Cover of ${book.title}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-[10px] text-[#A08960] text-center p-2">
+                                  Book cover
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-sm font-semibold text-yellow-900 mb-1 truncate group-hover:text-yellow-700 transition-colors">
+                                {book.title}
+                              </h3>
+                              <p className="text-[11px] text-[#7A674C] mb-2">
+                                {book.author}
+                              </p>
+                              {book.mood && (
+                                <span className="inline-block px-2 py-1 rounded-full bg-[#FFFEFA] border border-yellow-100 text-[10px] text-[#5C4A33]">
+                                  {book.mood}
+                                </span>
+                              )}
+                              {book.discussionCount > 0 && (
+                                <p className="text-[10px] text-[#A08960] mt-2 flex items-center gap-1">
+                                  <span>💬</span>
+                                  <span>
+                                    {book.discussionCount} discussion
+                                    {book.discussionCount === 1 ? "" : "s"}
+                                  </span>
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </a>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* ADD BOOK FORM */}
@@ -619,7 +686,7 @@ export default function BookClubRoom() {
                   return (
                     <article
                       key={book.id}
-                      className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-3 hover:border-yellow-200 transition"
+                      className="group bg-white border border-yellow-100 rounded-2xl p-4 space-y-3 hover:border-yellow-300 hover:shadow-lg transition-all duration-200"
                     >
                       <div className="flex items-center justify-between text-[10px] text-[#A08960]">
                         <span
@@ -633,9 +700,9 @@ export default function BookClubRoom() {
                       </div>
 
                       <div className="flex justify-between gap-3">
-                        <div className="flex gap-3">
-                          {/* COVER THUMBNAIL */}
-                          <div className="w-14 h-20 md:w-16 md:h-24 rounded-lg overflow-hidden bg-[#FFF7D6] border border-yellow-100 flex items-center justify-center text-[10px] text-[#A08960]">
+                        <div className="flex gap-4">
+                          {/* COVER THUMBNAIL - Larger and more prominent */}
+                          <div className="w-20 h-28 md:w-24 md:h-32 rounded-lg overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5] border border-yellow-200 flex items-center justify-center text-[10px] text-[#A08960] shadow-md group-hover:shadow-xl transition-shadow flex-shrink-0">
                             {book.coverUrl ? (
                               <img
                                 src={book.coverUrl}
@@ -643,24 +710,34 @@ export default function BookClubRoom() {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <span>Book cover</span>
+                              <span className="text-center p-2">Book cover</span>
                             )}
                           </div>
 
-                          <div>
-                            <h2 className="text-sm font-semibold text-yellow-900">
+                          <div className="flex-1 min-w-0">
+                            <h2 className="text-sm md:text-base font-semibold text-yellow-900 group-hover:text-yellow-700 transition-colors">
                               {book.title}
                             </h2>
-                            <p className="text-[11px] text-[#7A674C]">
+                            <p className="text-[11px] md:text-xs text-[#7A674C] mt-0.5">
                               {book.author}
                             </p>
-                            <p className="text-[11px] text-[#5C4A33] mt-1">
-                              {book.mood}
-                              {book.theme && <span> · {book.theme}</span>}
-                              {book.format && <span> · {book.format}</span>}
-                            </p>
+                            <div className="flex flex-wrap gap-1.5 mt-2">
+                              <span className="inline-block px-2 py-1 rounded-full bg-[#FFFEFA] border border-yellow-100 text-[10px] text-[#5C4A33]">
+                                {book.mood}
+                              </span>
+                              {book.theme && (
+                                <span className="inline-block px-2 py-1 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[10px] text-[#7C2D12]">
+                                  {book.theme}
+                                </span>
+                              )}
+                              {book.format && (
+                                <span className="inline-block px-2 py-1 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] text-[#166534]">
+                                  {book.format}
+                                </span>
+                              )}
+                            </div>
                             {book.note && (
-                              <p className="text-[11px] text-[#5C4A33] mt-1">
+                              <p className="text-[11px] text-[#5C4A33] mt-2 line-clamp-2">
                                 {book.note}
                               </p>
                             )}
@@ -669,7 +746,7 @@ export default function BookClubRoom() {
                                 href={book.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 mt-2 text-[11px] text-[#7A674C] underline hover:text-yellow-900"
+                                className="inline-flex items-center gap-1 mt-2 text-[11px] text-[#7A674C] underline hover:text-yellow-900 transition-colors"
                               >
                                 <span>View book</span>
                                 <span>↗</span>
@@ -681,31 +758,31 @@ export default function BookClubRoom() {
                         <button
                           type="button"
                           onClick={() => toggleShelf(book.id)}
-                          className={`px-3 py-1 h-fit rounded-full border text-[10px] flex items-center gap-1 ${
+                          className={`px-3 py-1 h-fit rounded-full border text-[10px] flex items-center gap-1 transition-all ${
                             shelf
-                              ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
-                              : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                              ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
+                              : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:shadow-sm"
                           }`}
                         >
                           <span>📖</span>
-                          <span>
-                            {shelf ? "On your shelf" : "Save to your shelf"}
+                          <span className="hidden sm:inline">
+                            {shelf ? "On your shelf" : "Save to shelf"}
                           </span>
                         </button>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
+                      <div className="flex items-center justify-between text-[11px] text-[#7A674C] pt-2 border-t border-yellow-50">
                         <span>
                           Shared by{" "}
                           {book.sharedBy ? (
-                            <span>{book.sharedBy}</span>
+                            <span className="font-medium">{book.sharedBy}</span>
                           ) : (
-                            <span>Anon</span>
+                            <span className="font-medium">Anon</span>
                           )}
                         </span>
                         <a
                           href={`/book-club/${book.id}`}
-                          className="flex items-center gap-1 hover:text-yellow-900"
+                          className="flex items-center gap-1 hover:text-yellow-900 transition-colors font-medium"
                         >
                           <span>💬</span>
                           <span>
