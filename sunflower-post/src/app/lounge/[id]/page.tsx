@@ -189,28 +189,28 @@ export default function LoungeThreadPage({ params }: PageProps) {
           </div>
 
           {/* MAIN POST CARD */}
-          <article className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-start gap-3">
+          <article className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-6 md:p-8 space-y-5 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div className="flex items-start gap-4">
               {/* Author Avatar */}
               <div
-                className={`w-12 h-12 rounded-full ${getAvatarColor(
+                className={`w-14 h-14 rounded-full ${getAvatarColor(
                   post.author
-                )} flex items-center justify-center text-base font-semibold text-[#3A2E1F] shadow-md`}
+                )} flex items-center justify-center text-lg font-bold text-[#3A2E1F] shadow-lg ring-2 ring-white`}
               >
                 {getAuthorInitial(post.author)}
               </div>
 
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-[#5C4A33]">
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-base font-bold text-[#5C4A33]">
                     {post.author}
                   </span>
-                  <span className="text-[10px] text-[#A08960]">
+                  <span className="text-[11px] text-[#A08960]">
                     {post.timeAgo}
                   </span>
                 </div>
                 <span
-                  className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${getBadgeStyles(
+                  className={`inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-semibold shadow-sm ${getBadgeStyles(
                     post.type
                   )}`}
                 >
@@ -223,10 +223,10 @@ export default function LoungeThreadPage({ params }: PageProps) {
               </div>
             </div>
 
-            <h1 className="text-lg md:text-xl font-semibold text-yellow-900 leading-snug">
+            <h1 className="text-xl md:text-2xl font-bold text-yellow-900 leading-tight">
               {post.title}
             </h1>
-            <p className="text-sm md:text-base text-[#5C4A33] whitespace-pre-line leading-relaxed">
+            <p className="text-base md:text-lg text-[#5C4A33] whitespace-pre-line leading-relaxed">
               {post.body}
             </p>
 
@@ -277,28 +277,28 @@ export default function LoungeThreadPage({ params }: PageProps) {
               {replies.map((reply) => (
                 <div
                   key={reply.id}
-                  className="bg-white border border-yellow-200/60 rounded-2xl p-4 space-y-3 text-sm shadow-md hover:shadow-lg transition-all"
+                  className="bg-gradient-to-br from-white to-yellow-50/10 border border-yellow-200/60 rounded-2xl p-5 space-y-3 text-sm shadow-md hover:shadow-xl transition-all duration-300"
                 >
                   <div className="flex items-start gap-3">
                     {/* Reply Author Avatar */}
                     <div
-                      className={`w-9 h-9 rounded-full ${getAvatarColor(
+                      className={`w-10 h-10 rounded-full ${getAvatarColor(
                         reply.author
-                      )} flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-sm`}
+                      )} flex items-center justify-center text-sm font-bold text-[#3A2E1F] shadow-md ring-2 ring-white`}
                     >
                       {getAuthorInitial(reply.author)}
                     </div>
 
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-[#5C4A33]">
+                        <span className="text-sm font-bold text-[#5C4A33]">
                           {reply.author}
                         </span>
                         <span className="text-[10px] text-[#A08960]">
                           {reply.timeAgo}
                         </span>
                       </div>
-                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed font-medium">
                         {reply.body}
                       </p>
                     </div>

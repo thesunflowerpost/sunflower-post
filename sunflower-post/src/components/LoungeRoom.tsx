@@ -31,6 +31,7 @@ const INITIAL_POSTS: LoungePost[] = [
     author: "Dani",
     timeAgo: "2 hours ago",
     replies: 3,
+    imageUrl: "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=400&fit=crop", // Clean folded laundry
   },
   {
     id: 2,
@@ -645,32 +646,32 @@ export default function LoungeRoom() {
                   return (
                     <article
                       key={post.id}
-                      className="bg-white border border-yellow-200/60 rounded-xl p-3 space-y-2 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group"
+                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
                     >
-                      <div className="flex items-start gap-2">
+                      <div className="flex items-start gap-3">
                         {/* Author Avatar */}
                         <div
-                          className={`w-8 h-8 rounded-full ${getAvatarColor(
+                          className={`w-10 h-10 rounded-full ${getAvatarColor(
                             post.author
-                          )} flex items-center justify-center text-xs font-semibold text-[#3A2E1F] shadow-sm flex-shrink-0`}
+                          )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white`}
                         >
                           {getAuthorInitial(post.author)}
                         </div>
-                        <div className="flex-1 min-w-0 space-y-1.5">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-[#5C4A33]">
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-semibold text-[#5C4A33]">
                               {post.author}
                             </span>
                             <span className="text-[10px] text-[#A08960]">
                               {post.timeAgo}
                             </span>
                             <span
-                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold ${
+                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold shadow-sm ${
                                 post.type === "joy"
-                                  ? "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900"
+                                  ? "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900 ring-1 ring-yellow-300/50"
                                   : post.type === "pickmeup"
-                                  ? "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-900"
-                                  : "bg-gradient-to-br from-orange-100 to-orange-200 text-orange-900"
+                                  ? "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-900 ring-1 ring-purple-300/50"
+                                  : "bg-gradient-to-br from-orange-100 to-orange-200 text-orange-900 ring-1 ring-orange-300/50"
                               }`}
                             >
                               {post.type === "joy"
@@ -681,7 +682,7 @@ export default function LoungeRoom() {
                             </span>
                           </div>
 
-                          <h2 className="text-sm font-semibold text-yellow-900 leading-snug">
+                          <h2 className="text-base font-bold text-yellow-900 leading-snug">
                             {post.title}
                           </h2>
                           <div>
@@ -702,11 +703,11 @@ export default function LoungeRoom() {
 
                           {/* POST IMAGE */}
                           {post.imageUrl && (
-                            <div className="mt-2">
+                            <div className="mt-3">
                               <img
                                 src={post.imageUrl}
                                 alt="Post image"
-                                className="w-full max-w-xs h-auto rounded-xl object-cover border border-yellow-100 shadow-sm"
+                                className="w-full max-w-sm h-auto rounded-xl object-cover border-2 border-yellow-100 shadow-md hover:shadow-lg transition-shadow"
                               />
                             </div>
                           )}
@@ -726,13 +727,13 @@ export default function LoungeRoom() {
 
                             <Link
                               href={`/lounge/${post.id}`}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-xs font-medium text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-sm"
+                              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95 group/reply"
                             >
                               <ShimmerIcon>
                                 <span className="text-sm">💬</span>
                               </ShimmerIcon>
                               <span>{post.replies} {post.replies === 1 ? 'reply' : 'replies'}</span>
-                              <span>→</span>
+                              <span className="group-hover/reply:translate-x-0.5 transition-transform">→</span>
                             </Link>
                           </div>
                         </div>
