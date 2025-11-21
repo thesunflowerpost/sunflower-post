@@ -33,10 +33,10 @@ interface LegacySunburstProps {
 // Map legacy types to new ReactionIds
 const legacyTypeMap: Record<string, ReactionId> = {
   sunburst: 'sunburst',
-  fire: 'thisSlaps',
+  fire: 'bigVibe',
   heart: 'heart',
   unity: 'withYou',
-  vibe: 'vibes',
+  vibe: 'shine',
 };
 
 export function Sunburst(

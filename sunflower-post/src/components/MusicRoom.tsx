@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useState, useRef, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
-import { ReactionBar } from "./ui";
+import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
 type MusicMood = string;
@@ -19,9 +20,12 @@ type TrackItem = {
   era?: string;
   genre?: string;
   source?: string; // e.g. Spotify, YouTube, Apple Music
+  link?: string; // Link to song/album
   sharedBy: string;
   note?: string;
   timeAgo: string;
+  imageUrl?: string; // Album art or uploaded image
+  replies?: number; // Number of comments/replies
 };
 
 // User reactions are now stored as Record<ReactionId, boolean>
@@ -47,7 +51,7 @@ const INITIAL_TRACKS: TrackItem[] = [
   {
     id: 1,
     title: "Say My Name",
-    artist: "Destiny’s Child",
+    artist: "Destiny's Child",
     mood: "Nostalgia",
     era: "90s / 2000s",
     genre: "R&B / Pop",
@@ -55,6 +59,8 @@ const INITIAL_TRACKS: TrackItem[] = [
     sharedBy: "S.",
     note: "Instant throwback energy. Great for cleaning or getting ready.",
     timeAgo: "Shared 3 days ago",
+    replies: 3,
+    imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
   },
   {
     id: 2,
@@ -65,8 +71,9 @@ const INITIAL_TRACKS: TrackItem[] = [
     genre: "Soul",
     source: "Spotify / YouTube",
     sharedBy: "Anon",
-    note: "For when you’re processing feelings and need a good reflective cry.",
+    note: "For when you're processing feelings and need a good reflective cry.",
     timeAgo: "Shared 1 week ago",
+    replies: 1,
   },
   {
     id: 3,
@@ -77,8 +84,10 @@ const INITIAL_TRACKS: TrackItem[] = [
     genre: "R&B",
     source: "Spotify / Apple Music",
     sharedBy: "Jay",
-    note: "Instant mood lift. Walking anthem when you need to remember you’re actually that girl.",
+    note: "Instant mood lift. Walking anthem when you need to remember you're actually that girl.",
     timeAgo: "Shared 2 weeks ago",
+    replies: 0,
+    imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop",
   },
 ];
 
@@ -113,9 +122,17 @@ export default function MusicRoom() {
     era: "",
     genre: "",
     source: "",
+    link: "",
     note: "",
     sharedBy: "",
+    isAnon: false,
   });
+
+  // Image upload state
+  const [trackMediaUrl, setTrackMediaUrl] = useState("");
+  const [trackFilePreviewUrl, setTrackFilePreviewUrl] = useState<string | null>(null);
+  const [showTrackUrlInput, setShowTrackUrlInput] = useState(false);
+  const trackFileInputRef = useRef<HTMLInputElement>(null);
 
   // per-track reactions for this viewer
   const [reactions, setReactions] = useState<Record<number, TrackReactions>>({});
@@ -188,6 +205,33 @@ export default function MusicRoom() {
     return "🎵";
   }
 
+  // Helper to get author initials
+  function getAuthorInitial(author: string): string {
+    return author.charAt(0).toUpperCase();
+  }
+
+  // Helper to get avatar color based on author name
+  function getAvatarColor(author: string): string {
+    const colors = [
+      "bg-gradient-to-br from-yellow-200 to-amber-300",
+      "bg-gradient-to-br from-rose-200 to-pink-300",
+      "bg-gradient-to-br from-blue-200 to-indigo-300",
+      "bg-gradient-to-br from-green-200 to-emerald-300",
+      "bg-gradient-to-br from-purple-200 to-violet-300",
+    ];
+    const index = author.length % colors.length;
+    return colors[index];
+  }
+
+  function handleTrackFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    setTrackFilePreviewUrl(url);
+    setTrackMediaUrl("");
+  }
+
   function toggleReaction(trackId: number, reactionId: ReactionId, active: boolean) {
     setReactions((prev) => {
       const current = prev[trackId] || {};
@@ -233,6 +277,8 @@ export default function MusicRoom() {
 
     setSubmitting(true);
 
+    const finalImageUrl = trackFilePreviewUrl || trackMediaUrl.trim() || undefined;
+
     const track: TrackItem = {
       id: tracks.length + 1,
       title,
@@ -241,9 +287,12 @@ export default function MusicRoom() {
       era: newTrack.era.trim() || undefined,
       genre: newTrack.genre.trim() || undefined,
       source: newTrack.source.trim() || undefined,
+      link: newTrack.link.trim() || undefined,
       note: newTrack.note.trim() || undefined,
-      sharedBy: newTrack.sharedBy.trim() || "Anon",
+      sharedBy: newTrack.isAnon ? "Anon" : newTrack.sharedBy.trim() || "Anon",
       timeAgo: "Just now",
+      imageUrl: finalImageUrl,
+      replies: 0,
     };
 
     setTracks([track, ...tracks]);
@@ -259,9 +308,14 @@ export default function MusicRoom() {
       era: "",
       genre: "",
       source: "",
+      link: "",
       note: "",
       sharedBy: "",
+      isAnon: false,
     });
+    setTrackMediaUrl("");
+    setTrackFilePreviewUrl(null);
+    setShowTrackUrlInput(false);
 
     setSubmitting(false);
     setShowAddForm(false);
@@ -310,50 +364,52 @@ export default function MusicRoom() {
           <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-3 md:max-w-xl">
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
                   Room
                 </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-yellow-900">
+                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
                   Music Room
                 </h1>
-                <p className="text-xs md:text-sm text-[#5C4A33] max-w-xl">
-                  Nostalgic tracks, feel-good songs and “this lives in my
-                  bones” music. Share the songs that make cleaning easier,
+                <p className="text-sm text-[#5C4A33] max-w-xl leading-relaxed">
+                  Nostalgic tracks, feel-good songs and "this lives in my
+                  bones" music. Share the songs that make cleaning easier,
                   walks brighter and hard days feel more human.
                 </p>
               </div>
 
-              {/* SEARCH BAR */}
-              <div className="flex items-center gap-2 bg-white border border-yellow-100 rounded-full px-3 py-1 shadow-sm">
-                <span>🔍</span>
+              {/* SEARCH BAR - Modernized */}
+              <div className="flex items-center gap-2 bg-white border border-yellow-200/60 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-yellow-300/50 focus-within:border-yellow-300">
+                <span className="text-base">🔍</span>
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by song, artist, mood, era, genre…"
-                  className="flex-1 bg-transparent text-[11px] focus:outline-none placeholder:text-[#C0A987]"
+                  className="flex-1 bg-transparent text-xs focus:outline-none placeholder:text-[#C0A987]"
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[11px]">
-              <button
+            <div className="flex flex-wrap gap-2 text-xs">
+              <BouncyButton
                 onClick={() => {
                   setShowAddForm((s) => !s);
                   setAddError(null);
                 }}
-                className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm"
+                variant="primary"
+                size="sm"
+                className="shadow-md"
               >
                 {showAddForm ? "Close add form" : "Add a song"}
-              </button>
+              </BouncyButton>
             </div>
           </section>
 
           {/* ADD TRACK FORM */}
           {showAddForm && (
-            <section className="bg-white border border-yellow-100 rounded-2xl p-4 md:p-5 space-y-3 text-xs md:text-sm">
+            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold text-yellow-900">
+                <p className="text-base font-semibold text-yellow-900">
                   Share a song for the room 🎧
                 </p>
                 <p className="text-[10px] text-[#A08960]">
@@ -362,10 +418,10 @@ export default function MusicRoom() {
                 </p>
               </div>
 
-              <form onSubmit={handleAddTrack} className="space-y-3">
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+              <form onSubmit={handleAddTrack} className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Song title
                     </label>
                     <input
@@ -377,13 +433,13 @@ export default function MusicRoom() {
                           title: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. Just Fine"
                       required
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Artist
                     </label>
                     <input
@@ -395,16 +451,16 @@ export default function MusicRoom() {
                           artist: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. Mary J. Blige"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Mood / vibe
                     </label>
                     <input
@@ -416,12 +472,12 @@ export default function MusicRoom() {
                           mood: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. Nostalgia, Feel-good, Soft background"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Era (optional)
                     </label>
                     <input
@@ -433,12 +489,12 @@ export default function MusicRoom() {
                           era: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. 90s, 2000s, 2010s"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Genre (optional)
                     </label>
                     <input
@@ -450,15 +506,15 @@ export default function MusicRoom() {
                           genre: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. R&B, Gospel, Afrobeats"
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
                       Where do you listen? (optional)
                     </label>
                     <input
@@ -470,45 +526,185 @@ export default function MusicRoom() {
                           source: e.target.value,
                         }))
                       }
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                       placeholder="e.g. Spotify, YouTube, Apple Music"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-[#5C4A33]">
-                      Why this song? (optional)
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
+                      Song link (optional)
                     </label>
-                    <textarea
-                      value={newTrack.note}
+                    <input
+                      type="url"
+                      value={newTrack.link}
                       onChange={(e) =>
                         setNewTrack((prev) => ({
                           ...prev,
-                          note: e.target.value,
+                          link: e.target.value,
                         }))
                       }
-                      rows={2}
-                      className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                      placeholder="Is it a cleaning song, walk song, cry song, shower concert song…?"
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                      placeholder="Link to Spotify, YouTube, Apple Music…"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-[#5C4A33]">
-                    Your name (or initial)
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    Why this song? (optional)
                   </label>
-                  <input
-                    type="text"
-                    value={newTrack.sharedBy}
+                  <textarea
+                    value={newTrack.note}
                     onChange={(e) =>
                       setNewTrack((prev) => ({
                         ...prev,
-                        sharedBy: e.target.value,
+                        note: e.target.value,
                       }))
                     }
-                    className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                    placeholder="Leave blank to show as Anon"
+                    rows={3}
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
+                    placeholder="Is it a cleaning song, walk song, cry song, shower concert song…?"
                   />
+                </div>
+
+                {/* IMAGE UPLOAD SECTION */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#5C4A33]">
+                    Add album art or image (optional)
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => trackFileInputRef.current?.click()}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>📷</span>
+                      <span>Upload image</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowTrackUrlInput((s) => !s)}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>🎵</span>
+                      <span>Add album art link</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTrackMediaUrl("/music-placeholder.svg");
+                        setTrackFilePreviewUrl(null);
+                        setShowTrackUrlInput(false);
+                      }}
+                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                    >
+                      <span>🌻</span>
+                      <span>Use default image</span>
+                    </button>
+
+                    <span className="text-[10px] text-[#A08960]">
+                      Perfect for adding atmosphere to your song share!
+                    </span>
+                  </div>
+
+                  {/* Hidden file input */}
+                  <input
+                    ref={trackFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleTrackFileChange}
+                  />
+
+                  {/* URL input */}
+                  {showTrackUrlInput && (
+                    <div className="space-y-1">
+                      <input
+                        type="url"
+                        value={trackMediaUrl}
+                        onChange={(e) => {
+                          setTrackMediaUrl(e.target.value);
+                          if (trackFilePreviewUrl) {
+                            setTrackFilePreviewUrl(null);
+                          }
+                        }}
+                        placeholder="Paste a link to album art (e.g. from Spotify, Apple Music, or direct image URL)"
+                        className="w-full border border-yellow-200 rounded-xl px-4 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                      />
+                      <p className="text-[10px] text-[#A08960]">
+                        Tip: Find album art on Spotify or Apple Music, right-click the image, and copy the image link.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* PREVIEW */}
+                  {(trackFilePreviewUrl || trackMediaUrl.trim()) && (
+                    <div className="bg-white border border-yellow-200 rounded-xl p-3 flex items-start gap-3">
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-yellow-50 flex items-center justify-center flex-shrink-0">
+                        {trackFilePreviewUrl || trackMediaUrl.trim() ? (
+                          <img
+                            src={trackFilePreviewUrl || trackMediaUrl.trim()}
+                            alt="Album art preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-2xl">🌻</span>
+                        )}
+                      </div>
+                      <div className="flex-1 text-[10px] text-[#7A674C] space-y-1">
+                        <p className="font-medium text-yellow-900">Image preview</p>
+                        <p>
+                          This will appear with your song. If it doesn&apos;t look right, you can change or clear it before posting.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 items-start">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
+                      Your name (or initials)
+                    </label>
+                    <input
+                      type="text"
+                      value={newTrack.sharedBy}
+                      onChange={(e) =>
+                        setNewTrack((prev) => ({
+                          ...prev,
+                          sharedBy: e.target.value,
+                        }))
+                      }
+                      required={!newTrack.isAnon}
+                      disabled={newTrack.isAnon}
+                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
+                      placeholder='e.g. "Jay" or "J."'
+                    />
+                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
+                      <input
+                        type="checkbox"
+                        checked={newTrack.isAnon}
+                        onChange={(e) =>
+                          setNewTrack((prev) => ({ ...prev, isAnon: e.target.checked }))
+                        }
+                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
+                      />
+                      <span>Post anonymously (still linked to your account)</span>
+                    </label>
+                  </div>
+
+                  <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
+                    <p className="font-medium text-yellow-900">Gentle boundaries</p>
+                    <ul className="space-y-1">
+                      <li>• Keep it kind and inclusive.</li>
+                      <li>• Avoid lyrics/music that are hateful or explicitly violent.</li>
+                      <li>
+                        • If a song has heavy themes (grief, heartbreak), mention it gently in your note.
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
                 {addError && (
@@ -517,17 +713,18 @@ export default function MusicRoom() {
                   </p>
                 )}
 
-                <div className="flex items-center justify-between gap-3 pt-1">
-                  <button
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <BouncyButton
                     type="submit"
                     disabled={submitting || !newTrack.title.trim() || !newTrack.artist.trim()}
-                    className="px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-xs font-semibold shadow-sm"
+                    variant="primary"
+                    size="sm"
+                    className="shadow-md"
                   >
                     {submitting ? "Adding…" : "Add to Music Room"}
-                  </button>
+                  </BouncyButton>
                   <p className="text-[10px] text-[#A08960]">
-                    Try not to add the exact same song + artist twice – the room
-                    will gently tell you if it&apos;s already here.
+                    Your post may be gently moderated for safety and tone.
                   </p>
                 </div>
               </form>
@@ -586,9 +783,9 @@ export default function MusicRoom() {
               </div>
 
               {/* TRACK CARDS */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {filteredTracks.length === 0 && (
-                  <div className="bg-white border border-yellow-100 rounded-2xl p-4 text-[11px] text-[#7A674C]">
+                  <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
                       Nothing matches that (yet).
                     </p>
@@ -601,227 +798,199 @@ export default function MusicRoom() {
 
                 {filteredTracks.map((track) => {
                   const trackReactions = reactions[track.id] || {};
-
                   const isInPlaylist = !!playlist[track.id];
-                  const thread = comments[track.id] || [];
-                  const isOpen = openTrackId === track.id;
-                  const draft = commentDrafts[track.id] || "";
 
                   return (
                     <article
                       key={track.id}
-                      className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-3 hover:border-yellow-200 transition"
+                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                        <span className="flex items-center gap-2">
-                          <span className="flex items-center gap-1">
-                            <span>{moodEmoji(track.mood)}</span>
-                            <span>{track.mood}</span>
-                          </span>
-                          {track.era && (
-                            <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33]">
-                              {track.era}
-                            </span>
-                          )}
-                        </span>
-                        <span>{track.timeAgo}</span>
-                      </div>
+                      <div className="flex items-start gap-3">
+                        {/* Author Avatar */}
+                        <div
+                          className={`w-10 h-10 rounded-full ${getAvatarColor(
+                            track.sharedBy
+                          )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white`}
+                        >
+                          {getAuthorInitial(track.sharedBy)}
+                        </div>
 
-                      <div className="flex items-baseline justify-between gap-2">
-                        <div>
-                          <h2 className="text-sm font-semibold text-yellow-900">
-                            {track.title}
-                          </h2>
-                          <p className="text-[11px] text-[#7A674C]">
-                            {track.artist}
-                            {track.genre && <span> · {track.genre}</span>}
-                            {track.source && (
-                              <span>
-                                {" "}
-                                ·{" "}
-                                <span className="italic">
-                                  {track.source}
-                                </span>
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-semibold text-[#5C4A33]">
+                              {track.sharedBy}
+                            </span>
+                            <span className="text-[10px] text-[#A08960]">
+                              {track.timeAgo}
+                            </span>
+                            <span className="flex items-center gap-1 text-[10px]">
+                              <span>{moodEmoji(track.mood)}</span>
+                              <span className="text-[#7A674C]">{track.mood}</span>
+                            </span>
+                            {track.era && (
+                              <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33] text-[10px]">
+                                {track.era}
                               </span>
                             )}
-                          </p>
-                          {track.note && (
-                            <p className="text-[11px] text-[#5C4A33] mt-1">
-                              {track.note}
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                          </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-                        <span>
-                          Shared by{" "}
-                          {track.sharedBy ? (
-                            <span>{track.sharedBy}</span>
-                          ) : (
-                            <span>Anon</span>
-                          )}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenTrackId((current) =>
-                              current === track.id ? null : track.id
-                            )
-                          }
-                          className="flex items-center gap-1 hover:text-yellow-900"
-                        >
-                          <span>💬</span>
-                          <span>
-                            {thread.length === 0
-                              ? "Start thread"
-                              : `${thread.length} comment${
-                                  thread.length === 1 ? "" : "s"
-                                }`}
-                          </span>
-                        </button>
-                      </div>
+                          <div className="flex gap-3">
+                            {/* Album art thumbnail */}
+                            {track.imageUrl && (
+                              <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-yellow-50 border-2 border-yellow-100 flex-shrink-0 shadow-md">
+                                <img
+                                  src={track.imageUrl}
+                                  alt={`Album art for ${track.title}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            )}
 
-                      {/* PLAYLIST BUTTON */}
-                      <div className="flex items-center justify-end">
-                        <button
-                          type="button"
-                          onClick={() => togglePlaylist(track.id)}
-                          className={`px-3 py-1 rounded-full border text-[10px] flex items-center gap-1 ${
-                            isInPlaylist
-                              ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
-                              : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                          }`}
-                        >
-                          <span>🎧</span>
-                          <span>
-                            {isInPlaylist
-                              ? "In your playlist"
-                              : "Add to your playlist"}
-                          </span>
-                        </button>
-                      </div>
-
-                      {/* REACTIONS - Using ReactionBar with Music Room config */}
-                      <div className="flex flex-col gap-2">
-                        <ReactionBar
-                          roomId="musicRoom"
-                          postId={track.id}
-                          reactions={trackReactions}
-                          onReactionToggle={(reactionId, active) =>
-                            toggleReaction(track.id, reactionId, active)
-                          }
-                          showLabels={true}
-                        />
-                        <p className="text-[9px] text-[#C0A987] italic">
-                          Reactions &amp; playlist are just for you. No public
-                          scores, just shared vibes.
-                        </p>
-                      </div>
-
-                      {/* COMMENTS THREAD */}
-                      {isOpen && (
-                        <div className="mt-2 border-t border-yellow-50 pt-3 space-y-3">
-                          {/* COMMENT FORM - Above existing comments */}
-                          <form
-                            className="space-y-2"
-                            onSubmit={(e) => handleAddComment(track.id, e)}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm">💬</span>
-                              <label className="text-[11px] font-medium text-[#5C4A33]">
-                                Add a reflection
-                              </label>
-                            </div>
-                            <textarea
-                              value={draft}
-                              onChange={(e) =>
-                                setCommentDrafts((prev) => ({
-                                  ...prev,
-                                  [track.id]: e.target.value,
-                                }))
-                              }
-                              rows={2}
-                              className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                              placeholder="Share the memory it reminds you of, how you found it, or what mood it fits."
-                            />
-                            <div className="flex items-center justify-between gap-2">
-                              <button
-                                type="submit"
-                                disabled={!draft.trim()}
-                                className="px-3 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-200 text-[#3A2E1F] text-[11px] font-semibold shadow-sm"
-                              >
-                                Post comment
-                              </button>
-                              <p className="text-[9px] text-[#A08960]">
-                                No music snobbery here – your guilty pleasures are
-                                safe. 🎶
+                            <div className="flex-1">
+                              <h2 className="text-base font-bold text-yellow-900 leading-snug">
+                                {track.title}
+                              </h2>
+                              <p className="text-xs text-[#7A674C] mt-0.5">
+                                {track.artist}
+                                {track.genre && <span> · {track.genre}</span>}
+                                {track.source && (
+                                  <span>
+                                    {" "}
+                                    ·{" "}
+                                    <span className="italic">
+                                      {track.source}
+                                    </span>
+                                  </span>
+                                )}
                               </p>
-                            </div>
-                          </form>
-
-                          {/* EXISTING COMMENTS - Below form */}
-                          {thread.length > 0 && (
-                            <div className="space-y-2 pt-2">
-                              <p className="text-[10px] text-[#A08960] font-medium">
-                                {thread.length} comment{thread.length === 1 ? "" : "s"}
-                              </p>
-                              {thread.map((c) => (
-                                <div
-                                  key={c.id}
-                                  className="bg-[#FFFEFA] border border-yellow-50 rounded-xl px-3 py-2 text-[11px]"
+                              {track.note && (
+                                <p className="text-xs text-[#5C4A33] mt-2 leading-relaxed">
+                                  {track.note}
+                                </p>
+                              )}
+                              {track.link && (
+                                <a
+                                  href={track.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 mt-2 text-[11px] text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
                                 >
-                                  <p className="text-[#5C4A33] whitespace-pre-line">
-                                    {c.body}
-                                  </p>
-                                  <p className="mt-1 text-[10px] text-[#A08960]">
-                                    {c.author} · {c.timeAgo}
-                                  </p>
-                                </div>
-                              ))}
+                                  <span>🎵</span>
+                                  <span>Listen to song</span>
+                                  <span>↗</span>
+                                </a>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </div>
-                      )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3 pt-1">
+                        {/* REACTIONS - Using ReactionBar with Music Room config */}
+                        <div className="flex-1">
+                          <ReactionBar
+                            roomId="musicRoom"
+                            postId={track.id}
+                            reactions={trackReactions}
+                            onReactionToggle={(reactionId, active) =>
+                              toggleReaction(track.id, reactionId, active)
+                            }
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => togglePlaylist(track.id)}
+                            className={`px-3 py-1.5 rounded-xl border text-[10px] flex items-center gap-1 ${
+                              isInPlaylist
+                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
+                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
+                            }`}
+                          >
+                            <span>🎧</span>
+                            <span>
+                              {isInPlaylist
+                                ? "In playlist"
+                                : "Add to playlist"}
+                            </span>
+                          </button>
+
+                          <Link
+                            href={`/music-room/${track.id}`}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95"
+                          >
+                            <span>💬</span>
+                            <span>{track.replies || 0} {track.replies === 1 ? 'comment' : 'comments'}</span>
+                            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <p className="text-[9px] text-[#C0A987] italic">
+                        Reactions &amp; playlist are just for you. No public
+                        scores, just shared vibes.
+                      </p>
                     </article>
                   );
                 })}
               </div>
             </div>
 
-            {/* SIDEBAR INFO */}
+            {/* SIDEBAR INFO - Modernized */}
             <aside className="space-y-4">
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
+                <p className="text-xs font-semibold text-yellow-900">
                   How people use this room
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
-                  <li>• Build “I can’t be bothered” playlists together</li>
-                  <li>• Share nostalgia songs that feel like home</li>
-                  <li>• Collect walking / cleaning / shower concert songs</li>
-                  <li>• Swap “I forgot about this banger” tracks</li>
+                <ul className="space-y-2 text-xs text-[#7A674C]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Build "I can't be bothered" playlists together</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Share nostalgia songs that feel like home</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Collect walking / cleaning / shower concert songs</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-600">•</span>
+                    <span>Swap "I forgot about this banger" tracks</span>
+                  </li>
                 </ul>
               </div>
 
-              <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-white border border-yellow-200/60 rounded-2xl p-5 space-y-2 shadow-md">
+                <p className="text-xs font-semibold text-yellow-900">
                   Gentle boundaries
                 </p>
-                <p className="text-[#7A674C]">
+                <p className="text-xs text-[#7A674C] leading-relaxed">
                   Please avoid lyrics or visuals that are hateful or explicitly
                   violent. It&apos;s okay if songs have heavy themes – just flag them
                   gently in your note (e.g. grief, heartbreak, faith, etc.).
                 </p>
               </div>
 
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50/30 border border-orange-200/60 rounded-2xl p-5 space-y-3 shadow-md">
+                <p className="text-xs font-semibold text-orange-900">
                   Stuck on what to add?
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
-                  <li>• “A song that always gets me out of bed…”</li>
-                  <li>• “The soundtrack to my healing era…”</li>
-                  <li>• “A song that makes cleaning less annoying…”</li>
+                <ul className="space-y-2 text-xs text-[#6C4A33]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"A song that always gets me out of bed…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"The soundtrack to my healing era…"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-600">💭</span>
+                    <span>"A song that makes cleaning less annoying…"</span>
+                  </li>
                 </ul>
               </div>
             </aside>
