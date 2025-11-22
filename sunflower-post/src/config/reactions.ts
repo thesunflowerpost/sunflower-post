@@ -322,7 +322,7 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
   needSeason2: {
     id: "needSeason2",
     emoji: "⏳",
-    label: "Need season 2",
+    label: "Need more episodes now",
     tooltip: "Need more episodes now",
     color: "text-blue-500",
     bgColor: "bg-blue-50",
