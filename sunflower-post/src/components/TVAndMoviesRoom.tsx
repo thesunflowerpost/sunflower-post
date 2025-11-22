@@ -737,7 +737,7 @@ export default function TVAndMoviesRoom() {
                           onReactionToggle={(reactionId, active) =>
                             toggleReaction(item.id, reactionId, active)
                           }
-                          showLabels={false}
+                          showLabels={true}
                         />
                         <p className="text-[9px] text-[#C0A987] italic">
                           Reactions are for care, not counts. Only you see what you&apos;ve sent.
