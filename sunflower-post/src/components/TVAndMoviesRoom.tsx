@@ -277,7 +277,41 @@ export default function TVAndMoviesRoom() {
       <div className="grid md:grid-cols-4 gap-6 items-start">
         {/* LEFT: SIDEBAR */}
         <div className="md:col-span-1">
-          <CommunitySidebar />
+          <CommunitySidebar
+            filters={[
+              {
+                title: "Type",
+                options: (["All", "TV series", "Movies"] as TypeFilter[]).map(
+                  (type) => ({
+                    label: type,
+                    value: type,
+                  })
+                ),
+                activeValue: typeFilter,
+                onChange: (value) => setTypeFilter(value as TypeFilter),
+              },
+              {
+                title: "Mood / Vibe",
+                options: moodFilters.map((mood) => ({
+                  label: mood,
+                  value: mood,
+                })),
+                activeValue: moodFilter,
+                onChange: (value) => setMoodFilter(value as MoodFilter),
+              },
+              {
+                title: "My Status",
+                options: (["All", "Watching", "Watched", "Want to watch"] as StatusFilter[]).map(
+                  (status) => ({
+                    label: status,
+                    value: status,
+                  })
+                ),
+                activeValue: statusFilter,
+                onChange: (value) => setStatusFilter(value as StatusFilter),
+              },
+            ]}
+          />
         </div>
 
         {/* RIGHT: MAIN CONTENT */}
@@ -532,83 +566,9 @@ export default function TVAndMoviesRoom() {
             </section>
           )}
 
-          {/* FILTERS */}
+          {/* ITEMS */}
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             <div className="lg:col-span-2 space-y-4">
-              <div className="space-y-3">
-                {/* Type Filter */}
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">
-                    Type
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {(["All", "TV series", "Movies"] as TypeFilter[]).map(
-                    (filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setTypeFilter(filter)}
-                        className={`px-3 py-1.5 rounded-full border text-[11px] transition-all ${
-                          typeFilter === filter
-                            ? "bg-yellow-100 border-yellow-300 text-[#5C4A33] font-semibold shadow-sm"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                        }`}
-                      >
-                        {filter}
-                      </button>
-                    )
-                  )}
-                </div>
-
-                {/* Mood Filter */}
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">
-                    Mood
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {moodFilters.map((mood) => (
-                    <button
-                      key={mood}
-                      onClick={() => setMoodFilter(mood)}
-                      className={`px-3 py-1.5 rounded-full border text-[11px] transition-all ${
-                        moodFilter === mood
-                          ? "bg-yellow-100 border-yellow-300 text-[#5C4A33] font-semibold shadow-sm"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                      }`}
-                    >
-                      {mood}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Status Filter */}
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">
-                    My status
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {(["All", "Watching", "Watched", "Want to watch"] as StatusFilter[]).map(
-                    (filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setStatusFilter(filter)}
-                        className={`px-3 py-1.5 rounded-full border text-[11px] transition-all ${
-                          statusFilter === filter
-                            ? "bg-yellow-100 border-yellow-300 text-[#5C4A33] font-semibold shadow-sm"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                        }`}
-                      >
-                        {filter}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* ITEMS */}
-              <div className="space-y-4">
                 {filteredItems.length === 0 && (
                   <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
@@ -746,7 +706,6 @@ export default function TVAndMoviesRoom() {
                     </article>
                   );
                 })}
-              </div>
             </div>
 
             {/* SIDEBAR INFO */}
