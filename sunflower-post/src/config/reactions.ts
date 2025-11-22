@@ -33,9 +33,14 @@ export type ReactionId =
   | "quotable"
   | "beautifully"
   // TV & Movies extras
-  | "thisGotMe"
-  | "shocked"
-  | "cinematic"
+  | "bigCackle"
+  | "comfortRewatch"
+  | "rentFree"
+  | "thatTwist"
+  | "emotionalDamage"
+  | "bingeWorthy"
+  | "cinematography"
+  | "needSeason2"
   // Pinterest Wall extras
   | "beautiful"
   | "inspired"
@@ -251,29 +256,77 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
   },
 
   // TV & Movies extras
-  thisGotMe: {
-    id: "thisGotMe",
+  bigCackle: {
+    id: "bigCackle",
     emoji: "😂",
-    label: "This got me",
+    label: "Big cackle",
+    tooltip: "Made me laugh out loud",
     color: "text-yellow-500",
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
   },
-  shocked: {
-    id: "shocked",
-    emoji: "😮",
-    label: "Shocked",
+  comfortRewatch: {
+    id: "comfortRewatch",
+    emoji: "🛋️",
+    label: "Comfort rewatch",
+    tooltip: "Perfect for rewatching",
+    color: "text-amber-500",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+  },
+  rentFree: {
+    id: "rentFree",
+    emoji: "🧠",
+    label: "Lives rent-free",
+    tooltip: "Can't stop thinking about this",
+    color: "text-purple-500",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+  },
+  thatTwist: {
+    id: "thatTwist",
+    emoji: "😲",
+    label: "That twist!!",
+    tooltip: "Did not see that coming",
     color: "text-pink-500",
     bgColor: "bg-pink-50",
     borderColor: "border-pink-200",
   },
-  cinematic: {
-    id: "cinematic",
+  emotionalDamage: {
+    id: "emotionalDamage",
+    emoji: "💔",
+    label: "Emotional damage",
+    tooltip: "Hit me in the feels",
+    color: "text-red-400",
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
+  },
+  bingeWorthy: {
+    id: "bingeWorthy",
+    emoji: "📺",
+    label: "Binge-worthy",
+    tooltip: "Could not stop watching",
+    color: "text-indigo-500",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-200",
+  },
+  cinematography: {
+    id: "cinematography",
     emoji: "🎬",
-    label: "Cinematic",
+    label: "Cinematography",
+    tooltip: "Visually stunning",
     color: "text-slate-600",
     bgColor: "bg-slate-50",
     borderColor: "border-slate-200",
+  },
+  needSeason2: {
+    id: "needSeason2",
+    emoji: "⏳",
+    label: "Need season 2",
+    tooltip: "Need more episodes now",
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
   },
 
   // Pinterest Wall extras
@@ -369,14 +422,15 @@ export const roomReactions: Record<string, ReactionId[]> = {
     "sunburst",
     "heart",
   ],
-  tvAndMovies: [
-    "sunburst",
-    "heart",
-    "withYou",
-    "shine",
-    "thisGotMe",
-    "shocked",
-    "cinematic",
+  tvMovies: [
+    "bigCackle",
+    "comfortRewatch",
+    "rentFree",
+    "thatTwist",
+    "emotionalDamage",
+    "bingeWorthy",
+    "cinematography",
+    "needSeason2",
   ],
   pinterestWall: [
     "sunburst",
