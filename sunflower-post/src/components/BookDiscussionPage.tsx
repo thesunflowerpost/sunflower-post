@@ -3,6 +3,8 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import CommunitySidebar from "./CommunitySidebar";
+import { ReactionBar } from "./ui";
+import type { ReactionId } from "@/config/reactions";
 
 type BookStatus = "Reading" | "Finished" | "To read";
 
@@ -25,6 +27,7 @@ type TopicReply = {
   body: string;
   author: string;
   timeAgo: string;
+  profilePic?: string;
 };
 
 type BookTopic = {
@@ -35,12 +38,7 @@ type BookTopic = {
   timeAgo: string;
   containsSpoilers: boolean;
   replies: TopicReply[];
-};
-
-type UserReactions = {
-  warmth: boolean;
-  support: boolean;
-  here: boolean;
+  profilePic?: string;
 };
 
 const SAMPLE_BOOKS: Book[] = [
@@ -91,33 +89,37 @@ const SAMPLE_TOPICS: Record<number, BookTopic[]> = {
       author: "Dani",
       timeAgo: "2 days ago",
       containsSpoilers: false,
+      profilePic: "https://api.dicebear.com/7.x/avataaars/svg?seed=Dani",
       replies: [
         {
           id: 1,
           body: "Yes! I had to pause and highlight so many lines in that section.",
           author: "Jay",
           timeAgo: "1 day ago",
+          profilePic: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jay",
         },
       ],
     },
     {
       id: 2,
       title: "How did this land if you grew up in a strict household?",
-      body: "I’m curious how people with very religious / strict upbringings received this – did it feel freeing or confronting?",
+      body: "I'm curious how people with very religious / strict upbringings received this – did it feel freeing or confronting?",
       author: "Anon",
       timeAgo: "1 day ago",
       containsSpoilers: false,
+      profilePic: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anon",
       replies: [],
     },
   ],
   2: [
     {
       id: 1,
-      title: "Spoiler: the ending + ‘personal legend’",
-      body: "Without going into too much detail here, did the way it wrapped up feel satisfying or a bit too neat? I’m torn between ‘needed this’ and ‘hmmm’.",
+      title: "Spoiler: the ending + 'personal legend'",
+      body: "Without going into too much detail here, did the way it wrapped up feel satisfying or a bit too neat? I'm torn between 'needed this' and 'hmmm'.",
       author: "Jay",
       timeAgo: "3 days ago",
       containsSpoilers: true,
+      profilePic: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jay",
       replies: [],
     },
   ],
@@ -154,7 +156,10 @@ export default function BookDiscussionPage({ bookId }: Props) {
   >({});
 
   // per-topic reactions (for this viewer only)
-  const [reactions, setReactions] = useState<Record<number, UserReactions>>({});
+  const [topicReactions, setTopicReactions] = useState<Record<number, Record<ReactionId, boolean>>>({});
+
+  // per-reply reactions (for this viewer only)
+  const [replyReactions, setReplyReactions] = useState<Record<number, Record<ReactionId, boolean>>>({});
 
   const normalizedTopicSearch = topicSearch.trim().toLowerCase();
 
@@ -247,18 +252,27 @@ export default function BookDiscussionPage({ bookId }: Props) {
     setReplySubmitting((prev) => ({ ...prev, [topicId]: false }));
   }
 
-  function toggleReaction(topicId: number, key: keyof UserReactions) {
-    setReactions((prev) => {
-      const current = prev[topicId] || {
-        warmth: false,
-        support: false,
-        here: false,
-      };
+  function toggleTopicReaction(topicId: number, reactionId: ReactionId, active: boolean) {
+    setTopicReactions((prev) => {
+      const current = prev[topicId] || {};
       return {
         ...prev,
         [topicId]: {
           ...current,
-          [key]: !current[key],
+          [reactionId]: active,
+        },
+      };
+    });
+  }
+
+  function toggleReplyReaction(replyId: number, reactionId: ReactionId, active: boolean) {
+    setReplyReactions((prev) => {
+      const current = prev[replyId] || {};
+      return {
+        ...prev,
+        [replyId]: {
+          ...current,
+          [reactionId]: active,
         },
       };
     });
@@ -406,24 +420,37 @@ export default function BookDiscussionPage({ bookId }: Props) {
             {visibleTopics.map((topic) => {
               const draftText = replyDrafts[topic.id] || "";
               const isReplySubmitting = !!replySubmitting[topic.id];
-              const topicReactions =
-                reactions[topic.id] || {
-                  warmth: false,
-                  support: false,
-                  here: false,
-                };
+              const currentTopicReactions = topicReactions[topic.id] || {};
 
               return (
                 <article
                   key={topic.id}
                   className="bg-white border border-yellow-100 rounded-2xl p-5 space-y-4 hover:border-yellow-300 hover:shadow-lg transition-all duration-200"
                 >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-lg mt-0.5">💭</span>
-                      <h3 className="font-semibold text-sm md:text-base text-yellow-900">
-                        {topic.title}
-                      </h3>
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      {/* Profile picture */}
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-200 flex-shrink-0">
+                        {topic.profilePic ? (
+                          <img
+                            src={topic.profilePic}
+                            alt={`${topic.author}'s profile`}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-yellow-600 text-sm font-bold">
+                            {topic.author.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <h3 className="font-semibold text-sm md:text-base text-yellow-900">
+                          {topic.title}
+                        </h3>
+                        <p className="text-[11px] text-[#A08960]">
+                          <span className="font-medium">{topic.author}</span> · {topic.timeAgo}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 text-[10px] text-[#A08960] flex-shrink-0">
                       {topic.containsSpoilers && (
@@ -431,15 +458,11 @@ export default function BookDiscussionPage({ bookId }: Props) {
                           Contains spoilers
                         </span>
                       )}
-                      <span className="font-medium">{topic.timeAgo}</span>
                     </div>
                   </div>
 
                   <p className="text-xs md:text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed">
                     {topic.body}
-                  </p>
-                  <p className="text-[11px] text-[#A08960]">
-                    — <span className="font-medium">{topic.author}</span>
                   </p>
 
                   {/* META: counts + open full topic */}
@@ -461,49 +484,16 @@ export default function BookDiscussionPage({ bookId }: Props) {
                   </div>
 
                   {/* REACTIONS ROW */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] border-t border-yellow-100 pt-3">
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => toggleReaction(topic.id, "warmth")}
-                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
-                          topicReactions.warmth
-                            ? "bg-yellow-200 border-yellow-300 text-[#3A2E1F] shadow-sm"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                        }`}
-                      >
-                        <span>🌻</span>
-                        <span>Send warmth</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleReaction(topic.id, "support")}
-                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
-                          topicReactions.support
-                            ? "bg-[#F5F3FF] border-[#D9D2FF] text-[#40325F] shadow-sm"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                        }`}
-                      >
-                        <span>🤍</span>
-                        <span>Gentle support</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleReaction(topic.id, "here")}
-                        className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-all font-medium ${
-                          topicReactions.here
-                            ? "bg-[#FEF3C7] border-[#FACC15] text-[#3A2E1F] shadow-sm"
-                            : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                        }`}
-                      >
-                        <span>💛</span>
-                        <span>Here with you</span>
-                      </button>
-                    </div>
-                    <p className="text-[9px] text-[#C0A987] italic">
-                      Reactions are for care, not counts. Only you see what
-                      you&apos;ve sent.
-                    </p>
+                  <div className="border-t border-yellow-100 pt-3">
+                    <ReactionBar
+                      roomId="bookClub"
+                      postId={topic.id}
+                      reactions={currentTopicReactions}
+                      onReactionToggle={(reactionId, active) =>
+                        toggleTopicReaction(topic.id, reactionId, active)
+                      }
+                      showLabels={true}
+                    />
                   </div>
 
                   {/* ADD REPLY FORM - Above existing replies */}
@@ -552,20 +542,55 @@ export default function BookDiscussionPage({ bookId }: Props) {
                           {topic.replies.length} {topic.replies.length === 1 ? "reply" : "replies"}
                         </p>
                       </div>
-                      <div className="space-y-2">
-                        {topic.replies.map((reply) => (
-                          <div
-                            key={reply.id}
-                            className="rounded-xl bg-gradient-to-br from-[#FFFCF5] to-white border border-yellow-100 px-4 py-3 hover:border-yellow-200 transition-all shadow-sm"
-                          >
-                            <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
-                              {reply.body}
-                            </p>
-                            <p className="text-[10px] text-[#A08960] mt-2 font-medium">
-                              {reply.author} · {reply.timeAgo}
-                            </p>
-                          </div>
-                        ))}
+                      <div className="space-y-3">
+                        {topic.replies.map((reply) => {
+                          const currentReplyReactions = replyReactions[reply.id] || {};
+
+                          return (
+                            <div
+                              key={reply.id}
+                              className="rounded-xl bg-gradient-to-br from-[#FFFCF5] to-white border border-yellow-100 px-4 py-3 hover:border-yellow-200 transition-all shadow-sm space-y-3"
+                            >
+                              <div className="flex items-start gap-3">
+                                {/* Profile picture */}
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-200 flex-shrink-0">
+                                  {reply.profilePic ? (
+                                    <img
+                                      src={reply.profilePic}
+                                      alt={`${reply.author}'s profile`}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-yellow-600 text-xs font-bold">
+                                      {reply.author.charAt(0).toUpperCase()}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-[10px] text-[#A08960] mb-1.5 font-medium">
+                                    {reply.author} · {reply.timeAgo}
+                                  </p>
+                                  <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
+                                    {reply.body}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Reply reactions */}
+                              <div className="border-t border-yellow-50 pt-2">
+                                <ReactionBar
+                                  roomId="bookClub"
+                                  postId={reply.id}
+                                  reactions={currentReplyReactions}
+                                  onReactionToggle={(reactionId, active) =>
+                                    toggleReplyReaction(reply.id, reactionId, active)
+                                  }
+                                  showLabels={false}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

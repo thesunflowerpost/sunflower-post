@@ -27,8 +27,11 @@ export type ReactionId =
   | "dopamineHit"
   // Book Club extras
   | "bookmark"
-  | "thoughtful"
-  | "reflecting"
+  | "resonated"
+  | "sameHere"
+  | "tearUp"
+  | "quotable"
+  | "beautifully"
   // TV & Movies extras
   | "thisGotMe"
   | "shocked"
@@ -194,27 +197,57 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
   // Book Club extras
   bookmark: {
     id: "bookmark",
-    emoji: "📖",
-    label: "Bookmark",
-    color: "text-brown-500",
-    bgColor: "bg-brown-50",
-    borderColor: "border-brown-200",
+    emoji: "📑",
+    label: "Bookmarked",
+    tooltip: "Bookmarking this",
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
   },
-  thoughtful: {
-    id: "thoughtful",
-    emoji: "🧠",
-    label: "Thoughtful",
+  resonated: {
+    id: "resonated",
+    emoji: "💫",
+    label: "Resonated",
+    tooltip: "This resonated",
     color: "text-purple-400",
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200",
   },
-  reflecting: {
-    id: "reflecting",
-    emoji: "💬",
-    label: "Reflecting",
-    color: "text-gray-500",
-    bgColor: "bg-gray-50",
-    borderColor: "border-gray-200",
+  sameHere: {
+    id: "sameHere",
+    emoji: "🙋",
+    label: "Same",
+    tooltip: "I felt this too",
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+  },
+  tearUp: {
+    id: "tearUp",
+    emoji: "😢",
+    label: "Hit hard",
+    tooltip: "This hit hard",
+    color: "text-cyan-500",
+    bgColor: "bg-cyan-50",
+    borderColor: "border-cyan-200",
+  },
+  quotable: {
+    id: "quotable",
+    emoji: "✍️",
+    label: "Quotable",
+    tooltip: "So quotable",
+    color: "text-slate-600",
+    bgColor: "bg-slate-50",
+    borderColor: "border-slate-200",
+  },
+  beautifully: {
+    id: "beautifully",
+    emoji: "🌸",
+    label: "Beautifully said",
+    tooltip: "Beautifully said",
+    color: "text-pink-400",
+    bgColor: "bg-pink-50",
+    borderColor: "border-pink-200",
   },
 
   // TV & Movies extras
@@ -327,13 +360,14 @@ export const roomReactions: Record<string, ReactionId[]> = {
     "dopamineHit",
   ],
   bookClub: [
+    "bookmark",
+    "resonated",
+    "sameHere",
+    "tearUp",
+    "quotable",
+    "beautifully",
     "sunburst",
     "heart",
-    "withYou",
-    "shine",
-    "bookmark",
-    "thoughtful",
-    "reflecting",
   ],
   tvAndMovies: [
     "sunburst",
