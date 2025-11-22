@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 /* 🌻 THE SUNFLOWER POST DESIGN TOKENS */
-/* Clean, white-first, modern aesthetic with sunflower yellow accents */
+/* Editorial white interface with vibrant sunflower yellow (#FDDA0D) */
 
 :root {
-  /* PRIMARY COLORS */
-  --sunflower-gold: #F5D98C;
-  --honey-gold: #F3C969;
+  /* PRIMARY COLORS - Editorial yellow palette */
+  --sunflower-gold: #FDDA0D;        /* Primary bright yellow */
+  --honey-gold: #E5C400;            /* Darker yellow for hover states */
+  --sun-light: #FEE84D;             /* Lighter yellow for accents */
+  --sun-glow: #FFFBEB;              /* Very light yellow for backgrounds */
   --deep-soil: #1F2937;
   --soft-cream: #FFFFFF;
 
@@ -18,12 +20,11 @@
   --rose-beige: #F9FAFB;
 
   /* ACCENT COLORS */
-  --sun-glow: #FEF3C7;
   --rainy-grey: #6B7280;
 
-  /* TEXT COLORS - Clean grays */
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
+  /* TEXT COLORS - Editorial blacks and grays */
+  --text-primary: #0A0A0A;          /* Deep black for strong contrast */
+  --text-secondary: #374151;
   --text-tertiary: #6B7280;
   --text-warm-dark: #1F2937;
   --text-warm-medium: #374151;
@@ -36,16 +37,16 @@
   --warning: #FEF3C7;
   --error: #FEE2E2;
 
-  /* SHADOWS - Subtle, modern shadows */
-  --shadow-gentle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  /* SHADOWS - Editorial shadows with more presence */
+  --shadow-gentle: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  --shadow-soft: 0 2px 4px -1px rgba(0, 0, 0, 0.12), 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 8px -2px rgba(0, 0, 0, 0.14), 0 6px 12px -2px rgba(0, 0, 0, 0.10);
+  --shadow-large: 0 8px 16px -4px rgba(0, 0, 0, 0.16), 0 12px 24px -4px rgba(0, 0, 0, 0.12);
 
-  /* BORDERS - Clean grays */
-  --border-soft: rgba(0, 0, 0, 0.05);
-  --border-medium: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.2);
+  /* BORDERS - Stronger borders for editorial clarity */
+  --border-soft: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.15);
+  --border-strong: rgba(0, 0, 0, 0.25);
 
   /* BORDER RADIUS - Simple, clean shapes */
   --radius-sm: 6px;
@@ -64,7 +65,7 @@
 
   /* Default theme */
   --background: #FFFFFF;
-  --foreground: #111827;
+  --foreground: #0A0A0A;
 }
 
 @theme inline {
@@ -75,6 +76,7 @@
   /* PRIMARY PALETTE */
   --color-sunflower: var(--sunflower-gold);
   --color-honey: var(--honey-gold);
+  --color-sun-light: var(--sun-light);
   --color-soil: var(--deep-soil);
   --color-cream: var(--soft-cream);
 
@@ -100,7 +102,7 @@
   --shadow-medium: var(--shadow-medium);
   --shadow-large: var(--shadow-large);
 
-  /* TYPOGRAPHY - Warm, human, calm */
+  /* TYPOGRAPHY - Clean, editorial, modern */
   --font-display: "DM Serif Display", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
