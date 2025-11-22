@@ -554,7 +554,39 @@ export default function MusicRoom() {
       <div className="grid md:grid-cols-4 gap-6 items-start">
         {/* LEFT: ROOMS SIDEBAR */}
         <div className="md:col-span-1">
-          <CommunitySidebar />
+          <CommunitySidebar
+            filters={[
+              {
+                title: "Mood / Vibe",
+                options: moodFilters.map((mood) => ({
+                  label: mood,
+                  value: mood,
+                })),
+                activeValue: moodFilter,
+                onChange: (value) => {
+                  setMoodFilter(value as MoodFilter);
+                  setActivityFilter(null);
+                },
+              },
+              {
+                title: "Activity",
+                options: [
+                  { label: "All activities", value: "all" },
+                  ...ACTIVITY_TAGS.map((activity) => ({
+                    label: `${activity.emoji} ${activity.label}`,
+                    value: activity.id,
+                  })),
+                ],
+                activeValue: activityFilter || "all",
+                onChange: (value) => {
+                  setActivityFilter(value === "all" ? null : value);
+                  if (value !== "all") {
+                    setMoodFilter("All moods");
+                  }
+                },
+              },
+            ]}
+          />
         </div>
 
         {/* RIGHT: MUSIC ROOM CONTENT */}
@@ -1019,65 +1051,6 @@ export default function MusicRoom() {
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* TRACK LIST */}
             <div className="lg:col-span-2 space-y-4">
-              {/* FILTERS - MOOD */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">Mood</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {moodFilters.map((mood) => (
-                    <button
-                      key={mood}
-                      onClick={() => {
-                        setMoodFilter(mood);
-                        setActivityFilter(null);
-                      }}
-                      className={`px-3 py-1.5 rounded-full border text-[11px] transition-all ${
-                        moodFilter === mood
-                          ? "bg-yellow-100 border-yellow-300 text-[#5C4A33] font-semibold shadow-sm"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                      }`}
-                    >
-                      {mood}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* FILTERS - ACTIVITY */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] uppercase tracking-wider text-[#A08960] font-medium">Activity</p>
-                  {activityFilter && (
-                    <button
-                      onClick={() => setActivityFilter(null)}
-                      className="text-[10px] text-yellow-700 hover:text-yellow-900 underline"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {ACTIVITY_TAGS.map((activity) => (
-                    <button
-                      key={activity.id}
-                      onClick={() => {
-                        setActivityFilter(activityFilter === activity.id ? null : activity.id);
-                        setMoodFilter("All moods");
-                      }}
-                      className={`px-3 py-1.5 rounded-xl border text-[11px] flex items-center gap-1.5 transition-all ${
-                        activityFilter === activity.id
-                          ? "bg-gradient-to-br from-yellow-100 to-amber-100 border-yellow-300 text-yellow-900 font-semibold shadow-md"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:border-yellow-200"
-                      }`}
-                    >
-                      <span>{activity.emoji}</span>
-                      <span>{activity.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* SORT & DISCOVERY */}
               <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-yellow-100">
                 <div className="flex flex-wrap items-center gap-2">
