@@ -4,6 +4,8 @@ import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import CommunitySidebar from "./CommunitySidebar";
 import { ReactionBar } from "./ui";
+import GiphyPicker from "./GiphyPicker";
+import ImageUpload from "./ImageUpload";
 import type { ReactionId } from "@/config/reactions";
 
 type BookStatus = "Reading" | "Finished" | "To read";
@@ -28,6 +30,8 @@ type TopicReply = {
   author: string;
   timeAgo: string;
   profilePic?: string;
+  gifUrl?: string;
+  imageUrl?: string;
 };
 
 type BookTopic = {
@@ -39,6 +43,8 @@ type BookTopic = {
   containsSpoilers: boolean;
   replies: TopicReply[];
   profilePic?: string;
+  gifUrl?: string;
+  imageUrl?: string;
 };
 
 const SAMPLE_BOOKS: Book[] = [
@@ -149,11 +155,23 @@ export default function BookDiscussionPage({ bookId }: Props) {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  // Discussion GIF and image state
+  const [discussionGifUrl, setDiscussionGifUrl] = useState<string>("");
+  const [discussionImageUrl, setDiscussionImageUrl] = useState<string>("");
+  const [showDiscussionGiphyPicker, setShowDiscussionGiphyPicker] = useState(false);
+  const [showDiscussionImageUpload, setShowDiscussionImageUpload] = useState(false);
+
   // per-topic reply drafts
   const [replyDrafts, setReplyDrafts] = useState<Record<number, string>>({});
   const [replySubmitting, setReplySubmitting] = useState<
     Record<number, boolean>
   >({});
+
+  // Reply GIF and image state (per topic)
+  const [replyGifUrls, setReplyGifUrls] = useState<Record<number, string>>({});
+  const [replyImageUrls, setReplyImageUrls] = useState<Record<number, string>>({});
+  const [activeGiphyPickerTopicId, setActiveGiphyPickerTopicId] = useState<number | null>(null);
+  const [activeImageUploadTopicId, setActiveImageUploadTopicId] = useState<number | null>(null);
 
   // per-topic reactions (for this viewer only)
   const [topicReactions, setTopicReactions] = useState<Record<number, Record<ReactionId, boolean>>>({});
@@ -203,11 +221,13 @@ export default function BookDiscussionPage({ bookId }: Props) {
         "A small thought about this book",
       body:
         draft.body.trim() ||
-        "This book landed in a way I don’t fully have words for yet, but I wanted to mark that it did.",
+        "This book landed in a way I don't fully have words for yet, but I wanted to mark that it did.",
       author: "You",
       timeAgo: "Just now",
       containsSpoilers: draft.containsSpoilers,
       replies: [],
+      gifUrl: discussionGifUrl || undefined,
+      imageUrl: discussionImageUrl || undefined,
     };
 
     setTopics([newTopic, ...topics]);
@@ -216,6 +236,8 @@ export default function BookDiscussionPage({ bookId }: Props) {
       body: "",
       containsSpoilers: false,
     });
+    setDiscussionGifUrl("");
+    setDiscussionImageUrl("");
     setSubmitting(false);
   }
 
@@ -239,6 +261,8 @@ export default function BookDiscussionPage({ bookId }: Props) {
           body: text,
           author: "You",
           timeAgo: "Just now",
+          gifUrl: replyGifUrls[topicId] || undefined,
+          imageUrl: replyImageUrls[topicId] || undefined,
         };
 
         return {
@@ -249,6 +273,8 @@ export default function BookDiscussionPage({ bookId }: Props) {
     );
 
     setReplyDrafts((prev) => ({ ...prev, [topicId]: "" }));
+    setReplyGifUrls((prev) => ({ ...prev, [topicId]: "" }));
+    setReplyImageUrls((prev) => ({ ...prev, [topicId]: "" }));
     setReplySubmitting((prev) => ({ ...prev, [topicId]: false }));
   }
 
@@ -465,6 +491,17 @@ export default function BookDiscussionPage({ bookId }: Props) {
                     {topic.body}
                   </p>
 
+                  {/* Display GIF or Image */}
+                  {(topic.gifUrl || topic.imageUrl) && (
+                    <div className="mt-3 rounded-xl overflow-hidden border-2 border-yellow-200">
+                      <img
+                        src={topic.gifUrl || topic.imageUrl}
+                        alt="Topic media"
+                        className="w-full max-h-96 object-contain"
+                      />
+                    </div>
+                  )}
+
                   {/* META: counts + open full topic */}
                   <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-[#7A674C] border-t border-yellow-50 pt-2">
                     <span>
@@ -519,6 +556,48 @@ export default function BookDiscussionPage({ bookId }: Props) {
                       className="w-full border border-yellow-100 rounded-xl px-4 py-3 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300 transition-all shadow-sm"
                       placeholder="Offer a reflection, a 'same', or a gentle question. No need to be profound."
                     />
+
+                    {/* Image/GIF Preview for Reply */}
+                    {(replyImageUrls[topic.id] || replyGifUrls[topic.id]) && (
+                      <div className="relative rounded-xl overflow-hidden border-2 border-yellow-200">
+                        <img
+                          src={replyImageUrls[topic.id] || replyGifUrls[topic.id]}
+                          alt="Preview"
+                          className="w-full max-h-64 object-contain"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReplyImageUrls((prev) => ({ ...prev, [topic.id]: "" }));
+                            setReplyGifUrls((prev) => ({ ...prev, [topic.id]: "" }));
+                          }}
+                          className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-1.5 text-[#7A674C] hover:text-yellow-900 transition-colors shadow-lg text-xs"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Media Buttons for Reply */}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setActiveGiphyPickerTopicId(topic.id)}
+                        className="px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1"
+                      >
+                        <span>📹</span>
+                        <span>GIF</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveImageUploadTopicId(topic.id)}
+                        className="px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1"
+                      >
+                        <span>📷</span>
+                        <span>Image</span>
+                      </button>
+                    </div>
+
                     <div className="flex items-center justify-between gap-2">
                       <button
                         type="submit"
@@ -573,6 +652,17 @@ export default function BookDiscussionPage({ bookId }: Props) {
                                   <p className="text-xs text-[#5C4A33] whitespace-pre-line leading-relaxed">
                                     {reply.body}
                                   </p>
+
+                                  {/* Display GIF or Image in Reply */}
+                                  {(reply.gifUrl || reply.imageUrl) && (
+                                    <div className="mt-2 rounded-xl overflow-hidden border-2 border-yellow-200">
+                                      <img
+                                        src={reply.gifUrl || reply.imageUrl}
+                                        alt="Reply media"
+                                        className="w-full max-h-64 object-contain"
+                                      />
+                                    </div>
+                                  )}
                                 </div>
                               </div>
 
@@ -647,6 +737,47 @@ export default function BookDiscussionPage({ bookId }: Props) {
                 />
               </div>
 
+              {/* Image/GIF Preview */}
+              {(discussionImageUrl || discussionGifUrl) && (
+                <div className="relative rounded-xl overflow-hidden border-2 border-yellow-200">
+                  <img
+                    src={discussionImageUrl || discussionGifUrl}
+                    alt="Preview"
+                    className="w-full max-h-96 object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDiscussionImageUrl("");
+                      setDiscussionGifUrl("");
+                    }}
+                    className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-2 text-[#7A674C] hover:text-yellow-900 transition-colors shadow-lg"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* Media Buttons */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowDiscussionGiphyPicker(true)}
+                  className="px-3 py-2 rounded-xl border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1.5"
+                >
+                  <span>📹</span>
+                  <span>Add GIF</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowDiscussionImageUpload(true)}
+                  className="px-3 py-2 rounded-xl border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1.5"
+                >
+                  <span>📷</span>
+                  <span>Add Image</span>
+                </button>
+              </div>
+
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                 <label className="inline-flex items-center gap-2 text-xs text-[#7A674C] font-medium cursor-pointer">
                   <input
@@ -685,6 +816,54 @@ export default function BookDiscussionPage({ bookId }: Props) {
           </section>
         </div>
       </div>
+
+      {/* Giphy Picker for Discussion */}
+      {showDiscussionGiphyPicker && (
+        <GiphyPicker
+          onSelect={(gifUrl) => {
+            setDiscussionGifUrl(gifUrl);
+            setDiscussionImageUrl(""); // Clear image if GIF is selected
+            setShowDiscussionGiphyPicker(false);
+          }}
+          onClose={() => setShowDiscussionGiphyPicker(false)}
+        />
+      )}
+
+      {/* Image Upload for Discussion */}
+      {showDiscussionImageUpload && (
+        <ImageUpload
+          onUpload={(imageUrl) => {
+            setDiscussionImageUrl(imageUrl);
+            setDiscussionGifUrl(""); // Clear GIF if image is selected
+            setShowDiscussionImageUpload(false);
+          }}
+          onClose={() => setShowDiscussionImageUpload(false)}
+        />
+      )}
+
+      {/* Giphy Picker for Reply */}
+      {activeGiphyPickerTopicId !== null && (
+        <GiphyPicker
+          onSelect={(gifUrl) => {
+            setReplyGifUrls((prev) => ({ ...prev, [activeGiphyPickerTopicId]: gifUrl }));
+            setReplyImageUrls((prev) => ({ ...prev, [activeGiphyPickerTopicId]: "" })); // Clear image if GIF is selected
+            setActiveGiphyPickerTopicId(null);
+          }}
+          onClose={() => setActiveGiphyPickerTopicId(null)}
+        />
+      )}
+
+      {/* Image Upload for Reply */}
+      {activeImageUploadTopicId !== null && (
+        <ImageUpload
+          onUpload={(imageUrl) => {
+            setReplyImageUrls((prev) => ({ ...prev, [activeImageUploadTopicId]: imageUrl }));
+            setReplyGifUrls((prev) => ({ ...prev, [activeImageUploadTopicId]: "" })); // Clear GIF if image is selected
+            setActiveImageUploadTopicId(null);
+          }}
+          onClose={() => setActiveImageUploadTopicId(null)}
+        />
+      )}
     </div>
   );
 }
