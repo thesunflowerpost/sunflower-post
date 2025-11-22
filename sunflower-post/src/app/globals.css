@@ -1,26 +1,201 @@
 @import "tailwindcss";
 
+/* 🌻 THE SUNFLOWER POST DESIGN TOKENS */
+/* Soft, warm, gentle, modern aesthetic */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* PRIMARY COLORS */
+  --sunflower-gold: #F5D98C;
+  --honey-gold: #F3C969;
+  --deep-soil: #5C4A3E;
+  --soft-cream: #FAF6F0;
+
+  /* SECONDARY COLORS */
+  --sage-green: #C7D7C1;
+  --deep-sage: #8A9B7E;
+  --lavender-dust: #C9C3D8;
+  --deep-lavender: #9B94B3;
+  --rose-beige: #E7D4CE;
+
+  /* ACCENT COLORS */
+  --sun-glow: #FFECC2;
+  --rainy-grey: #8E8E8E;
+
+  /* TEXT COLORS */
+  --text-primary: #3D3D3D;
+  --text-secondary: #6D6D6D;
+  --text-tertiary: #8E8E8E;
+  --text-warm-dark: #3A2E1F;
+  --text-warm-medium: #5C4A33;
+  --text-warm-light: #7A674C;
+  --text-warm-lighter: #A08960;
+  --text-warm-lightest: #C0A987;
+
+  /* SEMANTIC COLORS - Gentle, supportive tones */
+  --success: #B8E6D5;
+  --warning: #F4D4A8;
+  --error: #E8B4B8;
+
+  /* SHADOWS - Soft, natural light */
+  --shadow-gentle: 0 2px 8px rgba(92, 74, 62, 0.08);
+  --shadow-soft: 0 4px 12px rgba(92, 74, 62, 0.1);
+  --shadow-medium: 0 8px 24px rgba(92, 74, 62, 0.12);
+  --shadow-large: 0 16px 40px rgba(92, 74, 62, 0.15);
+
+  /* BORDERS - Soft, warm tones */
+  --border-soft: rgba(92, 74, 62, 0.1);
+  --border-medium: rgba(92, 74, 62, 0.2);
+  --border-strong: rgba(92, 74, 62, 0.3);
+
+  /* BORDER RADIUS - Rounded, soft corners */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+
+  /* SPACING - Generous, breathable */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Default theme */
+  --background: #FAF6F0;
+  --foreground: #3D3D3D;
 }
 
 @theme inline {
+  /* COLORS */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* PRIMARY PALETTE */
+  --color-sunflower: var(--sunflower-gold);
+  --color-honey: var(--honey-gold);
+  --color-soil: var(--deep-soil);
+  --color-cream: var(--soft-cream);
+
+  /* SECONDARY PALETTE */
+  --color-sage: var(--sage-green);
+  --color-sage-deep: var(--deep-sage);
+  --color-lavender: var(--lavender-dust);
+  --color-lavender-deep: var(--deep-lavender);
+  --color-rose: var(--rose-beige);
+
+  /* ACCENT PALETTE */
+  --color-glow: var(--sun-glow);
+  --color-grey: var(--rainy-grey);
+
+  /* SEMANTIC COLORS */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  /* SHADOWS */
+  --shadow-gentle: var(--shadow-gentle);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-medium: var(--shadow-medium);
+  --shadow-large: var(--shadow-large);
+
+  /* TYPOGRAPHY - Warm, human, calm */
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* GLOBAL STYLES - Soft, warm, gentle */
+body {
+  background: linear-gradient(to bottom, #FFF9EC 0%, #FFFDF8 50%, #FFF8E6 100%);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* TYPOGRAPHY HIERARCHY */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--deep-soil);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* GENTLE ANIMATIONS */
+@keyframes gentle-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes soft-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* UTILITY CLASSES */
+.animate-gentle-fade-in {
+  animation: gentle-fade-in 0.4s ease-out;
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* FOCUS STATES - Accessible and gentle */
+*:focus-visible {
+  outline: 2px solid var(--sunflower-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* SELECTION - Warm and welcoming */
+::selection {
+  background-color: var(--sunflower-gold);
+  color: var(--deep-soil);
+}
+
+/* SCROLLBAR - Subtle and soft */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--soft-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sunflower-gold);
+  border-radius: 5px;
+  border: 2px solid var(--soft-cream);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--honey-gold);
 }
