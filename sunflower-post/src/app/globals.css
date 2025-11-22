@@ -1,58 +1,58 @@
 @import "tailwindcss";
 
 /* 🌻 THE SUNFLOWER POST DESIGN TOKENS */
-/* Soft, warm, gentle, modern aesthetic */
+/* Clean, white-first, modern aesthetic with sunflower yellow accents */
 
 :root {
   /* PRIMARY COLORS */
   --sunflower-gold: #F5D98C;
   --honey-gold: #F3C969;
-  --deep-soil: #5C4A3E;
-  --soft-cream: #FAF6F0;
+  --deep-soil: #1F2937;
+  --soft-cream: #FFFFFF;
 
-  /* SECONDARY COLORS */
-  --sage-green: #C7D7C1;
-  --deep-sage: #8A9B7E;
-  --lavender-dust: #C9C3D8;
-  --deep-lavender: #9B94B3;
-  --rose-beige: #E7D4CE;
+  /* SECONDARY COLORS - Clean neutrals */
+  --sage-green: #F3F4F6;
+  --deep-sage: #E5E7EB;
+  --lavender-dust: #F9FAFB;
+  --deep-lavender: #D1D5DB;
+  --rose-beige: #F9FAFB;
 
   /* ACCENT COLORS */
-  --sun-glow: #FFECC2;
-  --rainy-grey: #8E8E8E;
+  --sun-glow: #FEF3C7;
+  --rainy-grey: #6B7280;
 
-  /* TEXT COLORS */
-  --text-primary: #3D3D3D;
-  --text-secondary: #6D6D6D;
-  --text-tertiary: #8E8E8E;
-  --text-warm-dark: #3A2E1F;
-  --text-warm-medium: #5C4A33;
-  --text-warm-light: #7A674C;
-  --text-warm-lighter: #A08960;
-  --text-warm-lightest: #C0A987;
+  /* TEXT COLORS - Clean grays */
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-tertiary: #6B7280;
+  --text-warm-dark: #1F2937;
+  --text-warm-medium: #374151;
+  --text-warm-light: #6B7280;
+  --text-warm-lighter: #9CA3AF;
+  --text-warm-lightest: #D1D5DB;
 
-  /* SEMANTIC COLORS - Gentle, supportive tones */
-  --success: #B8E6D5;
-  --warning: #F4D4A8;
-  --error: #E8B4B8;
+  /* SEMANTIC COLORS - Modern, clean tones */
+  --success: #D1FAE5;
+  --warning: #FEF3C7;
+  --error: #FEE2E2;
 
-  /* SHADOWS - Soft, natural light */
-  --shadow-gentle: 0 2px 8px rgba(92, 74, 62, 0.08);
-  --shadow-soft: 0 4px 12px rgba(92, 74, 62, 0.1);
-  --shadow-medium: 0 8px 24px rgba(92, 74, 62, 0.12);
-  --shadow-large: 0 16px 40px rgba(92, 74, 62, 0.15);
+  /* SHADOWS - Subtle, modern shadows */
+  --shadow-gentle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
-  /* BORDERS - Soft, warm tones */
-  --border-soft: rgba(92, 74, 62, 0.1);
-  --border-medium: rgba(92, 74, 62, 0.2);
-  --border-strong: rgba(92, 74, 62, 0.3);
+  /* BORDERS - Clean grays */
+  --border-soft: rgba(0, 0, 0, 0.05);
+  --border-medium: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.2);
 
-  /* BORDER RADIUS - Rounded, soft corners */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  /* BORDER RADIUS - Simple, clean shapes */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
 
   /* SPACING - Generous, breathable */
   --space-xs: 0.25rem;
@@ -63,8 +63,8 @@
   --space-2xl: 3rem;
 
   /* Default theme */
-  --background: #FAF6F0;
-  --foreground: #3D3D3D;
+  --background: #FFFFFF;
+  --foreground: #111827;
 }
 
 @theme inline {
@@ -107,9 +107,9 @@
   --font-mono: ui-monospace, monospace;
 }
 
-/* GLOBAL STYLES - Soft, warm, gentle */
+/* GLOBAL STYLES - Clean, crisp, modern */
 body {
-  background: linear-gradient(to bottom, #FFF9EC 0%, #FFFDF8 50%, #FFF8E6 100%);
+  background: #FFFFFF;
   color: var(--text-primary);
   font-family: var(--font-body);
   font-feature-settings: "kern" 1, "liga" 1;
@@ -119,7 +119,7 @@ body {
 
 /* TYPOGRAPHY HIERARCHY */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--deep-soil);
+  color: var(--text-primary);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -174,26 +174,26 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-sm);
 }
 
-/* SELECTION - Warm and welcoming */
+/* SELECTION - Clean and welcoming */
 ::selection {
   background-color: var(--sunflower-gold);
-  color: var(--deep-soil);
+  color: var(--text-primary);
 }
 
-/* SCROLLBAR - Subtle and soft */
+/* SCROLLBAR - Clean and minimal */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--soft-cream);
+  background: #FFFFFF;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--sunflower-gold);
   border-radius: 5px;
-  border: 2px solid var(--soft-cream);
+  border: 2px solid #FFFFFF;
 }
 
 ::-webkit-scrollbar-thumb:hover {
