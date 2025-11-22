@@ -12,7 +12,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import type { Database, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply } from "./schema";
+import type { Database, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply, TVMovieDiscussionReaction, TVMovieReplyReaction } from "./schema";
 import { initialDatabase } from "./schema";
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
@@ -488,6 +488,106 @@ export async function createTVMovieReply(
 
   await writeDatabase(db);
   return newReply;
+}
+
+/**
+ * Toggle a reaction for a discussion
+ */
+export async function toggleTVMovieDiscussionReaction(
+  discussionId: string,
+  userId: string,
+  reactionId: string,
+  active: boolean
+): Promise<void> {
+  const db = await readDatabase();
+
+  const existingIndex = db.tvMovieDiscussionReactions.findIndex(
+    (r) => r.discussionId === discussionId && r.userId === userId && r.reactionId === reactionId
+  );
+
+  if (active && existingIndex === -1) {
+    db.tvMovieDiscussionReactions.push({
+      id: Date.now().toString(),
+      discussionId,
+      userId,
+      reactionId,
+      createdAt: new Date().toISOString(),
+    });
+  } else if (!active && existingIndex !== -1) {
+    db.tvMovieDiscussionReactions.splice(existingIndex, 1);
+  }
+
+  await writeDatabase(db);
+}
+
+/**
+ * Get all reactions for a user on discussions
+ */
+export async function getUserTVMovieDiscussionReactions(
+  userId: string
+): Promise<Record<string, Record<string, boolean>>> {
+  const db = await readDatabase();
+  const userReactions = db.tvMovieDiscussionReactions.filter((r) => r.userId === userId);
+
+  const result: Record<string, Record<string, boolean>> = {};
+  for (const reaction of userReactions) {
+    if (!result[reaction.discussionId]) {
+      result[reaction.discussionId] = {};
+    }
+    result[reaction.discussionId][reaction.reactionId] = true;
+  }
+
+  return result;
+}
+
+/**
+ * Toggle a reaction for a reply
+ */
+export async function toggleTVMovieReplyReaction(
+  replyId: string,
+  userId: string,
+  reactionId: string,
+  active: boolean
+): Promise<void> {
+  const db = await readDatabase();
+
+  const existingIndex = db.tvMovieReplyReactions.findIndex(
+    (r) => r.replyId === replyId && r.userId === userId && r.reactionId === reactionId
+  );
+
+  if (active && existingIndex === -1) {
+    db.tvMovieReplyReactions.push({
+      id: Date.now().toString(),
+      replyId,
+      userId,
+      reactionId,
+      createdAt: new Date().toISOString(),
+    });
+  } else if (!active && existingIndex !== -1) {
+    db.tvMovieReplyReactions.splice(existingIndex, 1);
+  }
+
+  await writeDatabase(db);
+}
+
+/**
+ * Get all reactions for a user on replies
+ */
+export async function getUserTVMovieReplyReactions(
+  userId: string
+): Promise<Record<string, Record<string, boolean>>> {
+  const db = await readDatabase();
+  const userReactions = db.tvMovieReplyReactions.filter((r) => r.userId === userId);
+
+  const result: Record<string, Record<string, boolean>> = {};
+  for (const reaction of userReactions) {
+    if (!result[reaction.replyId]) {
+      result[reaction.replyId] = {};
+    }
+    result[reaction.replyId][reaction.reactionId] = true;
+  }
+
+  return result;
 }
 
 // ============================================================================

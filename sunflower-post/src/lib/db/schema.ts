@@ -104,6 +104,8 @@ export interface TVMovieDiscussion {
   body: string;
   author: string;
   isSpoiler?: boolean;
+  imageUrl?: string;
+  gifUrl?: string;
   createdAt: string;
   replyCount: number;
 }
@@ -114,6 +116,24 @@ export interface TVMovieReply {
   author: string;
   body: string;
   isSpoiler?: boolean;
+  imageUrl?: string;
+  gifUrl?: string;
+  createdAt: string;
+}
+
+export interface TVMovieDiscussionReaction {
+  id: string;
+  discussionId: string;
+  userId: string;
+  reactionId: string;
+  createdAt: string;
+}
+
+export interface TVMovieReplyReaction {
+  id: string;
+  replyId: string;
+  userId: string;
+  reactionId: string;
   createdAt: string;
 }
 
@@ -129,6 +149,8 @@ export interface Database {
   userTVMovieStatuses: UserTVMovieStatus[];
   tvMovieDiscussions: TVMovieDiscussion[];
   tvMovieReplies: TVMovieReply[];
+  tvMovieDiscussionReactions: TVMovieDiscussionReaction[];
+  tvMovieReplyReactions: TVMovieReplyReaction[];
 }
 
 // Initial seed data
@@ -232,4 +254,6 @@ export const initialDatabase: Database = {
   userTVMovieStatuses: [],
   tvMovieDiscussions: [],
   tvMovieReplies: [],
+  tvMovieDiscussionReactions: [],
+  tvMovieReplyReactions: [],
 };
