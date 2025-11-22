@@ -11,6 +11,22 @@ type Room = {
   comingSoon?: boolean;
 };
 
+type FilterOption = {
+  label: string;
+  value: string;
+};
+
+type FilterGroup = {
+  title: string;
+  options: FilterOption[];
+  activeValue: string;
+  onChange: (value: string) => void;
+};
+
+type CommunitySidebarProps = {
+  filters?: FilterGroup[];
+};
+
 const ROOMS: Room[] = [
   {
     href: "/lounge",
@@ -59,17 +75,18 @@ const ROOMS: Room[] = [
   },
 ];
 
-export default function CommunitySidebar() {
+export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}) {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-white border border-gray-200 rounded-lg p-3 space-y-1 shadow-sm">
-      {/* HEADER */}
-      <div className="px-2 py-2 mb-2">
-        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          Rooms
-        </h2>
-      </div>
+    <div className="space-y-4">
+      <nav className="bg-white border border-gray-200 rounded-lg p-3 space-y-1 shadow-sm">
+        {/* HEADER */}
+        <div className="px-2 py-2 mb-2">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            Rooms
+          </h2>
+        </div>
 
       {/* ROOM LIST */}
       <div className="space-y-0.5">
@@ -112,12 +129,50 @@ export default function CommunitySidebar() {
         })}
       </div>
 
-      {/* FOOTER NOTE */}
-      <div className="pt-3 mt-3 border-t border-gray-200">
-        <p className="text-[11px] text-gray-500 px-2 leading-relaxed">
-          More rooms open as the community grows 🌻
-        </p>
-      </div>
-    </nav>
+        {/* FOOTER NOTE */}
+        <div className="pt-3 mt-3 border-t border-gray-200">
+          <p className="text-[11px] text-gray-500 px-2 leading-relaxed">
+            More rooms open as the community grows 🌻
+          </p>
+        </div>
+      </nav>
+
+      {/* FILTERS SECTION */}
+      {filters && filters.length > 0 && (
+        <nav className="bg-white border border-gray-200 rounded-lg p-3 space-y-4 shadow-sm">
+          {filters.map((filterGroup, index) => (
+            <div key={index} className="space-y-2">
+              <div className="px-2 py-1">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  {filterGroup.title}
+                </h3>
+              </div>
+              <div className="space-y-1">
+                {filterGroup.options.map((option) => {
+                  const isActive = filterGroup.activeValue === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => filterGroup.onChange(option.value)}
+                      className={[
+                        "w-full text-left rounded-md px-3 py-2 text-sm transition-colors",
+                        isActive
+                          ? "bg-yellow-50 text-yellow-900 font-medium"
+                          : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                      ].join(" ")}
+                    >
+                      {option.label}
+                      {isActive && (
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-yellow-500 rounded-r" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
+      )}
+    </div>
   );
 }

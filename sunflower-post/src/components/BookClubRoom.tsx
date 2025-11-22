@@ -305,7 +305,28 @@ export default function BookClubRoom() {
       <div className="grid md:grid-cols-4 gap-6 items-start">
         {/* LEFT: ROOMS SIDEBAR */}
         <div className="md:col-span-1">
-          <CommunitySidebar />
+          <CommunitySidebar
+            filters={[
+              {
+                title: "Status",
+                options: statusFilters.map((status) => ({
+                  label: status,
+                  value: status,
+                })),
+                activeValue: statusFilter,
+                onChange: (value) => setStatusFilter(value as StatusFilter),
+              },
+              {
+                title: "Mood / Vibe",
+                options: moodFilters.map((mood) => ({
+                  label: mood,
+                  value: mood,
+                })),
+                activeValue: moodFilter,
+                onChange: (value) => setMoodFilter(value as MoodFilter),
+              },
+            ]}
+          />
         </div>
 
         {/* RIGHT: BOOK CLUB CONTENT */}
@@ -659,37 +680,6 @@ export default function BookClubRoom() {
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* BOOK LIST */}
             <div className="lg:col-span-2 space-y-4">
-              {/* FILTERS */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-2">
-                  {statusFilters.map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => setStatusFilter(status)}
-                      className={`px-3 py-1 rounded-full border text-[11px] ${
-                        statusFilter === status
-                          ? "bg-yellow-100 border-yellow-200 text-[#5C4A33] font-medium"
-                          : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                      }`}
-                    >
-                      {status}
-                    </button>
-                  ))}
-                </div>
-                <select
-                  value={moodFilter}
-                  onChange={(e) =>
-                    setMoodFilter(e.target.value as MoodFilter)
-                  }
-                  className="border border-yellow-100 rounded-full px-2 py-1 bg-[#FFFEFA] text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                >
-                  {moodFilters.map((mood) => (
-                    <option key={mood} value={mood}>
-                      {mood}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
               {/* BOOK CARDS */}
               <div className="space-y-3">

@@ -236,7 +236,19 @@ export default function LoungeRoom() {
       <div className="grid md:grid-cols-4 gap-6 items-start">
         {/* LEFT: ROOMS SIDEBAR */}
         <div className="md:col-span-1">
-          <CommunitySidebar />
+          <CommunitySidebar
+            filters={[
+              {
+                title: "Time Period",
+                options: FILTERS.map((filter) => ({
+                  label: filter,
+                  value: filter,
+                })),
+                activeValue: activeFilter,
+                onChange: (value) => setActiveFilter(value as typeof FILTERS[number]),
+              },
+            ]}
+          />
         </div>
 
         {/* RIGHT: LOUNGE CONTENT */}
@@ -602,27 +614,10 @@ export default function LoungeRoom() {
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* LEFT / CENTER: FEED */}
             <div className="lg:col-span-2 space-y-5">
-              {/* FILTERS - Modern Segmented Control */}
-              <div className="flex flex-col gap-4">
-                <div className="inline-flex items-center bg-white border border-yellow-200/60 rounded-2xl p-1.5 shadow-sm w-fit">
-                  {FILTERS.map((filter) => (
-                    <button
-                      key={filter}
-                      onClick={() => setActiveFilter(filter)}
-                      className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${
-                        activeFilter === filter
-                          ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-[#3A2E1F] shadow-md"
-                          : "text-[#7A674C] hover:text-[#5C4A33] hover:bg-yellow-50/50"
-                      }`}
-                    >
-                      {filter}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[10px] text-[#A08960]">
-                  Posts with no replies are gently bumped so no-one feels ignored.
-                </p>
-              </div>
+              {/* FEED INFO */}
+              <p className="text-[10px] text-[#A08960]">
+                Posts with no replies are gently bumped so no-one feels ignored.
+              </p>
 
               {/* FEED CARDS - Modernized */}
               <div className="space-y-4">
