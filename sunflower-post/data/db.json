@@ -1,0 +1,146 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "All About Love",
+      "author": "bell hooks",
+      "status": "Reading",
+      "mood": "Soft self-help",
+      "theme": "Love · Healing · Community",
+      "format": "Physical",
+      "sharedBy": "S.",
+      "note": "Good for unlearning old ideas about love without feeling attacked.",
+      "discussionCount": 2,
+      "createdAt": "2025-11-18T04:07:26.210Z",
+      "updatedAt": "2025-11-18T04:07:26.211Z"
+    },
+    {
+      "id": "2",
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "status": "Finished",
+      "mood": "Slow & thoughtful",
+      "theme": "Purpose · Spirituality",
+      "format": "Audiobook",
+      "sharedBy": "Anon",
+      "note": "Great for when you feel lost or like you've 'missed your moment'.",
+      "discussionCount": 1,
+      "createdAt": "2025-11-15T04:07:26.211Z",
+      "updatedAt": "2025-11-15T04:07:26.211Z"
+    },
+    {
+      "id": "3",
+      "title": "Homegoing",
+      "author": "Yaa Gyasi",
+      "status": "To read",
+      "mood": "Heavy but healing",
+      "theme": "Ancestry · Diaspora · Generations",
+      "format": "Kindle",
+      "sharedBy": "Jay",
+      "note": "Everyone says it's intense but beautifully written.",
+      "discussionCount": 0,
+      "createdAt": "2025-11-08T04:07:26.211Z",
+      "updatedAt": "2025-11-08T04:07:26.211Z"
+    }
+  ],
+  "reactions": [],
+  "userBookStatuses": [],
+  "discussions": [],
+  "replies": [],
+  "tvMovies": [
+    {
+      "title": "fleabagm",
+      "type": "TV series",
+      "status": "Want to watch",
+      "mood": "Comfort watch",
+      "sharedBy": "Anon",
+      "discussionCount": 0,
+      "id": "1763784491383",
+      "createdAt": "2025-11-22T04:08:11.383Z",
+      "updatedAt": "2025-11-22T04:08:11.383Z"
+    },
+    {
+      "id": "1",
+      "title": "Fleabag",
+      "type": "TV series",
+      "status": "Watched",
+      "mood": "Soft chaos",
+      "genre": "Comedy · Drama",
+      "era": "2016-2019",
+      "platform": "Prime Video",
+      "note": "Breaking the fourth wall never felt so raw and healing.",
+      "sharedBy": "Em",
+      "discussionCount": 1,
+      "createdAt": "2025-11-17T04:07:26.211Z",
+      "updatedAt": "2025-11-17T04:07:26.211Z"
+    },
+    {
+      "id": "2",
+      "title": "Past Lives",
+      "type": "Movie",
+      "status": "Watched",
+      "mood": "High drama",
+      "genre": "Romance · Drama",
+      "era": "2023",
+      "platform": "A24",
+      "note": "Made me think about all the versions of myself I could have been.",
+      "sharedBy": "Anon",
+      "discussionCount": 0,
+      "createdAt": "2025-11-14T04:07:26.211Z",
+      "updatedAt": "2025-11-14T04:07:26.211Z"
+    },
+    {
+      "id": "3",
+      "title": "The Bear",
+      "type": "TV series",
+      "status": "Watching",
+      "mood": "High drama",
+      "genre": "Drama · Comedy",
+      "era": "2022-present",
+      "platform": "Hulu",
+      "note": "Stressful but oddly comforting? The kitchen chaos hits different.",
+      "sharedBy": "S.",
+      "discussionCount": 0,
+      "createdAt": "2025-11-20T04:07:26.211Z",
+      "updatedAt": "2025-11-20T04:07:26.211Z"
+    }
+  ],
+  "tvMovieReactions": [
+    {
+      "id": "1763784508064",
+      "tvMovieId": "1",
+      "userId": "current-user",
+      "reactionId": "sunburst",
+      "createdAt": "2025-11-22T04:08:28.064Z"
+    },
+    {
+      "id": "1763784511824",
+      "tvMovieId": "1",
+      "userId": "current-user",
+      "reactionId": "softExhale",
+      "createdAt": "2025-11-22T04:08:31.824Z"
+    }
+  ],
+  "userTVMovieStatuses": [
+    {
+      "id": "1763784499691",
+      "tvMovieId": "1",
+      "userId": "current-user",
+      "status": "Want to watch",
+      "updatedAt": "2025-11-22T04:08:23.732Z"
+    }
+  ],
+  "tvMovieDiscussions": [
+    {
+      "tvMovieId": "1",
+      "title": "kn",
+      "body": "j. m ,",
+      "author": "You",
+      "isSpoiler": false,
+      "id": "1763784525889",
+      "createdAt": "2025-11-22T04:08:45.889Z",
+      "replyCount": 0
+    }
+  ],
+  "tvMovieReplies": []
+}
