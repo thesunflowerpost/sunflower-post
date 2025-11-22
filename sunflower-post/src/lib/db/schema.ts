@@ -8,6 +8,8 @@
 
 export type BookStatus = "Reading" | "Finished" | "To read";
 
+export type TVMovieStatus = "Watching" | "Watched" | "Want to watch";
+
 export interface Book {
   id: string;
   title: string;
@@ -59,6 +61,62 @@ export interface Reply {
   createdAt: string;
 }
 
+// TV & Movies types
+export interface TVMovie {
+  id: string;
+  title: string;
+  type: "TV series" | "Movie";
+  status: TVMovieStatus;
+  mood: string;
+  genre?: string;
+  era?: string;
+  platform?: string;
+  note?: string;
+  sharedBy: string;
+  coverUrl?: string;
+  trailerUrl?: string;
+  link?: string;
+  discussionCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TVMovieReaction {
+  id: string;
+  tvMovieId: string;
+  userId: string;
+  reactionId: string;
+  createdAt: string;
+}
+
+export interface UserTVMovieStatus {
+  id: string;
+  tvMovieId: string;
+  userId: string;
+  status: TVMovieStatus;
+  updatedAt: string;
+}
+
+export interface TVMovieDiscussion {
+  id: string;
+  tvMovieId: string;
+  title: string;
+  body: string;
+  author: string;
+  isSpoiler?: boolean;
+  createdAt: string;
+  replyCount: number;
+}
+
+export interface TVMovieReply {
+  id: string;
+  discussionId: string;
+  author: string;
+  body: string;
+  isSpoiler?: boolean;
+  createdAt: string;
+}
+
 // Database collections
 export interface Database {
   books: Book[];
@@ -66,6 +124,11 @@ export interface Database {
   userBookStatuses: UserBookStatus[];
   discussions: Discussion[];
   replies: Reply[];
+  tvMovies: TVMovie[];
+  tvMovieReactions: TVMovieReaction[];
+  userTVMovieStatuses: UserTVMovieStatus[];
+  tvMovieDiscussions: TVMovieDiscussion[];
+  tvMovieReplies: TVMovieReply[];
 }
 
 // Initial seed data
@@ -118,4 +181,55 @@ export const initialDatabase: Database = {
   userBookStatuses: [],
   discussions: [],
   replies: [],
+  tvMovies: [
+    {
+      id: "1",
+      title: "Fleabag",
+      type: "TV series",
+      status: "Watched",
+      mood: "Soft chaos",
+      genre: "Comedy · Drama",
+      era: "2016-2019",
+      platform: "Prime Video",
+      note: "Breaking the fourth wall never felt so raw and healing.",
+      sharedBy: "Em",
+      discussionCount: 0,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "2",
+      title: "Past Lives",
+      type: "Movie",
+      status: "Watched",
+      mood: "High drama",
+      genre: "Romance · Drama",
+      era: "2023",
+      platform: "A24",
+      note: "Made me think about all the versions of myself I could have been.",
+      sharedBy: "Anon",
+      discussionCount: 0,
+      createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "3",
+      title: "The Bear",
+      type: "TV series",
+      status: "Watching",
+      mood: "High drama",
+      genre: "Drama · Comedy",
+      era: "2022-present",
+      platform: "Hulu",
+      note: "Stressful but oddly comforting? The kitchen chaos hits different.",
+      sharedBy: "S.",
+      discussionCount: 0,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+  ],
+  tvMovieReactions: [],
+  userTVMovieStatuses: [],
+  tvMovieDiscussions: [],
+  tvMovieReplies: [],
 };
