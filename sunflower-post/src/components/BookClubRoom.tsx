@@ -3,6 +3,8 @@
 import React, { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
+import { ReactionBar } from "./ui";
+import type { ReactionId } from "@/config/reactions";
 
 type BookStatus = "Reading" | "Finished" | "To read";
 type BookMood = string;
@@ -128,8 +130,11 @@ export default function BookClubRoom() {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
-  // local-only “My shelf”
+  // local-only "My shelf"
   const [myShelf, setMyShelf] = useState<Record<number, boolean>>({});
+
+  // Reactions state - per-book reactions for this viewer
+  const [reactions, setReactions] = useState<Record<number, Record<ReactionId, boolean>>>({});
 
   const dynamicMoods = Array.from(
     new Set(books.map((b) => b.mood).filter(Boolean))
@@ -272,6 +277,27 @@ export default function BookClubRoom() {
     setCoverFile(file);
     const url = URL.createObjectURL(file);
     setCoverPreview(url);
+  }
+
+  function toggleReaction(bookId: number, reactionId: ReactionId, active: boolean) {
+    setReactions((prev) => {
+      const current = prev[bookId] || {};
+      return {
+        ...prev,
+        [bookId]: {
+          ...current,
+          [reactionId]: active,
+        },
+      };
+    });
+  }
+
+  function changeBookStatus(bookId: number, newStatus: BookStatus) {
+    setBooks((prev) =>
+      prev.map((book) =>
+        book.id === bookId ? { ...book, status: newStatus } : book
+      )
+    );
   }
 
   return (
@@ -682,6 +708,7 @@ export default function BookClubRoom() {
 
                 {filteredBooks.map((book) => {
                   const shelf = !!myShelf[book.id];
+                  const bookReactions = reactions[book.id] || {};
 
                   return (
                     <article
@@ -689,13 +716,28 @@ export default function BookClubRoom() {
                       className="group bg-white border border-yellow-100 rounded-2xl p-4 space-y-3 hover:border-yellow-300 hover:shadow-lg transition-all duration-200"
                     >
                       <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                        <span
-                          className={`px-2 py-[2px] rounded-full border ${statusBadge(
-                            book.status
-                          )}`}
-                        >
-                          {book.status}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-[2px] rounded-full border ${statusBadge(
+                              book.status
+                            )}`}
+                          >
+                            {book.status}
+                          </span>
+                          {/* Status Change Dropdown */}
+                          <select
+                            value={book.status}
+                            onChange={(e) =>
+                              changeBookStatus(book.id, e.target.value as BookStatus)
+                            }
+                            className="text-[10px] px-2 py-1 rounded-lg border border-yellow-100 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
+                            title="Change reading status"
+                          >
+                            <option value="To read">To read</option>
+                            <option value="Reading">Reading</option>
+                            <option value="Finished">Finished</option>
+                          </select>
+                        </div>
                         <span>{book.timeAgo}</span>
                       </div>
 
@@ -771,7 +813,19 @@ export default function BookClubRoom() {
                         </button>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-[#7A674C] pt-2 border-t border-yellow-50">
+                      {/* REACTIONS */}
+                      <div className="pt-2 border-t border-yellow-50">
+                        <ReactionBar
+                          roomId="bookClub"
+                          postId={book.id}
+                          reactions={bookReactions}
+                          onReactionToggle={(reactionId, active) =>
+                            toggleReaction(book.id, reactionId, active)
+                          }
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
                         <span>
                           Shared by{" "}
                           {book.sharedBy ? (
