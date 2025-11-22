@@ -12,7 +12,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import type { Database, Book, BookStatus } from "./schema";
+import type { Database, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply } from "./schema";
 import { initialDatabase } from "./schema";
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
@@ -236,6 +236,258 @@ export async function getUserReactions(
   }
 
   return result;
+}
+
+// ============================================================================
+// TV MOVIE OPERATIONS
+// ============================================================================
+
+/**
+ * Get all TV shows and movies
+ */
+export async function getTVMovies(): Promise<TVMovie[]> {
+  const db = await readDatabase();
+  return db.tvMovies;
+}
+
+/**
+ * Get a single TV show/movie by ID
+ */
+export async function getTVMovie(id: string): Promise<TVMovie | null> {
+  const db = await readDatabase();
+  return db.tvMovies.find((item) => item.id === id) || null;
+}
+
+/**
+ * Create a new TV show/movie
+ */
+export async function createTVMovie(
+  tvMovie: Omit<TVMovie, "id" | "createdAt" | "updatedAt">
+): Promise<TVMovie> {
+  const db = await readDatabase();
+
+  const newTVMovie: TVMovie = {
+    ...tvMovie,
+    id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  db.tvMovies.unshift(newTVMovie);
+  await writeDatabase(db);
+
+  return newTVMovie;
+}
+
+/**
+ * Update an existing TV show/movie
+ */
+export async function updateTVMovie(
+  id: string,
+  updates: Partial<Omit<TVMovie, "id" | "createdAt" | "updatedAt">>
+): Promise<TVMovie | null> {
+  const db = await readDatabase();
+  const index = db.tvMovies.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  db.tvMovies[index] = {
+    ...db.tvMovies[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await writeDatabase(db);
+  return db.tvMovies[index];
+}
+
+/**
+ * Delete a TV show/movie
+ */
+export async function deleteTVMovie(id: string): Promise<boolean> {
+  const db = await readDatabase();
+  const index = db.tvMovies.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return false;
+  }
+
+  db.tvMovies.splice(index, 1);
+  await writeDatabase(db);
+  return true;
+}
+
+/**
+ * Update TV/Movie status for a user
+ */
+export async function updateUserTVMovieStatus(
+  tvMovieId: string,
+  userId: string,
+  status: TVMovieStatus
+): Promise<void> {
+  const db = await readDatabase();
+
+  const existingIndex = db.userTVMovieStatuses.findIndex(
+    (s) => s.tvMovieId === tvMovieId && s.userId === userId
+  );
+
+  if (existingIndex !== -1) {
+    db.userTVMovieStatuses[existingIndex].status = status;
+    db.userTVMovieStatuses[existingIndex].updatedAt = new Date().toISOString();
+  } else {
+    db.userTVMovieStatuses.push({
+      id: Date.now().toString(),
+      tvMovieId,
+      userId,
+      status,
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  await writeDatabase(db);
+}
+
+/**
+ * Get TV/Movie status for a user
+ */
+export async function getUserTVMovieStatus(
+  tvMovieId: string,
+  userId: string
+): Promise<TVMovieStatus | null> {
+  const db = await readDatabase();
+  const status = db.userTVMovieStatuses.find(
+    (s) => s.tvMovieId === tvMovieId && s.userId === userId
+  );
+  return status ? status.status : null;
+}
+
+/**
+ * Toggle a reaction for a TV show/movie
+ */
+export async function toggleTVMovieReaction(
+  tvMovieId: string,
+  userId: string,
+  reactionId: string,
+  active: boolean
+): Promise<void> {
+  const db = await readDatabase();
+
+  const existingIndex = db.tvMovieReactions.findIndex(
+    (r) => r.tvMovieId === tvMovieId && r.userId === userId && r.reactionId === reactionId
+  );
+
+  if (active && existingIndex === -1) {
+    db.tvMovieReactions.push({
+      id: Date.now().toString(),
+      tvMovieId,
+      userId,
+      reactionId,
+      createdAt: new Date().toISOString(),
+    });
+  } else if (!active && existingIndex !== -1) {
+    db.tvMovieReactions.splice(existingIndex, 1);
+  }
+
+  await writeDatabase(db);
+}
+
+/**
+ * Get all reactions for a user on TV shows/movies
+ */
+export async function getUserTVMovieReactions(
+  userId: string
+): Promise<Record<string, Record<string, boolean>>> {
+  const db = await readDatabase();
+  const userReactions = db.tvMovieReactions.filter((r) => r.userId === userId);
+
+  const result: Record<string, Record<string, boolean>> = {};
+  for (const reaction of userReactions) {
+    if (!result[reaction.tvMovieId]) {
+      result[reaction.tvMovieId] = {};
+    }
+    result[reaction.tvMovieId][reaction.reactionId] = true;
+  }
+
+  return result;
+}
+
+/**
+ * Get all discussions for a TV show/movie
+ */
+export async function getTVMovieDiscussions(tvMovieId: string): Promise<TVMovieDiscussion[]> {
+  const db = await readDatabase();
+  return db.tvMovieDiscussions.filter((d) => d.tvMovieId === tvMovieId);
+}
+
+/**
+ * Get a single discussion by ID
+ */
+export async function getTVMovieDiscussion(id: string): Promise<TVMovieDiscussion | null> {
+  const db = await readDatabase();
+  return db.tvMovieDiscussions.find((d) => d.id === id) || null;
+}
+
+/**
+ * Create a new discussion for a TV show/movie
+ */
+export async function createTVMovieDiscussion(
+  discussion: Omit<TVMovieDiscussion, "id" | "createdAt" | "replyCount">
+): Promise<TVMovieDiscussion> {
+  const db = await readDatabase();
+
+  const newDiscussion: TVMovieDiscussion = {
+    ...discussion,
+    id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+    replyCount: 0,
+  };
+
+  db.tvMovieDiscussions.unshift(newDiscussion);
+
+  // Increment discussion count on the TV show/movie
+  const tvMovie = db.tvMovies.find((item) => item.id === discussion.tvMovieId);
+  if (tvMovie) {
+    tvMovie.discussionCount++;
+  }
+
+  await writeDatabase(db);
+  return newDiscussion;
+}
+
+/**
+ * Get all replies for a discussion
+ */
+export async function getTVMovieReplies(discussionId: string): Promise<TVMovieReply[]> {
+  const db = await readDatabase();
+  return db.tvMovieReplies.filter((r) => r.discussionId === discussionId);
+}
+
+/**
+ * Create a new reply for a discussion
+ */
+export async function createTVMovieReply(
+  reply: Omit<TVMovieReply, "id" | "createdAt">
+): Promise<TVMovieReply> {
+  const db = await readDatabase();
+
+  const newReply: TVMovieReply = {
+    ...reply,
+    id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+  };
+
+  db.tvMovieReplies.push(newReply);
+
+  // Increment reply count on the discussion
+  const discussion = db.tvMovieDiscussions.find((d) => d.id === reply.discussionId);
+  if (discussion) {
+    discussion.replyCount++;
+  }
+
+  await writeDatabase(db);
+  return newReply;
 }
 
 // ============================================================================
