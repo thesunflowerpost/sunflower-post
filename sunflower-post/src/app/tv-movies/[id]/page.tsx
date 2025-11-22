@@ -3,11 +3,15 @@
 import { useState, useEffect, type FormEvent } from "react";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import { BouncyButton, ReactionBar } from "@/components/ui";
+import GiphyPicker from "@/components/GiphyPicker";
+import ImageUpload from "@/components/ImageUpload";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
 import type { TVMovie, TVMovieDiscussion, TVMovieReply, TVMovieStatus } from "@/lib/db/schema";
 
 type UserReactions = Record<ReactionId, boolean>;
+type DiscussionReactions = Record<string, UserReactions>;
+type ReplyReactions = Record<string, UserReactions>;
 
 // Helper to get author initials
 function getAuthorInitial(author: string): string {
@@ -62,6 +66,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
   const [discussions, setDiscussions] = useState<TVMovieDiscussion[]>([]);
   const [repliesByDiscussion, setRepliesByDiscussion] = useState<Record<string, TVMovieReply[]>>({});
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
+  const [discussionReactions, setDiscussionReactions] = useState<DiscussionReactions>({});
+  const [replyReactions, setReplyReactions] = useState<ReplyReactions>({});
   const [userStatus, setUserStatus] = useState<TVMovieStatus | null>(null);
   const [showSpoilers, setShowSpoilers] = useState(false);
 
@@ -70,10 +76,18 @@ export default function TVMovieDetailPage({ params }: PageProps) {
   const [discussionTitle, setDiscussionTitle] = useState("");
   const [discussionBody, setDiscussionBody] = useState("");
   const [discussionIsSpoiler, setDiscussionIsSpoiler] = useState(false);
+  const [discussionGifUrl, setDiscussionGifUrl] = useState<string>("");
+  const [discussionImageUrl, setDiscussionImageUrl] = useState<string>("");
+  const [showDiscussionGiphyPicker, setShowDiscussionGiphyPicker] = useState(false);
+  const [showDiscussionImageUpload, setShowDiscussionImageUpload] = useState(false);
 
   // Reply form
   const [replyText, setReplyText] = useState("");
   const [activeDiscussionId, setActiveDiscussionId] = useState<string | null>(null);
+  const [replyGifUrl, setReplyGifUrl] = useState<string>("");
+  const [replyImageUrl, setReplyImageUrl] = useState<string>("");
+  const [showReplyGiphyPicker, setShowReplyGiphyPicker] = useState(false);
+  const [showReplyImageUpload, setShowReplyImageUpload] = useState(false);
 
   // Load params
   useEffect(() => {
@@ -180,6 +194,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
           body: discussionBody,
           author: "You",
           isSpoiler: discussionIsSpoiler,
+          gifUrl: discussionGifUrl || undefined,
+          imageUrl: discussionImageUrl || undefined,
         }),
       });
 
@@ -189,6 +205,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
         setDiscussionTitle("");
         setDiscussionBody("");
         setDiscussionIsSpoiler(false);
+        setDiscussionGifUrl("");
+        setDiscussionImageUrl("");
         setShowDiscussionForm(false);
       }
     } catch (error) {
@@ -209,6 +227,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
           author: "You",
           body: replyText,
           isSpoiler: false,
+          gifUrl: replyGifUrl || undefined,
+          imageUrl: replyImageUrl || undefined,
         }),
       });
 
@@ -219,6 +239,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
           [discussionId]: [...(prev[discussionId] || []), data.reply]
         }));
         setReplyText("");
+        setReplyGifUrl("");
+        setReplyImageUrl("");
         setActiveDiscussionId(null);
 
         // Update discussion reply count
@@ -229,6 +251,46 @@ export default function TVMovieDetailPage({ params }: PageProps) {
     } catch (error) {
       console.error("Error creating reply:", error);
     }
+  }
+
+  // Toggle reactions for discussions
+  function toggleDiscussionReaction(discussionId: string, reactionId: ReactionId, active: boolean) {
+    setDiscussionReactions((prev) => ({
+      ...prev,
+      [discussionId]: {
+        ...prev[discussionId],
+        [reactionId]: active,
+      },
+    }));
+
+    // Send to API
+    fetch(`/api/tv-movies/${id}/discussions/${discussionId}/reactions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reactionId, active, userId: "current-user" }),
+    }).catch((error) => {
+      console.error("Error toggling discussion reaction:", error);
+    });
+  }
+
+  // Toggle reactions for replies
+  function toggleReplyReaction(discussionId: string, replyId: string, reactionId: ReactionId, active: boolean) {
+    setReplyReactions((prev) => ({
+      ...prev,
+      [replyId]: {
+        ...prev[replyId],
+        [reactionId]: active,
+      },
+    }));
+
+    // Send to API
+    fetch(`/api/tv-movies/${id}/discussions/${discussionId}/replies/${replyId}/reactions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reactionId, active, userId: "current-user" }),
+    }).catch((error) => {
+      console.error("Error toggling reply reaction:", error);
+    });
   }
 
   if (!tvMovie) {
@@ -459,6 +521,47 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                   required
                 />
 
+                {/* Image/GIF Preview */}
+                {(discussionImageUrl || discussionGifUrl) && (
+                  <div className="relative rounded-xl overflow-hidden border-2 border-yellow-200">
+                    <img
+                      src={discussionImageUrl || discussionGifUrl}
+                      alt="Preview"
+                      className="w-full max-h-96 object-contain"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDiscussionImageUrl("");
+                        setDiscussionGifUrl("");
+                      }}
+                      className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-2 text-[#7A674C] hover:text-yellow-900 transition-colors shadow-lg"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {/* Media Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowDiscussionGiphyPicker(true)}
+                    className="px-3 py-2 rounded-xl border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-sm font-medium transition-all flex items-center gap-1.5"
+                  >
+                    <span>📹</span>
+                    <span>Add GIF</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowDiscussionImageUpload(true)}
+                    className="px-3 py-2 rounded-xl border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-sm font-medium transition-all flex items-center gap-1.5"
+                  >
+                    <span>📷</span>
+                    <span>Add Image</span>
+                  </button>
+                </div>
+
                 <label className="flex items-center gap-2 text-sm text-[#7A674C] cursor-pointer">
                   <input
                     type="checkbox"
@@ -518,11 +621,35 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                         {discussion.body}
                       </p>
 
+                      {/* Display GIF or Image */}
+                      {(discussion.gifUrl || discussion.imageUrl) && (
+                        <div className="mt-3 rounded-xl overflow-hidden border-2 border-yellow-200">
+                          <img
+                            src={discussion.gifUrl || discussion.imageUrl}
+                            alt="Discussion media"
+                            className="w-full max-h-96 object-contain"
+                          />
+                        </div>
+                      )}
+
+                      {/* Reaction Bar for Discussion */}
+                      <div className="mt-3 pt-2 border-t border-yellow-200/40">
+                        <ReactionBar
+                          roomId="tvMovies"
+                          postId={discussion.id}
+                          reactions={discussionReactions[discussion.id] || {}}
+                          onReactionToggle={(reactionId, active) =>
+                            toggleDiscussionReaction(discussion.id, reactionId, active)
+                          }
+                          showLabels={true}
+                        />
+                      </div>
+
                       {/* Replies */}
                       {repliesByDiscussion[discussion.id]?.length > 0 && (
-                        <div className="mt-3 space-y-2 pl-4 border-l-2 border-yellow-200">
+                        <div className="mt-3 space-y-3 pl-4 border-l-2 border-yellow-200">
                           {repliesByDiscussion[discussion.id].map((reply) => (
-                            <div key={reply.id} className="space-y-1">
+                            <div key={reply.id} className="space-y-2">
                               <div className="flex items-center gap-2">
                                 <span className="text-xs font-bold text-[#5C4A33]">
                                   {reply.author}
@@ -532,6 +659,30 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                                 </span>
                               </div>
                               <p className="text-sm text-[#5C4A33]">{reply.body}</p>
+
+                              {/* Display GIF or Image in Reply */}
+                              {(reply.gifUrl || reply.imageUrl) && (
+                                <div className="rounded-xl overflow-hidden border-2 border-yellow-200">
+                                  <img
+                                    src={reply.gifUrl || reply.imageUrl}
+                                    alt="Reply media"
+                                    className="w-full max-h-64 object-contain"
+                                  />
+                                </div>
+                              )}
+
+                              {/* Reaction Bar for Reply */}
+                              <div className="pt-1 border-t border-yellow-200/40">
+                                <ReactionBar
+                                  roomId="tvMovies"
+                                  postId={reply.id}
+                                  reactions={replyReactions[reply.id] || {}}
+                                  onReactionToggle={(reactionId, active) =>
+                                    toggleReplyReaction(discussion.id, reply.id, reactionId, active)
+                                  }
+                                  showLabels={false}
+                                />
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -551,6 +702,48 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                             className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
                             autoFocus
                           />
+
+                          {/* Image/GIF Preview for Reply */}
+                          {(replyImageUrl || replyGifUrl) && (
+                            <div className="relative rounded-xl overflow-hidden border-2 border-yellow-200">
+                              <img
+                                src={replyImageUrl || replyGifUrl}
+                                alt="Preview"
+                                className="w-full max-h-64 object-contain"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setReplyImageUrl("");
+                                  setReplyGifUrl("");
+                                }}
+                                className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-1.5 text-[#7A674C] hover:text-yellow-900 transition-colors shadow-lg text-xs"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Media Buttons for Reply */}
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowReplyGiphyPicker(true)}
+                              className="px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1"
+                            >
+                              <span>📹</span>
+                              <span>GIF</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setShowReplyImageUpload(true)}
+                              className="px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 text-[#5C4A33] text-xs font-medium transition-all flex items-center gap-1"
+                            >
+                              <span>📷</span>
+                              <span>Image</span>
+                            </button>
+                          </div>
+
                           <div className="flex gap-2">
                             <BouncyButton
                               type="submit"
@@ -565,6 +758,8 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                               onClick={() => {
                                 setActiveDiscussionId(null);
                                 setReplyText("");
+                                setReplyGifUrl("");
+                                setReplyImageUrl("");
                               }}
                               variant="secondary"
                               size="sm"
@@ -600,6 +795,54 @@ export default function TVMovieDetailPage({ params }: PageProps) {
           </section>
         </div>
       </div>
+
+      {/* Giphy Picker for Discussion */}
+      {showDiscussionGiphyPicker && (
+        <GiphyPicker
+          onSelect={(gifUrl) => {
+            setDiscussionGifUrl(gifUrl);
+            setDiscussionImageUrl(""); // Clear image if GIF is selected
+            setShowDiscussionGiphyPicker(false);
+          }}
+          onClose={() => setShowDiscussionGiphyPicker(false)}
+        />
+      )}
+
+      {/* Image Upload for Discussion */}
+      {showDiscussionImageUpload && (
+        <ImageUpload
+          onUpload={(imageUrl) => {
+            setDiscussionImageUrl(imageUrl);
+            setDiscussionGifUrl(""); // Clear GIF if image is selected
+            setShowDiscussionImageUpload(false);
+          }}
+          onClose={() => setShowDiscussionImageUpload(false)}
+        />
+      )}
+
+      {/* Giphy Picker for Reply */}
+      {showReplyGiphyPicker && (
+        <GiphyPicker
+          onSelect={(gifUrl) => {
+            setReplyGifUrl(gifUrl);
+            setReplyImageUrl(""); // Clear image if GIF is selected
+            setShowReplyGiphyPicker(false);
+          }}
+          onClose={() => setShowReplyGiphyPicker(false)}
+        />
+      )}
+
+      {/* Image Upload for Reply */}
+      {showReplyImageUpload && (
+        <ImageUpload
+          onUpload={(imageUrl) => {
+            setReplyImageUrl(imageUrl);
+            setReplyGifUrl(""); // Clear GIF if image is selected
+            setShowReplyImageUpload(false);
+          }}
+          onClose={() => setShowReplyImageUpload(false)}
+        />
+      )}
     </div>
   );
 }
