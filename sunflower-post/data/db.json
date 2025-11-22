@@ -119,6 +119,27 @@
       "userId": "current-user",
       "reactionId": "softExhale",
       "createdAt": "2025-11-22T04:08:31.824Z"
+    },
+    {
+      "id": "1763834853988",
+      "tvMovieId": "1763784491383",
+      "userId": "current-user",
+      "reactionId": "thatTwist",
+      "createdAt": "2025-11-22T18:07:33.988Z"
+    },
+    {
+      "id": "1763834854825",
+      "tvMovieId": "1763784491383",
+      "userId": "current-user",
+      "reactionId": "rentFree",
+      "createdAt": "2025-11-22T18:07:34.825Z"
+    },
+    {
+      "id": "1763834856110",
+      "tvMovieId": "1763784491383",
+      "userId": "current-user",
+      "reactionId": "bigCackle",
+      "createdAt": "2025-11-22T18:07:36.110Z"
     }
   ],
   "userTVMovieStatuses": [
