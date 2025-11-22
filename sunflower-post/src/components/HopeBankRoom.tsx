@@ -130,7 +130,19 @@ export default function HopeBankRoom() {
       <div className="grid md:grid-cols-4 gap-6 items-start">
         {/* LEFT: ROOMS SIDEBAR */}
         <div className="md:col-span-1">
-          <CommunitySidebar />
+          <CommunitySidebar
+            filters={[
+              {
+                title: "Category",
+                options: CATEGORY_FILTERS.map((cat) => ({
+                  label: cat,
+                  value: cat,
+                })),
+                activeValue: activeCategory,
+                onChange: (value) => setActiveCategory(value as typeof CATEGORY_FILTERS[number]),
+              },
+            ]}
+          />
         </div>
 
         {/* RIGHT: HOPE BANK CONTENT */}
@@ -183,33 +195,16 @@ export default function HopeBankRoom() {
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* STORIES LIST */}
             <div className="lg:col-span-2 space-y-4">
-              {/* FILTER BAR */}
-              <div className="flex flex-col gap-4">
-                <div className="inline-flex items-center bg-white border border-yellow-200/60 rounded-2xl p-1.5 shadow-sm w-fit flex-wrap">
-                  {CATEGORY_FILTERS.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setActiveCategory(cat)}
-                      className={`px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all ${
-                        activeCategory === cat
-                          ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-[#3A2E1F] shadow-md"
-                          : "text-[#7A674C] hover:text-[#5C4A33] hover:bg-yellow-50/50"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between gap-3 text-[11px] text-[#7A674C]">
-                  <p className="text-[10px] text-[#A08960]">
-                    Stories are sorted by relevance and recency.
-                  </p>
-                  <select className="border border-yellow-200/60 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 shadow-sm hover:shadow-md transition-all text-[11px]">
-                    <option>Most saved</option>
-                    <option>Most recent</option>
-                    <option>Most relevant</option>
-                  </select>
-                </div>
+              {/* SORTING BAR */}
+              <div className="flex items-center justify-between gap-3 text-[11px] text-[#7A674C]">
+                <p className="text-[10px] text-[#A08960]">
+                  Stories are sorted by relevance and recency.
+                </p>
+                <select className="border border-yellow-200/60 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 shadow-sm hover:shadow-md transition-all text-[11px]">
+                  <option>Most saved</option>
+                  <option>Most recent</option>
+                  <option>Most relevant</option>
+                </select>
               </div>
 
               {/* STORY CARDS */}
