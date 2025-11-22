@@ -63,19 +63,16 @@ export default function CommunitySidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-white border border-yellow-100 rounded-2xl p-3 md:p-4 text-xs space-y-4 shadow-sm">
+    <nav className="bg-white border border-gray-200 rounded-lg p-3 space-y-1 shadow-sm">
       {/* HEADER */}
-      <div className="space-y-1">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960]">
+      <div className="px-2 py-2 mb-2">
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Rooms
-        </p>
-        <p className="text-[11px] text-[#7A674C]">
-          Move between spaces without losing the calm.
-        </p>
+        </h2>
       </div>
 
       {/* ROOM LIST */}
-      <div className="space-y-2">
+      <div className="space-y-0.5">
         {ROOMS.map((room) => {
           const isActive = pathname.startsWith(room.href) && !room.comingSoon;
 
@@ -83,14 +80,13 @@ export default function CommunitySidebar() {
             // COMING SOON (NO LINK)
             <div
               key={room.href}
-              className="flex items-start gap-3 rounded-xl px-3 py-2 border border-yellow-50 bg-[#FFFEFA] text-[#C8B89A] opacity-70"
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-gray-400 cursor-not-allowed group relative"
             >
-              <span className="text-base">{room.icon}</span>
-              <div className="space-y-0.5">
-                <span className="text-[11px] font-semibold">{room.label}</span>
-                <p className="text-[10px]">{room.description}</p>
-                <span className="text-[9px] italic">Coming soon</span>
+              <span className="text-lg flex-shrink-0">{room.icon}</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-medium block truncate">{room.label}</span>
               </div>
+              <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Soon</span>
             </div>
           ) : (
             // ACTIVE / CLICKABLE ROOM
@@ -98,25 +94,27 @@ export default function CommunitySidebar() {
               key={room.href}
               href={room.href}
               className={[
-                "flex items-start gap-3 rounded-xl px-3 py-2 border transition",
+                "flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors group relative",
                 isActive
-                  ? "bg-[#FFF7D6] border-yellow-300 text-[#3A2E1F]"
-                  : "bg-[#FFFEFA] border-yellow-100 text-[#5C4A33] hover:bg-yellow-50/70",
+                  ? "bg-yellow-50 text-yellow-900 font-medium"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
               ].join(" ")}
             >
-              <span className="text-base">{room.icon}</span>
-              <div className="space-y-0.5">
-                <span className="text-[11px] font-semibold">{room.label}</span>
-                <p className="text-[10px]">{room.description}</p>
+              <span className="text-lg flex-shrink-0">{room.icon}</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-medium block truncate">{room.label}</span>
               </div>
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-yellow-500 rounded-r" />
+              )}
             </Link>
           );
         })}
       </div>
 
       {/* FOOTER NOTE */}
-      <div className="pt-1 border-t border-yellow-50 mt-2">
-        <p className="text-[10px] text-[#A08960]">
+      <div className="pt-3 mt-3 border-t border-gray-200">
+        <p className="text-[11px] text-gray-500 px-2 leading-relaxed">
           More rooms open as the community grows 🌻
         </p>
       </div>
