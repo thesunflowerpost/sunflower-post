@@ -406,11 +406,11 @@ export default function InspoWall() {
             </div>
 
             {/* UNIFORM GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="flex flex-col bg-white border border-[color:var(--border-medium)] rounded-xl overflow-hidden shadow-[var(--shadow-medium)] hover:shadow-[var(--shadow-large)] transition-shadow group"
+                  className="flex flex-col bg-white border border-[color:var(--border-medium)] rounded-lg overflow-hidden shadow-[var(--shadow-medium)] hover:shadow-[var(--shadow-large)] transition-shadow group"
                 >
                   {/* IMAGE */}
                   {post.imageUrl && (
@@ -419,7 +419,7 @@ export default function InspoWall() {
                         <img
                           src={post.imageUrl}
                           alt={post.title || "Inspiration"}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     </Link>
@@ -427,94 +427,59 @@ export default function InspoWall() {
 
                   {/* QUOTE */}
                   {post.quote && !post.imageUrl && (
-                    <Link href={`/inspo-wall/${post.id}`} className="block aspect-square w-full bg-gradient-to-br from-[color:var(--sun-glow)] to-white flex items-center justify-center p-8">
-                      <p className="text-lg font-serif italic text-[color:var(--text-primary)] leading-relaxed text-center">
+                    <Link href={`/inspo-wall/${post.id}`} className="block aspect-square w-full bg-gradient-to-br from-[color:var(--sun-glow)] to-white flex items-center justify-center p-4">
+                      <p className="text-sm font-serif italic text-[color:var(--text-primary)] leading-relaxed text-center line-clamp-4">
                         "{post.quote}"
                       </p>
                     </Link>
                   )}
 
                   {/* CONTENT */}
-                  <div className="p-4 flex-1 flex flex-col">
+                  <div className="p-3 flex-1 flex flex-col">
                     {/* TOP SECTION - Variable content */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-h-0">
                       {post.title && (
                         <Link href={`/inspo-wall/${post.id}`}>
-                          <h3 className="font-semibold text-[color:var(--text-primary)] mb-1 hover:text-[color:var(--honey-gold)] transition-colors">
+                          <h3 className="text-sm font-semibold text-[color:var(--text-primary)] mb-1 hover:text-[color:var(--honey-gold)] transition-colors line-clamp-2">
                             {post.title}
                           </h3>
                         </Link>
                       )}
 
                       {post.description && (
-                        <p className="text-sm text-[color:var(--text-secondary)] mb-3 line-clamp-2">
+                        <p className="text-xs text-[color:var(--text-secondary)] mb-2 line-clamp-2">
                           {post.description}
                         </p>
-                      )}
-
-                      {/* TAGS */}
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {post.tags.slice(0, 3).map((tag, idx) => (
-                            <span
-                              key={idx}
-                              className="text-xs px-2 py-0.5 bg-gray-100 text-[color:var(--text-tertiary)] rounded-full"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                       )}
                     </div>
 
                     {/* BOTTOM SECTION - Fixed at bottom */}
-                    <div className="mt-auto space-y-3">
-                      {/* CATEGORY */}
-                      <div className="flex items-center justify-between text-xs text-[color:var(--text-tertiary)]">
-                      <span className="px-2 py-1 bg-[color:var(--sun-glow)] text-[color:var(--text-primary)] rounded-md font-medium">
-                        {post.category}
-                      </span>
-                      <span>{post.timeAgo}</span>
-                    </div>
-
-                      {/* ACTIONS */}
-                      <div className="flex items-center justify-between border-t border-[color:var(--border-soft)] pt-3">
+                    <div className="mt-auto space-y-2">
+                      {/* CATEGORY & SAVE */}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] px-2 py-0.5 bg-[color:var(--sun-glow)] text-[color:var(--text-primary)] rounded font-medium truncate">
+                          {post.category}
+                        </span>
                         <button
                           onClick={() => handleToggleSave(post.id)}
                           className={[
-                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                            userSaves[post.id]
-                              ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)]"
-                              : "bg-gray-100 text-[color:var(--text-secondary)] hover:bg-gray-200",
+                            "text-sm flex-shrink-0 transition-colors",
+                            userSaves[post.id] ? "text-[color:var(--sunflower-gold)]" : "text-[color:var(--text-tertiary)] hover:text-[color:var(--sunflower-gold)]",
                           ].join(" ")}
                         >
-                          <span>{userSaves[post.id] ? "✓" : "📌"}</span>
-                          <span>{userSaves[post.id] ? "Saved" : "Save"}</span>
-                          {(post.saves || 0) > 0 && (
-                            <span className="text-xs opacity-75">({post.saves})</span>
-                          )}
+                          {userSaves[post.id] ? "✓" : "📌"}
                         </button>
+                      </div>
 
+                      {/* STATS */}
+                      <div className="flex items-center justify-between text-[10px] text-[color:var(--text-tertiary)]">
+                        <span>{post.saves || 0} saves</span>
                         <Link
                           href={`/inspo-wall/${post.id}`}
-                          className="text-sm text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors"
+                          className="hover:text-[color:var(--text-primary)] transition-colors"
                         >
                           💬 {post.replies || 0}
                         </Link>
-                      </div>
-
-                      {/* REACTIONS */}
-                      <div className="border-t border-[color:var(--border-soft)] pt-3">
-                        <ReactionBar
-                          availableReactions={["sunburst", "heart", "beautiful", "inspired", "savedThis"]}
-                          userReactions={userReactions[post.id] || {}}
-                          onReact={(reactionId) => handleReaction(post.id, reactionId)}
-                        />
-                      </div>
-
-                      {/* SHARED BY */}
-                      <div className="text-xs text-[color:var(--text-tertiary)]">
-                        Shared by <span className="font-medium">{post.sharedBy}</span>
                       </div>
                     </div>
                   </div>
