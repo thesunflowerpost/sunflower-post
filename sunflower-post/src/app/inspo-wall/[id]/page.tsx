@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import { BouncyButton, ReactionBar } from "@/components/ui";
+import GiphyPicker from "@/components/GiphyPicker";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
 
@@ -119,6 +120,8 @@ export default function InspoWallThreadPage({ params }: PageProps) {
   const [replyText, setReplyText] = useState("");
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
   const [isSaved, setIsSaved] = useState(false);
+  const [showGiphyPicker, setShowGiphyPicker] = useState(false);
+  const [selectedGif, setSelectedGif] = useState<string | null>(null);
 
   function toggleReaction(reactionId: ReactionId, active: boolean) {
     setReactions((prev) => ({
@@ -127,19 +130,26 @@ export default function InspoWallThreadPage({ params }: PageProps) {
     }));
   }
 
+  const handleGifSelect = (gifUrl: string) => {
+    setSelectedGif(gifUrl);
+    setShowGiphyPicker(false);
+  };
+
   const handleSubmitReply = (e: FormEvent) => {
     e.preventDefault();
-    if (!replyText.trim()) return;
+    if (!replyText.trim() && !selectedGif) return;
 
     const newReply: InspoReply = {
       id: Date.now(),
       author: "You",
       timeAgo: "Just now",
       body: replyText,
+      imageUrl: selectedGif || undefined,
     };
 
     setReplies([...replies, newReply]);
     setReplyText("");
+    setSelectedGif(null);
   };
 
   return (
@@ -277,10 +287,36 @@ export default function InspoWallThreadPage({ params }: PageProps) {
                   rows={3}
                   className="w-full px-4 py-3 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] resize-none"
                 />
-                <div className="flex justify-end mt-2">
+
+                {/* GIF PREVIEW */}
+                {selectedGif && (
+                  <div className="mt-3 relative inline-block">
+                    <img
+                      src={selectedGif}
+                      alt="Selected GIF"
+                      className="rounded-lg max-w-xs max-h-48 border border-[color:var(--border-medium)]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectedGif(null)}
+                      className="absolute -top-2 -right-2 bg-[color:var(--text-primary)] text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-[color:var(--text-secondary)] transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowGiphyPicker(true)}
+                    className="text-sm px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors font-medium"
+                  >
+                    🎬 Add GIF
+                  </button>
                   <BouncyButton
                     type="submit"
-                    disabled={!replyText.trim()}
+                    disabled={!replyText.trim() && !selectedGif}
                     className="bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] disabled:bg-gray-200 disabled:text-gray-400 text-[color:var(--text-primary)] px-6 py-2 rounded-lg font-medium shadow-[var(--shadow-soft)] transition-colors"
                   >
                     Post Comment
@@ -338,6 +374,11 @@ export default function InspoWallThreadPage({ params }: PageProps) {
           </main>
         </div>
       </div>
+
+      {/* GIPHY PICKER MODAL */}
+      {showGiphyPicker && (
+        <GiphyPicker onSelect={handleGifSelect} onClose={() => setShowGiphyPicker(false)} />
+      )}
     </div>
   );
 }
