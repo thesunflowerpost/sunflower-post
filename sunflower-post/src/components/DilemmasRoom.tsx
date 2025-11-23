@@ -241,10 +241,10 @@ export default function DilemmasRoom() {
     <div className="min-h-screen bg-white">
       {/* HEADER */}
       <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
                 <span>💭</span>
                 <span>Dilemmas</span>
               </h1>
@@ -252,12 +252,12 @@ export default function DilemmasRoom() {
                 For the "what should I do?" moments — work, money, dating, family, all of it
               </p>
             </div>
-            <BouncyButton
+            <button
               onClick={() => setShowComposer(!showComposer)}
-              className="bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[color:var(--text-primary)] px-6 py-3 rounded-full font-semibold shadow-[var(--shadow-soft)] transition-colors"
+              className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
             >
               {showComposer ? "Cancel" : "Share a dilemma"}
-            </BouncyButton>
+            </button>
           </div>
         </div>
       </header>
@@ -269,18 +269,18 @@ export default function DilemmasRoom() {
             <CommunitySidebar />
 
             {/* CATEGORY FILTERS */}
-            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
-              <h3 className="text-sm font-semibold text-[color:var(--text-primary)] mb-3">
+            <div className="bg-white border border-[#E5E5EA] rounded-2xl p-4 shadow-sm">
+              <h3 className="text-sm font-semibold text-[#111111] mb-3">
                 Category
               </h3>
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => setCategoryFilter("All")}
                   className={[
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors border text-left",
+                    "px-4 py-2 rounded-xl text-sm font-medium transition-colors border text-left",
                     categoryFilter === "All"
-                      ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
-                      : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
+                      ? "bg-[#FFD52A] text-[#111111] border-[#FFD52A]"
+                      : "bg-white text-[#666666] border-[#E5E5EA] hover:border-[#CCCCCC]",
                   ].join(" ")}
                 >
                   All
@@ -290,10 +290,10 @@ export default function DilemmasRoom() {
                     key={cat}
                     onClick={() => setCategoryFilter(cat)}
                     className={[
-                      "px-4 py-2 rounded-lg text-sm font-medium transition-colors border text-left",
+                      "px-4 py-2 rounded-xl text-sm font-medium transition-colors border text-left",
                       categoryFilter === cat
-                        ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
-                        : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
+                        ? "bg-[#FFD52A] text-[#111111] border-[#FFD52A]"
+                        : "bg-white text-[#666666] border-[#E5E5EA] hover:border-[#CCCCCC]",
                     ].join(" ")}
                   >
                     {cat}
@@ -307,8 +307,8 @@ export default function DilemmasRoom() {
           <main className="flex-1 min-w-0">
             {/* COMPOSER */}
             {showComposer && (
-              <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-6 mb-6 shadow-[var(--shadow-medium)]">
-                <h3 className="text-base font-semibold text-[color:var(--text-primary)] mb-4">
+              <div className="bg-white border border-[#E5E5EA] rounded-2xl p-6 mb-6 shadow-sm">
+                <h3 className="text-base font-semibold text-[#111111] mb-4">
                   Share your dilemma
                 </h3>
                 <form onSubmit={handleSubmitDilemma} className="space-y-4">
@@ -406,41 +406,39 @@ export default function DilemmasRoom() {
               </div>
             )}
 
-            {/* NESTED GRID: MAIN CONTENT + RIGHT SIDEBAR */}
-            <section className="grid lg:grid-cols-3 gap-6 text-xs">
-              {/* LEFT: DILEMMAS LIST */}
-              <div className="lg:col-span-2 space-y-4">
+            {/* TWO-COLUMN GRID: MAIN CONTENT + RIGHT SIDEBAR */}
+            <div className="mt-6 grid grid-cols-[minmax(0,2.1fr)_minmax(0,1fr)] gap-6 items-start">
+              {/* LEFT COLUMN: SEARCH + DILEMMAS LIST */}
+              <div className="space-y-4">
                 {/* SEARCH & SORT BAR */}
-                <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                      type="search"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search dilemmas..."
-                      className="flex-1 px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                    />
-                    <select
-                      value={sortOption}
-                      onChange={(e) => setSortOption(e.target.value as SortOption)}
-                      className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                    >
-                      <option value="newest">Newest</option>
-                      <option value="most_replies">Most perspectives</option>
-                      <option value="most_saved">Most saved</option>
-                    </select>
-                  </div>
+                <div className="space-y-3">
+                  <input
+                    type="search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search dilemmas..."
+                    className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+                  />
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value as SortOption)}
+                    className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="most_replies">Most perspectives</option>
+                    <option value="most_saved">Most saved</option>
+                  </select>
                 </div>
 
                 {/* DILEMMA LIST */}
-            <div className="space-y-4">
-              {filteredDilemmas.map((dilemma) => {
-                const urgencyBadge = getUrgencyLabel(dilemma.urgency);
-                return (
-                  <div
-                    key={dilemma.id}
-                    className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-shadow"
-                  >
+                <div className="space-y-4">
+                  {filteredDilemmas.map((dilemma) => {
+                    const urgencyBadge = getUrgencyLabel(dilemma.urgency);
+                    return (
+                      <div
+                        key={dilemma.id}
+                        className="bg-white border border-[#E5E5EA] rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                      >
                     {/* Header */}
                     <div className="flex items-start gap-3 mb-3">
                       <div
@@ -540,47 +538,47 @@ export default function DilemmasRoom() {
                 )}
               </div>
 
-              {/* RIGHT SIDEBAR */}
+              {/* RIGHT COLUMN: SIDEBAR INFO */}
               <aside className="space-y-4">
                 {/* WHAT IS DILEMMAS? */}
-                <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 shadow-[var(--shadow-soft)]">
-                  <p className="text-xs font-semibold text-[color:var(--text-primary)] mb-3">
+                <div className="bg-white border border-[#E5E5EA] rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-semibold text-[#111111] mb-3">
                     What is Dilemmas?
                   </p>
-                  <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-4">
+                  <p className="text-xs text-[#666666] leading-relaxed mb-4">
                     This is a space for those "I genuinely don't know what to do" moments. Work decisions,
                     relationship crossroads, family dynamics, life stuff. Share what's on your mind and get
                     real perspectives from people who've been there.
                   </p>
 
-                  <p className="text-xs font-semibold text-[color:var(--text-primary)] mb-2">
+                  <p className="text-xs font-semibold text-[#111111] mb-2">
                     How this works
                   </p>
-                  <ul className="space-y-2 text-xs text-[color:var(--text-secondary)]">
+                  <ul className="space-y-2 text-xs text-[#666666]">
                     <li className="flex gap-2">
-                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span className="text-[#FFD52A] flex-shrink-0">→</span>
                       <span>No judgment, no shaming. We're all figuring it out.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span className="text-[#FFD52A] flex-shrink-0">→</span>
                       <span>Advice is perspective, not instruction. Take what resonates.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span className="text-[#FFD52A] flex-shrink-0">→</span>
                       <span>"Same boat" = solidarity. You're not alone in this.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span className="text-[#FFD52A] flex-shrink-0">→</span>
                       <span>You can post anonymously—this is a safe space.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span className="text-[#FFD52A] flex-shrink-0">→</span>
                       <span>Be kind, be honest, be the big sister energy you'd want.</span>
                     </li>
                   </ul>
                 </div>
               </aside>
-            </section>
+            </div>
           </main>
         </div>
       </div>
