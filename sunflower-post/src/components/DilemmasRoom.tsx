@@ -308,7 +308,7 @@ export default function DilemmasRoom() {
             {/* COMPOSER */}
             {showComposer && (
               <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-6 mb-6 shadow-[var(--shadow-medium)]">
-                <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-4">
+                <h3 className="text-base font-semibold text-[color:var(--text-primary)] mb-4">
                   Share your dilemma
                 </h3>
                 <form onSubmit={handleSubmitDilemma} className="space-y-4">
@@ -406,67 +406,33 @@ export default function DilemmasRoom() {
               </div>
             )}
 
-            {/* SEARCH & SORT BAR */}
-            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 mb-6 shadow-[var(--shadow-soft)]">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search dilemmas..."
-                  className="flex-1 px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                />
-                <select
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                >
-                  <option value="newest">Newest</option>
-                  <option value="most_replies">Most perspectives</option>
-                  <option value="most_saved">Most saved</option>
-                </select>
-              </div>
-            </div>
+            {/* NESTED GRID: MAIN CONTENT + RIGHT SIDEBAR */}
+            <section className="grid lg:grid-cols-3 gap-6 text-xs">
+              {/* LEFT: DILEMMAS LIST */}
+              <div className="lg:col-span-2 space-y-4">
+                {/* SEARCH & SORT BAR */}
+                <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="search"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search dilemmas..."
+                      className="flex-1 px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                    />
+                    <select
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value as SortOption)}
+                      className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                    >
+                      <option value="newest">Newest</option>
+                      <option value="most_replies">Most perspectives</option>
+                      <option value="most_saved">Most saved</option>
+                    </select>
+                  </div>
+                </div>
 
-            {/* WHAT IS DILEMMAS? */}
-            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 mb-6 shadow-[var(--shadow-soft)]">
-              <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-3">
-                What is Dilemmas?
-              </h3>
-              <p className="text-sm text-[color:var(--text-secondary)] leading-relaxed mb-4">
-                This is a space for those "I genuinely don't know what to do" moments. Work decisions,
-                relationship crossroads, family dynamics, life stuff. Share what's on your mind and get
-                real perspectives from people who've been there.
-              </p>
-
-              <h4 className="text-sm font-semibold text-[color:var(--text-primary)] mb-2">
-                How this works
-              </h4>
-              <ul className="space-y-2 text-sm text-[color:var(--text-secondary)]">
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>No judgment, no shaming. We're all figuring it out.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>Advice is perspective, not instruction. Take what resonates.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>"Same boat" = solidarity. You're not alone in this.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>You can post anonymously—this is a safe space.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>Be kind, be honest, be the big sister energy you'd want.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* DILEMMA LIST */}
+                {/* DILEMMA LIST */}
             <div className="space-y-4">
               {filteredDilemmas.map((dilemma) => {
                 const urgencyBadge = getUrgencyLabel(dilemma.urgency);
@@ -508,10 +474,10 @@ export default function DilemmasRoom() {
 
                     {/* Content */}
                     <Link href={`/dilemmas/${dilemma.id}`} className="block mb-4">
-                      <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-2 hover:text-[color:var(--honey-gold)] transition-colors">
+                      <h3 className="text-base font-semibold text-[color:var(--text-primary)] mb-2 hover:text-[color:var(--honey-gold)] transition-colors">
                         {dilemma.title}
                       </h3>
-                      <p className="text-sm text-[color:var(--text-secondary)] line-clamp-3 leading-relaxed">
+                      <p className="text-xs text-[color:var(--text-secondary)] line-clamp-3 leading-relaxed">
                         {dilemma.body}
                       </p>
                     </Link>
@@ -520,7 +486,7 @@ export default function DilemmasRoom() {
                     <div className="flex items-center justify-between pt-3 border-t border-[color:var(--border-soft)]">
                       <Link
                         href={`/dilemmas/${dilemma.id}`}
-                        className="text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors font-medium"
+                        className="text-xs text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors font-medium"
                       >
                         💬 {dilemma.replies} {dilemma.replies === 1 ? "perspective" : "perspectives"}
                       </Link>
@@ -529,7 +495,7 @@ export default function DilemmasRoom() {
                         <button
                           onClick={() => handleToggleSameBoat(dilemma.id)}
                           className={[
-                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
                             userSameBoat[dilemma.id]
                               ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)]"
                               : "bg-gray-50 text-[color:var(--text-secondary)] hover:bg-gray-100",
@@ -538,14 +504,14 @@ export default function DilemmasRoom() {
                           <span>🚣</span>
                           <span>Same boat</span>
                           {dilemma.sameBoat > 0 && (
-                            <span className="text-xs opacity-75">({dilemma.sameBoat})</span>
+                            <span className="text-[10px] opacity-75">({dilemma.sameBoat})</span>
                           )}
                         </button>
 
                         <button
                           onClick={() => handleToggleSave(dilemma.id)}
                           className={[
-                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
                             userSaves[dilemma.id]
                               ? "text-[color:var(--honey-gold)]"
                               : "text-[color:var(--text-tertiary)] hover:text-[color:var(--honey-gold)]",
@@ -553,7 +519,7 @@ export default function DilemmasRoom() {
                         >
                           <span className="font-bold">{userSaves[dilemma.id] ? "✓" : "📌"}</span>
                           {dilemma.saves > 0 && (
-                            <span className="text-xs">({dilemma.saves})</span>
+                            <span className="text-[10px]">({dilemma.saves})</span>
                           )}
                         </button>
                       </div>
@@ -561,17 +527,60 @@ export default function DilemmasRoom() {
                   </div>
                 );
               })}
-            </div>
+                </div>
 
-            {/* Empty state */}
-            {filteredDilemmas.length === 0 && (
-              <div className="text-center py-12 px-4">
-                <p className="text-lg text-[color:var(--text-secondary)] mb-2">No dilemmas found</p>
-                <p className="text-sm text-[color:var(--text-tertiary)]">
-                  Try adjusting your filters or share the first one
-                </p>
+                {/* Empty state */}
+                {filteredDilemmas.length === 0 && (
+                  <div className="text-center py-12 px-4">
+                    <p className="text-base text-[color:var(--text-secondary)] mb-2">No dilemmas found</p>
+                    <p className="text-xs text-[color:var(--text-tertiary)]">
+                      Try adjusting your filters or share the first one
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* RIGHT SIDEBAR */}
+              <aside className="space-y-4">
+                {/* WHAT IS DILEMMAS? */}
+                <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 shadow-[var(--shadow-soft)]">
+                  <p className="text-xs font-semibold text-[color:var(--text-primary)] mb-3">
+                    What is Dilemmas?
+                  </p>
+                  <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-4">
+                    This is a space for those "I genuinely don't know what to do" moments. Work decisions,
+                    relationship crossroads, family dynamics, life stuff. Share what's on your mind and get
+                    real perspectives from people who've been there.
+                  </p>
+
+                  <p className="text-xs font-semibold text-[color:var(--text-primary)] mb-2">
+                    How this works
+                  </p>
+                  <ul className="space-y-2 text-xs text-[color:var(--text-secondary)]">
+                    <li className="flex gap-2">
+                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span>No judgment, no shaming. We're all figuring it out.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span>Advice is perspective, not instruction. Take what resonates.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span>"Same boat" = solidarity. You're not alone in this.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span>You can post anonymously—this is a safe space.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                      <span>Be kind, be honest, be the big sister energy you'd want.</span>
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+            </section>
           </main>
         </div>
       </div>
