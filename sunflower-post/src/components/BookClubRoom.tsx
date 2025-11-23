@@ -369,19 +369,6 @@ export default function BookClubRoom() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[11px] hidden">
-              <button
-                onClick={() => {
-                  setShowAddForm((s) => !s);
-                  setAddError(null);
-                }}
-                  className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm transition-all hover:shadow-md"
-                >
-                  {showAddForm ? "Close add book form" : "Add a book"}
-                </button>
-              </div>
-            </div>
-
             {/* HERO: CURRENTLY READING */}
             {books.filter((b) => b.status === "Reading").length > 0 && (
               <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg">
