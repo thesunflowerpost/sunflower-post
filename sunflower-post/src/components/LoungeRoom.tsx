@@ -232,74 +232,63 @@ export default function LoungeRoom() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-      <div className="grid md:grid-cols-4 gap-6 items-start">
-        {/* LEFT: ROOMS SIDEBAR */}
-        <div className="md:col-span-1">
-          <CommunitySidebar
-            filters={[
-              {
-                title: "Time Period",
-                options: FILTERS.map((filter) => ({
-                  label: filter,
-                  value: filter,
-                })),
-                activeValue: activeFilter,
-                onChange: (value) => setActiveFilter(value as typeof FILTERS[number]),
-              },
-            ]}
-          />
-        </div>
-
-        {/* RIGHT: LOUNGE CONTENT */}
-        <div className="md:col-span-3 space-y-8">
-          {/* HEADER ROW */}
-          <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div className="space-y-3 md:max-w-xl">
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
-                  Room
-                </p>
-                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
-                  The Lounge
-                </h1>
-                <p className="text-sm text-[#5C4A33] max-w-xl leading-relaxed">
-                  A soft landing spot for the day. Share a small joy, ask for a
-                  pick-me-up or gently rant about life without needing a perfect
-                  takeaway.
-                </p>
-              </div>
-
-              {/* SEARCH BAR */}
-              <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search Lounge posts..."
-                  className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                />
-              </div>
+    <div className="min-h-screen bg-white">
+      {/* HEADER */}
+      <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
+                <span>☀️</span>
+                <span>The Lounge</span>
+              </h1>
+              <p className="text-sm text-[color:var(--text-secondary)] mt-1">
+                A soft landing spot for the day. Share a small joy, ask for a pick-me-up or gently rant about life without needing a perfect takeaway.
+              </p>
             </div>
-
-            <div className="flex flex-wrap gap-2 text-xs">
-              <BouncyButton
+            <div className="flex gap-2">
+              <button
                 onClick={() => setShowJoyForm((s) => !s)}
-                variant="primary"
-                size="sm"
-                className="shadow-md"
+                className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
               >
-                {showJoyForm ? "Close joy form" : "Share a small joy"}
-              </BouncyButton>
-              <BouncyButton
-                onClick={() => setShowPickForm((s) => !s)}
-                variant="secondary"
-                size="sm"
-              >
-                {showPickForm ? "Close pick-me-up form" : "Ask for a pick-me-up"}
-              </BouncyButton>
+                {showJoyForm ? "Close" : "Share a joy"}
+              </button>
             </div>
-          </section>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* SIDEBAR */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <CommunitySidebar
+              filters={[
+                {
+                  title: "Time Period",
+                  options: FILTERS.map((filter) => ({
+                    label: filter,
+                    value: filter,
+                  })),
+                  activeValue: activeFilter,
+                  onChange: (value) => setActiveFilter(value as typeof FILTERS[number]),
+                },
+              ]}
+            />
+          </aside>
+
+          {/* MAIN CONTENT */}
+          <main className="flex-1 min-w-0">
+            {/* SEARCH BAR */}
+            <div className="mb-6">
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search Lounge posts..."
+                className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+              />
+            </div>
 
           {/* JOY SUBMISSION FORM */}
           {showJoyForm && (
@@ -799,7 +788,7 @@ export default function LoungeRoom() {
                 </p>
               </div>
             </aside>
-          </section>
+          </main>
         </div>
       </div>
     </div>
