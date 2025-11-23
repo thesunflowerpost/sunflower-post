@@ -433,7 +433,6 @@ export default function BookClubRoom() {
                 </div>
               </div>
             )}
-          </section>
 
           {/* ADD BOOK FORM */}
           {showAddForm && (
