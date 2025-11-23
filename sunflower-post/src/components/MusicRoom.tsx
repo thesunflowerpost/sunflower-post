@@ -629,31 +629,6 @@ export default function MusicRoom() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs hidden">
-              <BouncyButton
-                onClick={() => {
-                  setShowAddForm((s) => !s);
-                  setAddError(null);
-                }}
-                variant="primary"
-                size="sm"
-                className="shadow-md"
-              >
-                {showAddForm ? "Close add form" : "Add a song"}
-              </BouncyButton>
-              {Object.keys(playlist).some((id) => playlist[Number(id)]) && (
-                <BouncyButton
-                  onClick={exportPlaylist}
-                  variant="secondary"
-                  size="sm"
-                  className="shadow-md"
-                >
-                  Export Playlist ({Object.values(playlist).filter(Boolean).length})
-                </BouncyButton>
-              )}
-            </div>
-          </section>
-
           {/* TIME-BASED RECOMMENDATION BANNER */}
           <section className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-yellow-300/60 rounded-2xl p-4 md:p-5 shadow-lg">
             <div className="flex items-start gap-3">
