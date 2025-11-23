@@ -60,11 +60,10 @@ const ROOMS: Room[] = [
     description: "Decompress with series & films",
   },
   {
-    href: "/pinterest-wall",
-    icon: "📌",
-    label: "Pinterest Wall",
+    href: "/inspo-wall",
+    icon: "✨",
+    label: "Inspo Wall",
     description: "Visual inspo & saved sunshine",
-    comingSoon: true,
   },
   {
     href: "/solution-rooms",
