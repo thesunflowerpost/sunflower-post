@@ -270,15 +270,14 @@ export default function LoungeRoom() {
                 </p>
               </div>
 
-              {/* SEARCH BAR - Modernized */}
-              <div className="flex items-center gap-2 bg-white border border-yellow-200/60 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-yellow-300/50 focus-within:border-yellow-300">
-                <span className="text-base">🔍</span>
+              {/* SEARCH BAR */}
+              <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
                 <input
-                  type="text"
+                  type="search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search Lounge posts (e.g. job hunt, burnout, tiny wins)"
-                  className="flex-1 bg-transparent text-xs focus:outline-none placeholder:text-[#C0A987]"
+                  placeholder="Search Lounge posts..."
+                  className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
                 />
               </div>
             </div>

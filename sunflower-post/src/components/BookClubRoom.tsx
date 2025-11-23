@@ -349,15 +349,14 @@ export default function BookClubRoom() {
                   </p>
                 </div>
 
-                {/* SEARCH BAR – now sees books *and* discussion topics */}
-                <div className="flex items-center gap-2 bg-white border border-yellow-100 rounded-full px-3 py-1 shadow-sm">
-                  <span>🔍</span>
+                {/* SEARCH BAR */}
+                <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
                   <input
-                    type="text"
+                    type="search"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search by title, author, theme or discussion topic…"
-                    className="flex-1 bg-transparent text-[11px] focus:outline-none placeholder:text-[#C0A987]"
+                    placeholder="Search by title, author, theme or discussion topic..."
+                    className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
                   />
                 </div>
               </div>
