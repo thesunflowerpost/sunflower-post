@@ -264,9 +264,10 @@ export default function InspoWallThreadPage({ params }: PageProps) {
                 {/* REACTIONS */}
                 <div className="mb-4">
                   <ReactionBar
-                    availableReactions={["sunburst", "heart", "beautiful", "inspired", "savedThis"]}
-                    userReactions={reactions}
-                    onReact={(reactionId) => toggleReaction(reactionId, !reactions[reactionId])}
+                    roomId="inspo-wall"
+                    postId={post.id}
+                    reactions={reactions}
+                    onReactionToggle={toggleReaction}
                   />
                 </div>
               </div>

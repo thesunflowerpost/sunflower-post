@@ -726,10 +726,9 @@ export default function LoungeRoom() {
                 })}
               </div>
             </div>
-          </main>
 
             {/* RIGHT: PROMPTS & BOUNDARIES - Modernized */}
-            <aside className="lg:w-80 flex-shrink-0 space-y-4">
+            <aside className="space-y-4">
               <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
                 <p className="text-xs font-semibold text-yellow-900">
                   What belongs here
@@ -789,6 +788,8 @@ export default function LoungeRoom() {
                 </p>
               </div>
             </aside>
+          </section>
+          </main>
         </div>
       </div>
     </div>

@@ -167,7 +167,7 @@ export default function DilemmasRoom() {
 
   if (search.trim()) {
     filteredDilemmas = filteredDilemmas.filter((d) =>
-      matchesSearch(`${d.title} ${d.body} ${d.category}`, search)
+      matchesSearch([d.title, d.body, d.category], search)
     );
   }
 

@@ -76,6 +76,7 @@ export default function HopeBankRoom() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] =
     useState<(typeof CATEGORY_FILTERS)[number]>("All");
+  const [showForm, setShowForm] = useState(false);
 
   // per-story reactions for *this* viewer only
   const [reactions, setReactions] = useState<Record<number, UserReactions>>({});
