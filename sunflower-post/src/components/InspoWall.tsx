@@ -463,12 +463,32 @@ export default function InspoWall() {
                         <button
                           onClick={() => handleToggleSave(post.id)}
                           className={[
-                            "text-sm flex-shrink-0 transition-colors",
-                            userSaves[post.id] ? "text-[color:var(--sunflower-gold)]" : "text-[color:var(--text-tertiary)] hover:text-[color:var(--sunflower-gold)]",
+                            "text-sm flex-shrink-0 transition-colors font-bold",
+                            userSaves[post.id] ? "text-[color:var(--honey-gold)]" : "text-[color:var(--text-tertiary)] hover:text-[color:var(--honey-gold)]",
                           ].join(" ")}
                         >
                           {userSaves[post.id] ? "✓" : "📌"}
                         </button>
+                      </div>
+
+                      {/* REACTIONS */}
+                      <div className="flex items-center gap-1.5">
+                        {(["sunburst", "heartHands", "brain"] as const).map((reactionId) => {
+                          const reactionEmoji = reactionId === "sunburst" ? "🌻" : reactionId === "heartHands" ? "🫶" : "🧠";
+                          const isActive = userReactions[post.id]?.[reactionId];
+                          return (
+                            <button
+                              key={reactionId}
+                              onClick={() => handleReaction(post.id, reactionId)}
+                              className={[
+                                "text-sm transition-transform hover:scale-110",
+                                isActive ? "opacity-100" : "opacity-40 hover:opacity-70",
+                              ].join(" ")}
+                            >
+                              {reactionEmoji}
+                            </button>
+                          );
+                        })}
                       </div>
 
                       {/* STATS */}
