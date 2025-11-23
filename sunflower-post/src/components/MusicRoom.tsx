@@ -550,77 +550,86 @@ export default function MusicRoom() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-      <div className="grid md:grid-cols-4 gap-6 items-start">
-        {/* LEFT: ROOMS SIDEBAR */}
-        <div className="md:col-span-1">
-          <CommunitySidebar
-            filters={[
-              {
-                title: "Mood / Vibe",
-                options: moodFilters.map((mood) => ({
-                  label: mood,
-                  value: mood,
-                })),
-                activeValue: moodFilter,
-                onChange: (value) => {
-                  setMoodFilter(value as MoodFilter);
-                  setActivityFilter(null);
-                },
-              },
-              {
-                title: "Activity",
-                options: [
-                  { label: "All activities", value: "all" },
-                  ...ACTIVITY_TAGS.map((activity) => ({
-                    label: `${activity.emoji} ${activity.label}`,
-                    value: activity.id,
-                  })),
-                ],
-                activeValue: activityFilter || "all",
-                onChange: (value) => {
-                  setActivityFilter(value === "all" ? null : value);
-                  if (value !== "all") {
-                    setMoodFilter("All moods");
-                  }
-                },
-              },
-            ]}
-          />
+    <div className="min-h-screen bg-white">
+      {/* HEADER */}
+      <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
+                <span>🎵</span>
+                <span>Music Room</span>
+              </h1>
+              <p className="text-sm text-[color:var(--text-secondary)] mt-1">
+                Nostalgic tracks, feel-good songs and "this lives in my bones" music. Share the songs that make cleaning easier, walks brighter and hard days feel more human.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setShowAddForm((s) => !s);
+                setAddError(null);
+              }}
+              className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
+            >
+              {showAddForm ? "Close" : "+ Add song"}
+            </button>
+          </div>
         </div>
+      </header>
 
-        {/* RIGHT: MUSIC ROOM CONTENT */}
-        <div className="md:col-span-3 space-y-8">
-          {/* HEADER */}
-          <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div className="space-y-3 md:max-w-xl">
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
-                  Room
-                </p>
-                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
-                  Music Room
-                </h1>
-                <p className="text-sm text-[#5C4A33] max-w-xl leading-relaxed">
-                  Nostalgic tracks, feel-good songs and "this lives in my
-                  bones" music. Share the songs that make cleaning easier,
-                  walks brighter and hard days feel more human.
-                </p>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* SIDEBAR */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <CommunitySidebar
+              filters={[
+                {
+                  title: "Mood / Vibe",
+                  options: moodFilters.map((mood) => ({
+                    label: mood,
+                    value: mood,
+                  })),
+                  activeValue: moodFilter,
+                  onChange: (value) => {
+                    setMoodFilter(value as MoodFilter);
+                    setActivityFilter(null);
+                  },
+                },
+                {
+                  title: "Activity",
+                  options: [
+                    { label: "All activities", value: "all" },
+                    ...ACTIVITY_TAGS.map((activity) => ({
+                      label: `${activity.emoji} ${activity.label}`,
+                      value: activity.id,
+                    })),
+                  ],
+                  activeValue: activityFilter || "all",
+                  onChange: (value) => {
+                    setActivityFilter(value === "all" ? null : value);
+                    if (value !== "all") {
+                      setMoodFilter("All moods");
+                    }
+                  },
+                },
+              ]}
+            />
+          </aside>
 
-              {/* SEARCH BAR */}
-              <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by song, artist, mood, era, genre..."
-                  className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-                />
-              </div>
+          {/* MAIN CONTENT */}
+          <main className="flex-1 min-w-0">
+            {/* SEARCH BAR */}
+            <div className="mb-6">
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by song, artist, mood, era, genre..."
+                className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+              />
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs">
+            <div className="flex flex-wrap gap-2 text-xs hidden">
               <BouncyButton
                 onClick={() => {
                   setShowAddForm((s) => !s);
@@ -1466,6 +1475,7 @@ export default function MusicRoom() {
               </div>
             </aside>
           </section>
+          </main>
         </div>
       </div>
     </div>

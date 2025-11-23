@@ -273,78 +273,83 @@ export default function TVAndMoviesRoom() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-      <div className="grid md:grid-cols-4 gap-6 items-start">
-        {/* LEFT: SIDEBAR */}
-        <div className="md:col-span-1">
-          <CommunitySidebar
-            filters={[
-              {
-                title: "Type",
-                options: (["All", "TV series", "Movies"] as TypeFilter[]).map(
-                  (type) => ({
-                    label: type,
-                    value: type,
-                  })
-                ),
-                activeValue: typeFilter,
-                onChange: (value) => setTypeFilter(value as TypeFilter),
-              },
-              {
-                title: "Mood / Vibe",
-                options: moodFilters.map((mood) => ({
-                  label: mood,
-                  value: mood,
-                })),
-                activeValue: moodFilter,
-                onChange: (value) => setMoodFilter(value as MoodFilter),
-              },
-              {
-                title: "My Status",
-                options: (["All", "Watching", "Watched", "Want to watch"] as StatusFilter[]).map(
-                  (status) => ({
-                    label: status,
-                    value: status,
-                  })
-                ),
-                activeValue: statusFilter,
-                onChange: (value) => setStatusFilter(value as StatusFilter),
-              },
-            ]}
-          />
-        </div>
-
-        {/* RIGHT: MAIN CONTENT */}
-        <div className="md:col-span-3 space-y-6">
-          {/* HEADER */}
-          <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="min-h-screen bg-white">
+      {/* HEADER */}
+      <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-yellow-900">
-                TV & Movies Room
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
+                <span>📺</span>
+                <span>TV & Movies</span>
               </h1>
-              <p className="text-sm text-[#7A674C] mt-1">
+              <p className="text-sm text-[color:var(--text-secondary)] mt-1">
                 Share your comfort watches, hidden gems, and the shows that just hit right.
               </p>
             </div>
-
             <button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="px-5 py-2.5 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#3A2E1F] text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+              className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
             >
-              {showAddForm ? "Cancel" : "+ Add show or movie"}
+              {showAddForm ? "Cancel" : "+ Add show"}
             </button>
-          </header>
-
-          {/* SEARCH */}
-          <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, mood, genre, platform..."
-              className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
-            />
           </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* SIDEBAR */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <CommunitySidebar
+              filters={[
+                {
+                  title: "Type",
+                  options: (["All", "TV series", "Movies"] as TypeFilter[]).map(
+                    (type) => ({
+                      label: type,
+                      value: type,
+                    })
+                  ),
+                  activeValue: typeFilter,
+                  onChange: (value) => setTypeFilter(value as TypeFilter),
+                },
+                {
+                  title: "Mood / Vibe",
+                  options: moodFilters.map((mood) => ({
+                    label: mood,
+                    value: mood,
+                  })),
+                  activeValue: moodFilter,
+                  onChange: (value) => setMoodFilter(value as MoodFilter),
+                },
+                {
+                  title: "My Status",
+                  options: (["All", "Watching", "Watched", "Want to watch"] as StatusFilter[]).map(
+                    (status) => ({
+                      label: status,
+                      value: status,
+                    })
+                  ),
+                  activeValue: statusFilter,
+                  onChange: (value) => setStatusFilter(value as StatusFilter),
+                },
+              ]}
+            />
+          </aside>
+
+          {/* MAIN CONTENT */}
+          <main className="flex-1 min-w-0">
+            {/* SEARCH */}
+            <div className="mb-6">
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by title, mood, genre, platform..."
+                className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+              />
+            </div>
 
           {/* ADD FORM */}
           {showAddForm && (
@@ -734,6 +739,7 @@ export default function TVAndMoviesRoom() {
               </div>
             </aside>
           </section>
+          </main>
         </div>
       </div>
     </div>
