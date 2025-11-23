@@ -60,8 +60,8 @@ export default function LoungeRoom() {
   const [posts, setPosts] = useState<LoungePost[]>(INITIAL_POSTS);
   const [activeFilter, setActiveFilter] =
     useState<(typeof FILTERS)[number]>("Today");
-  const [showPickForm, setShowPickForm] = useState(false);
-  const [showJoyForm, setShowJoyForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [postType, setPostType] = useState<"joy" | "pickmeup">("joy");
   const [submitting, setSubmitting] = useState(false);
 
   // per-post reactions for *this* viewer only
@@ -70,110 +70,63 @@ export default function LoungeRoom() {
   // track which posts are expanded
   const [expandedPosts, setExpandedPosts] = useState<Set<number>>(new Set());
 
-  const [pickForm, setPickForm] = useState({
+  // Unified form state
+  const [form, setForm] = useState({
     title: "",
     body: "",
     authorName: "",
     isAnon: false,
   });
 
-  const [joyForm, setJoyForm] = useState({
-    title: "",
-    body: "",
-    authorName: "",
-    isAnon: false,
-  });
-
-  // Image upload state for joy form
-  const [joyMediaUrl, setJoyMediaUrl] = useState("");
-  const [joyFilePreviewUrl, setJoyFilePreviewUrl] = useState<string | null>(null);
-  const [showJoyUrlInput, setShowJoyUrlInput] = useState(false);
-  const joyFileInputRef = useRef<HTMLInputElement>(null);
+  // Image upload state (only for joy posts)
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // NEW: search state
   const [search, setSearch] = useState("");
 
-  function handleJoyFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const url = URL.createObjectURL(file);
-    setJoyFilePreviewUrl(url);
-    setJoyMediaUrl("");
+    setFilePreviewUrl(url);
+    setMediaUrl("");
   }
 
-  function handlePickSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!pickForm.body.trim() && !pickForm.title.trim()) return;
+    if (!form.body.trim() && !form.title.trim()) return;
 
     setSubmitting(true);
 
-    const newPost: LoungePost = {
-      id: posts.length + 1,
-      type: "pickmeup",
-      title:
-        pickForm.title.trim() ||
-        "Could use a gentle reminder that things can change",
-      body:
-        pickForm.body.trim() ||
-        "Just having one or two kind words would mean a lot today.",
-      author:
-        pickForm.isAnon
-          ? "Anon"
-          : pickForm.authorName.trim() || "You",
-      timeAgo: "Just now",
-      replies: 0,
-    };
-
-    setPosts([newPost, ...posts]);
-    setPickForm({
-      title: "",
-      body: "",
-      authorName: "",
-      isAnon: false,
-    });
-    setSubmitting(false);
-    setShowPickForm(false);
-  }
-
-  function handleJoySubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!joyForm.body.trim() && !joyForm.title.trim()) return;
-
-    setSubmitting(true);
-
-    const finalImageUrl = joyFilePreviewUrl || joyMediaUrl.trim() || undefined;
+    const finalImageUrl = postType === "joy" ? (filePreviewUrl || mediaUrl.trim() || undefined) : undefined;
 
     const newPost: LoungePost = {
       id: posts.length + 1,
-      type: "joy",
-      title:
-        joyForm.title.trim() ||
-        "A small joy from today",
-      body:
-        joyForm.body.trim() ||
-        "Something good happened today.",
-      author:
-        joyForm.isAnon
-          ? "Anon"
-          : joyForm.authorName.trim() || "You",
+      type: postType,
+      title: form.title.trim() || (postType === "joy" ? "A small joy from today" : "Could use a gentle reminder"),
+      body: form.body.trim() || (postType === "joy" ? "Something good happened today." : "Just having one or two kind words would mean a lot today."),
+      author: form.isAnon ? "Anon" : form.authorName.trim() || "You",
       timeAgo: "Just now",
       replies: 0,
       imageUrl: finalImageUrl,
     };
 
     setPosts([newPost, ...posts]);
-    setJoyForm({
+    setForm({
       title: "",
       body: "",
       authorName: "",
       isAnon: false,
     });
-    setJoyMediaUrl("");
-    setJoyFilePreviewUrl(null);
-    setShowJoyUrlInput(false);
+    setMediaUrl("");
+    setFilePreviewUrl(null);
+    setShowUrlInput(false);
     setSubmitting(false);
-    setShowJoyForm(false);
+    setShowForm(false);
   }
 
   // toggle helper for reactions
@@ -248,10 +201,10 @@ export default function LoungeRoom() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setShowJoyForm((s) => !s)}
+                onClick={() => setShowForm((s) => !s)}
                 className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
               >
-                {showJoyForm ? "Close" : "Share a joy"}
+                {showForm ? "Close" : "New post"}
               </button>
             </div>
           </div>
@@ -290,30 +243,62 @@ export default function LoungeRoom() {
               />
             </div>
 
-          {/* JOY SUBMISSION FORM */}
-          {showJoyForm && (
-            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
+          {/* UNIFIED SUBMISSION FORM */}
+          {showForm && (
+            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg mb-6">
+              {/* POST TYPE SELECTOR */}
+              <div className="flex gap-3 pb-4 border-b border-yellow-200/60">
+                <button
+                  type="button"
+                  onClick={() => setPostType("joy")}
+                  className={`flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    postType === "joy"
+                      ? "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-900 shadow-md ring-2 ring-yellow-300/50"
+                      : "bg-white text-[#7A674C] border border-yellow-200/60 hover:bg-yellow-50"
+                  }`}
+                >
+                  🌻 Share a joy
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPostType("pickmeup")}
+                  className={`flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    postType === "pickmeup"
+                      ? "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-900 shadow-md ring-2 ring-purple-300/50"
+                      : "bg-white text-[#7A674C] border border-yellow-200/60 hover:bg-yellow-50"
+                  }`}
+                >
+                  💛 Ask for pick-me-up
+                </button>
+              </div>
+
               <div className="flex items-center justify-between gap-2">
                 <p className="text-base font-semibold text-yellow-900">
-                  Share a small joy 🌻
+                  {postType === "joy" ? "Share a small joy 🌻" : "Ask for a pick-me-up 💛"}
                 </p>
                 <p className="text-[10px] text-[#A08960]">
-                  No joy is too small to celebrate.
+                  {postType === "joy"
+                    ? "No joy is too small to celebrate."
+                    : "You don't have to explain everything perfectly to be cared for."}
                 </p>
               </div>
 
-              <form className="space-y-4" onSubmit={handleJoySubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <label className="text-xs font-medium text-[#5C4A33]">
                     Title (optional)
                   </label>
                   <input
                     type="text"
-                    value={joyForm.title}
+                    value={form.title}
                     onChange={(e) =>
-                      setJoyForm((f) => ({ ...f, title: e.target.value }))
+                      setForm((f) => ({ ...f, title: e.target.value }))
                     }
-                    placeholder='e.g. "Made my bed for the first time this week"'
+                    placeholder={
+                      postType === "joy"
+                        ? 'e.g. "Made my bed for the first time this week"'
+                        : 'e.g. "Feeling behind on everything and a bit lost"'
+                    }
                     className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
                   />
                 </div>
@@ -323,111 +308,117 @@ export default function LoungeRoom() {
                     What would you like to share?
                   </label>
                   <textarea
-                    value={joyForm.body}
+                    value={form.body}
                     onChange={(e) =>
-                      setJoyForm((f) => ({ ...f, body: e.target.value }))
+                      setForm((f) => ({ ...f, body: e.target.value }))
                     }
                     rows={3}
-                    placeholder="Share something that went well, made you smile, or just felt a little lighter than usual."
+                    placeholder={
+                      postType === "joy"
+                        ? "Share something that went well, made you smile, or just felt a little lighter than usual."
+                        : "You can say as little or as much as you want. No pressure to give all the context."
+                    }
                     className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
                   />
                 </div>
 
-                {/* IMAGE UPLOAD SECTION */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-[#5C4A33]">
-                    Add an image (optional)
-                  </label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => joyFileInputRef.current?.click()}
-                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
-                    >
-                      <span>📷</span>
-                      <span>Upload image</span>
-                    </button>
+                {/* IMAGE UPLOAD SECTION - Only for joy posts */}
+                {postType === "joy" && (
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-[#5C4A33]">
+                      Add an image (optional)
+                    </label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                      >
+                        <span>📷</span>
+                        <span>Upload image</span>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setShowJoyUrlInput((s) => !s)}
-                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
-                    >
-                      <span>🎵</span>
-                      <span>Add album art / link</span>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowUrlInput((s) => !s)}
+                        className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                      >
+                        <span>🎵</span>
+                        <span>Add album art / link</span>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setJoyMediaUrl("/music-placeholder.svg");
-                        setJoyFilePreviewUrl(null);
-                        setShowJoyUrlInput(false);
-                      }}
-                      className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
-                    >
-                      <span>🌻</span>
-                      <span>Use default image</span>
-                    </button>
-
-                    <span className="text-[10px] text-[#A08960]">
-                      Perfect for song shares or adding atmosphere!
-                    </span>
-                  </div>
-
-                  {/* Hidden file input */}
-                  <input
-                    ref={joyFileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleJoyFileChange}
-                  />
-
-                  {/* URL input */}
-                  {showJoyUrlInput && (
-                    <div className="space-y-1">
-                      <input
-                        type="url"
-                        value={joyMediaUrl}
-                        onChange={(e) => {
-                          setJoyMediaUrl(e.target.value);
-                          if (joyFilePreviewUrl) {
-                            setJoyFilePreviewUrl(null);
-                          }
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMediaUrl("/music-placeholder.svg");
+                          setFilePreviewUrl(null);
+                          setShowUrlInput(false);
                         }}
-                        placeholder="Paste a link to album art or an image (e.g. from Spotify, Apple Music, or direct image URL)"
-                        className="w-full border border-yellow-200 rounded-xl px-4 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
-                      />
-                      <p className="text-[10px] text-[#A08960]">
-                        Tip: Find album art on Spotify or Apple Music, right-click the image, and copy the image link.
-                      </p>
-                    </div>
-                  )}
+                        className="px-3 py-2 rounded-xl border border-yellow-200 bg-white text-xs text-[#5C4A33] hover:bg-yellow-50 inline-flex items-center gap-1.5 transition-all"
+                      >
+                        <span>🌻</span>
+                        <span>Use default image</span>
+                      </button>
 
-                  {/* PREVIEW */}
-                  {(joyFilePreviewUrl || joyMediaUrl.trim()) && (
-                    <div className="bg-white border border-yellow-200 rounded-xl p-3 flex items-start gap-3">
-                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-yellow-50 flex items-center justify-center flex-shrink-0">
-                        {joyFilePreviewUrl || joyMediaUrl.trim() ? (
-                          <img
-                            src={joyFilePreviewUrl || joyMediaUrl.trim()}
-                            alt="Image preview"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-2xl">🌻</span>
-                        )}
-                      </div>
-                      <div className="flex-1 text-[10px] text-[#7A674C] space-y-1">
-                        <p className="font-medium text-yellow-900">Image preview</p>
-                        <p>
-                          This will appear with your post. If it doesn&apos;t look right, you can change or clear it before posting.
+                      <span className="text-[10px] text-[#A08960]">
+                        Perfect for song shares or adding atmosphere!
+                      </span>
+                    </div>
+
+                    {/* Hidden file input */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFileChange}
+                    />
+
+                    {/* URL input */}
+                    {showUrlInput && (
+                      <div className="space-y-1">
+                        <input
+                          type="url"
+                          value={mediaUrl}
+                          onChange={(e) => {
+                            setMediaUrl(e.target.value);
+                            if (filePreviewUrl) {
+                              setFilePreviewUrl(null);
+                            }
+                          }}
+                          placeholder="Paste a link to album art or an image (e.g. from Spotify, Apple Music, or direct image URL)"
+                          className="w-full border border-yellow-200 rounded-xl px-4 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                        />
+                        <p className="text-[10px] text-[#A08960]">
+                          Tip: Find album art on Spotify or Apple Music, right-click the image, and copy the image link.
                         </p>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+
+                    {/* PREVIEW */}
+                    {(filePreviewUrl || mediaUrl.trim()) && (
+                      <div className="bg-white border border-yellow-200 rounded-xl p-3 flex items-start gap-3">
+                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-yellow-50 flex items-center justify-center flex-shrink-0">
+                          {filePreviewUrl || mediaUrl.trim() ? (
+                            <img
+                              src={filePreviewUrl || mediaUrl.trim()}
+                              alt="Image preview"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-2xl">🌻</span>
+                          )}
+                        </div>
+                        <div className="flex-1 text-[10px] text-[#7A674C] space-y-1">
+                          <p className="font-medium text-yellow-900">Image preview</p>
+                          <p>
+                            This will appear with your post. If it doesn&apos;t look right, you can change or clear it before posting.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="grid md:grid-cols-2 gap-4 items-start">
                   <div className="space-y-2">
@@ -436,24 +427,24 @@ export default function LoungeRoom() {
                     </label>
                     <input
                       type="text"
-                      value={joyForm.authorName}
+                      value={form.authorName}
                       onChange={(e) =>
-                        setJoyForm((f) => ({
+                        setForm((f) => ({
                           ...f,
                           authorName: e.target.value,
                         }))
                       }
-                      required={!joyForm.isAnon}
-                      disabled={joyForm.isAnon}
+                      required={!form.isAnon}
+                      disabled={form.isAnon}
                       placeholder='e.g. "Alex" or "A."'
                       className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
                     />
                     <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
                       <input
                         type="checkbox"
-                        checked={joyForm.isAnon}
+                        checked={form.isAnon}
                         onChange={(e) =>
-                          setJoyForm((f) => ({ ...f, isAnon: e.target.checked }))
+                          setForm((f) => ({ ...f, isAnon: e.target.checked }))
                         }
                         className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
                       />
@@ -464,11 +455,23 @@ export default function LoungeRoom() {
                   <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
                     <p className="font-medium text-yellow-900">Gentle boundaries</p>
                     <ul className="space-y-1">
-                      <li>• Keep it kind and authentic.</li>
-                      <li>• Don&apos;t name other people or organisations directly.</li>
-                      <li>
-                        • Small wins are welcome – you don&apos;t need a &quot;big&quot; achievement to share.
-                      </li>
+                      {postType === "joy" ? (
+                        <>
+                          <li>• Keep it kind and authentic.</li>
+                          <li>• Don&apos;t name other people or organisations directly.</li>
+                          <li>
+                            • Small wins are welcome – you don&apos;t need a &quot;big&quot; achievement to share.
+                          </li>
+                        </>
+                      ) : (
+                        <>
+                          <li>• No graphic detail or explicit harm.</li>
+                          <li>• Don&apos;t name other people or organisations directly.</li>
+                          <li>
+                            • This isn&apos;t a crisis line – please seek local support if you&apos;re unsafe.
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -476,114 +479,7 @@ export default function LoungeRoom() {
                 <div className="flex items-center justify-between gap-3 pt-2">
                   <BouncyButton
                     type="submit"
-                    disabled={submitting || !joyForm.body.trim()}
-                    variant="primary"
-                    size="sm"
-                    className="shadow-md"
-                  >
-                    {submitting ? "Posting..." : "Post to Lounge"}
-                  </BouncyButton>
-                  <p className="text-[10px] text-[#A08960]">
-                    Your post may be gently moderated for safety and tone.
-                  </p>
-                </div>
-              </form>
-            </section>
-          )}
-
-          {/* PICK-ME-UP SUBMISSION FORM - Modernized */}
-          {showPickForm && (
-            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-base font-semibold text-yellow-900">
-                  Ask for a pick-me-up 💛
-                </p>
-                <p className="text-[10px] text-[#A08960]">
-                  You don&apos;t have to explain everything perfectly to be cared
-                  for.
-                </p>
-              </div>
-
-              <form className="space-y-4" onSubmit={handlePickSubmit}>
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-[#5C4A33]">
-                    Title (optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={pickForm.title}
-                    onChange={(e) =>
-                      setPickForm((f) => ({ ...f, title: e.target.value }))
-                    }
-                    placeholder='e.g. "Feeling behind on everything and a bit lost"'
-                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-[#5C4A33]">
-                    What would you like to share?
-                  </label>
-                  <textarea
-                    value={pickForm.body}
-                    onChange={(e) =>
-                      setPickForm((f) => ({ ...f, body: e.target.value }))
-                    }
-                    rows={3}
-                    placeholder="You can say as little or as much as you want. No pressure to give all the context."
-                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4 items-start">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-[#5C4A33]">
-                      Your name (or initials)
-                    </label>
-                    <input
-                      type="text"
-                      value={pickForm.authorName}
-                      onChange={(e) =>
-                        setPickForm((f) => ({
-                          ...f,
-                          authorName: e.target.value,
-                        }))
-                      }
-                      required={!pickForm.isAnon}
-                      disabled={pickForm.isAnon}
-                      placeholder='e.g. "Sarah" or "S."'
-                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
-                    />
-                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
-                      <input
-                        type="checkbox"
-                        checked={pickForm.isAnon}
-                        onChange={(e) =>
-                          setPickForm((f) => ({ ...f, isAnon: e.target.checked }))
-                        }
-                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
-                      />
-                      <span>Post anonymously (still linked to your account)</span>
-                    </label>
-                  </div>
-
-                  <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
-                    <p className="font-medium text-yellow-900">Gentle boundaries</p>
-                    <ul className="space-y-1">
-                      <li>• No graphic detail or explicit harm.</li>
-                      <li>• Don&apos;t name other people or organisations directly.</li>
-                      <li>
-                        • This isn&apos;t a crisis line – please seek local support if
-                        you&apos;re unsafe.
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 pt-2">
-                  <BouncyButton
-                    type="submit"
-                    disabled={submitting || !pickForm.body.trim()}
+                    disabled={submitting || !form.body.trim()}
                     variant="primary"
                     size="sm"
                     className="shadow-md"
