@@ -79,16 +79,16 @@ export default function GiphyPicker({ onSelect, onClose }: GiphyPickerProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl max-h-[80vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="w-full max-w-2xl max-h-[80vh] bg-white rounded-xl shadow-[var(--shadow-large)] overflow-hidden flex flex-col border border-[color:var(--border-medium)]">
         {/* Header */}
-        <div className="p-4 border-b border-yellow-200 bg-gradient-to-br from-yellow-50 to-white">
+        <div className="p-4 border-b border-[color:var(--border-medium)] bg-white">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-bold text-yellow-900">
+            <h3 className="text-lg font-semibold text-[color:var(--text-primary)]">
               Add a GIF
             </h3>
             <button
               onClick={onClose}
-              className="text-[#7A674C] hover:text-yellow-900 transition-colors"
+              className="text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors"
             >
               ✕
             </button>
@@ -102,12 +102,12 @@ export default function GiphyPicker({ onSelect, onClose }: GiphyPickerProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Search for GIFs..."
-              className="flex-1 border border-yellow-200 rounded-xl px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+              className="flex-1 border border-[color:var(--border-medium)] rounded-lg px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] transition-all"
               autoFocus
             />
             <button
               onClick={searchGifs}
-              className="px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+              className="px-4 py-2 rounded-lg bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[color:var(--text-primary)] text-sm font-semibold shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-all"
             >
               Search
             </button>
@@ -118,11 +118,11 @@ export default function GiphyPicker({ onSelect, onClose }: GiphyPickerProps) {
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <p className="text-[#7A674C]">Loading...</p>
+              <p className="text-[color:var(--text-tertiary)]">Loading...</p>
             </div>
           ) : gifs.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <p className="text-[#7A674C]">No GIFs found</p>
+              <p className="text-[color:var(--text-tertiary)]">No GIFs found</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -130,7 +130,7 @@ export default function GiphyPicker({ onSelect, onClose }: GiphyPickerProps) {
                 <button
                   key={gif.id}
                   onClick={() => onSelect(gif.images.original.url)}
-                  className="aspect-square rounded-xl overflow-hidden hover:ring-4 hover:ring-yellow-300 transition-all hover:scale-105 active:scale-95"
+                  className="aspect-square rounded-lg overflow-hidden border border-[color:var(--border-medium)] hover:ring-4 hover:ring-[color:var(--sunflower-gold)] transition-all hover:scale-105 active:scale-95 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)]"
                 >
                   <img
                     src={gif.images.fixed_height_small.url}
@@ -144,8 +144,8 @@ export default function GiphyPicker({ onSelect, onClose }: GiphyPickerProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-yellow-200 bg-gradient-to-br from-white to-yellow-50/30">
-          <p className="text-[10px] text-[#A08960] text-center">
+        <div className="p-3 border-t border-[color:var(--border-soft)] bg-white">
+          <p className="text-[10px] text-[color:var(--text-tertiary)] text-center">
             Powered by GIPHY · Keep it gentle and kind
           </p>
         </div>
