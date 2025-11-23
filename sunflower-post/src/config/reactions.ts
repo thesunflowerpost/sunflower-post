@@ -47,7 +47,7 @@ export type ReactionId =
   | "savedThis"
   | "heartHands"
   | "brain"
-  // Solution Rooms extras
+  // Dilemmas extras
   | "helpful"
   | "holdingSpace"
   | "noted";
@@ -373,7 +373,7 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
     borderColor: "border-purple-200",
   },
 
-  // Solution Rooms extras
+  // Dilemmas extras
   helpful: {
     id: "helpful",
     emoji: "🧩",

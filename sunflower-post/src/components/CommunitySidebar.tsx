@@ -66,11 +66,10 @@ const ROOMS: Room[] = [
     description: "Visual inspo & saved sunshine",
   },
   {
-    href: "/solution-rooms",
-    icon: "🧩",
-    label: "Solution Rooms",
-    description: "Gentle problem-solving together",
-    comingSoon: true,
+    href: "/dilemmas",
+    icon: "💭",
+    label: "Dilemmas",
+    description: "Get perspective on life's tricky moments",
   },
 ];
 
