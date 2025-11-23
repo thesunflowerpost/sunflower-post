@@ -148,14 +148,14 @@ export default function InspoWall() {
 
   if (search.trim()) {
     filteredPosts = filteredPosts.filter((post) => {
-      const searchableText = [
+      const searchableFields = [
         post.title || "",
         post.description || "",
         post.quote || "",
         post.category,
         ...(post.tags || []),
-      ].join(" ");
-      return matchesSearch(searchableText, search);
+      ];
+      return matchesSearch(searchableFields, search);
     });
   }
 

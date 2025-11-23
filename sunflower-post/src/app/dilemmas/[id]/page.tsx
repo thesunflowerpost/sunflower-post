@@ -248,9 +248,10 @@ export default function DilemmaThreadPage({ params }: PageProps) {
                 </div>
 
                 <ReactionBar
-                  availableReactions={["sunburst", "withYou", "holdingSpace", "helpful"]}
-                  userReactions={reactions}
-                  onReact={(reactionId) => toggleReaction(reactionId, !reactions[reactionId])}
+                  roomId="dilemmas"
+                  postId={dilemma.id}
+                  reactions={reactions}
+                  onReactionToggle={toggleReaction}
                 />
               </div>
             </div>
