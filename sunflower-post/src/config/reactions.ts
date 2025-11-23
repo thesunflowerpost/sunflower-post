@@ -45,6 +45,8 @@ export type ReactionId =
   | "beautiful"
   | "inspired"
   | "savedThis"
+  | "heartHands"
+  | "brain"
   // Solution Rooms extras
   | "helpful"
   | "holdingSpace"
@@ -329,7 +331,7 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
     borderColor: "border-blue-200",
   },
 
-  // Pinterest Wall extras
+  // Inspo Wall extras
   beautiful: {
     id: "beautiful",
     emoji: "🌼",
@@ -353,6 +355,22 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
     color: "text-cyan-500",
     bgColor: "bg-cyan-50",
     borderColor: "border-cyan-200",
+  },
+  heartHands: {
+    id: "heartHands",
+    emoji: "🫶",
+    label: "Love this",
+    color: "text-rose-500",
+    bgColor: "bg-rose-50",
+    borderColor: "border-rose-200",
+  },
+  brain: {
+    id: "brain",
+    emoji: "🧠",
+    label: "Mind-blowing",
+    color: "text-purple-500",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
   },
 
   // Solution Rooms extras
