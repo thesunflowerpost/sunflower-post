@@ -428,6 +428,44 @@ export default function DilemmasRoom() {
               </div>
             </div>
 
+            {/* WHAT IS DILEMMAS? */}
+            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 mb-6 shadow-[var(--shadow-soft)]">
+              <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-3">
+                What is Dilemmas?
+              </h3>
+              <p className="text-sm text-[color:var(--text-secondary)] leading-relaxed mb-4">
+                This is a space for those "I genuinely don't know what to do" moments. Work decisions,
+                relationship crossroads, family dynamics, life stuff. Share what's on your mind and get
+                real perspectives from people who've been there.
+              </p>
+
+              <h4 className="text-sm font-semibold text-[color:var(--text-primary)] mb-2">
+                How this works
+              </h4>
+              <ul className="space-y-2 text-sm text-[color:var(--text-secondary)]">
+                <li className="flex gap-2">
+                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                  <span>No judgment, no shaming. We're all figuring it out.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                  <span>Advice is perspective, not instruction. Take what resonates.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                  <span>"Same boat" = solidarity. You're not alone in this.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                  <span>You can post anonymously—this is a safe space.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
+                  <span>Be kind, be honest, be the big sister energy you'd want.</span>
+                </li>
+              </ul>
+            </div>
+
             {/* DILEMMA LIST */}
             <div className="space-y-4">
               {filteredDilemmas.map((dilemma) => {
@@ -535,50 +573,6 @@ export default function DilemmasRoom() {
               </div>
             )}
           </main>
-
-          {/* RIGHT SIDEBAR */}
-          <aside className="lg:w-80 flex-shrink-0 space-y-4">
-            {/* What is Dilemmas? */}
-            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 shadow-[var(--shadow-soft)]">
-              <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-3">
-                What is Dilemmas?
-              </h3>
-              <p className="text-sm text-[color:var(--text-secondary)] leading-relaxed">
-                This is a space for those "I genuinely don't know what to do" moments. Work decisions,
-                relationship crossroads, family dynamics, life stuff. Share what's on your mind and get
-                real perspectives from people who've been there.
-              </p>
-            </div>
-
-            {/* How this room works */}
-            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-5 shadow-[var(--shadow-soft)]">
-              <h3 className="text-lg font-semibold text-[color:var(--text-primary)] mb-3">
-                How this works
-              </h3>
-              <ul className="space-y-2.5 text-sm text-[color:var(--text-secondary)]">
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>No judgment, no shaming. We're all figuring it out.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>Advice is perspective, not instruction. Take what resonates.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>"Same boat" = solidarity. You're not alone in this.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>You can post anonymously—this is a safe space.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-[color:var(--sunflower-gold)] flex-shrink-0">→</span>
-                  <span>Be kind, be honest, be the big sister energy you'd want.</span>
-                </li>
-              </ul>
-            </div>
-          </aside>
         </div>
       </div>
     </div>
