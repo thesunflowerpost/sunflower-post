@@ -405,109 +405,117 @@ export default function InspoWall() {
               </div>
             </div>
 
-            {/* MASONRY GRID */}
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+            {/* UNIFORM GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="break-inside-avoid bg-white border border-[color:var(--border-medium)] rounded-xl overflow-hidden shadow-[var(--shadow-medium)] hover:shadow-[var(--shadow-large)] transition-shadow group"
+                  className="flex flex-col bg-white border border-[color:var(--border-medium)] rounded-xl overflow-hidden shadow-[var(--shadow-medium)] hover:shadow-[var(--shadow-large)] transition-shadow group"
                 >
                   {/* IMAGE */}
                   {post.imageUrl && (
                     <Link href={`/inspo-wall/${post.id}`} className="block">
-                      <img
-                        src={post.imageUrl}
-                        alt={post.title || "Inspiration"}
-                        className="w-full h-auto object-cover"
-                      />
+                      <div className="aspect-square w-full overflow-hidden">
+                        <img
+                          src={post.imageUrl}
+                          alt={post.title || "Inspiration"}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </Link>
                   )}
 
                   {/* QUOTE */}
                   {post.quote && !post.imageUrl && (
-                    <Link href={`/inspo-wall/${post.id}`} className="block p-6 bg-gradient-to-br from-[color:var(--sun-glow)] to-white">
-                      <p className="text-lg font-serif italic text-[color:var(--text-primary)] leading-relaxed">
+                    <Link href={`/inspo-wall/${post.id}`} className="block aspect-square w-full bg-gradient-to-br from-[color:var(--sun-glow)] to-white flex items-center justify-center p-8">
+                      <p className="text-lg font-serif italic text-[color:var(--text-primary)] leading-relaxed text-center">
                         "{post.quote}"
                       </p>
                     </Link>
                   )}
 
                   {/* CONTENT */}
-                  <div className="p-4">
-                    {post.title && (
-                      <Link href={`/inspo-wall/${post.id}`}>
-                        <h3 className="font-semibold text-[color:var(--text-primary)] mb-1 hover:text-[color:var(--honey-gold)] transition-colors">
-                          {post.title}
-                        </h3>
-                      </Link>
-                    )}
+                  <div className="p-4 flex-1 flex flex-col">
+                    {/* TOP SECTION - Variable content */}
+                    <div className="flex-1">
+                      {post.title && (
+                        <Link href={`/inspo-wall/${post.id}`}>
+                          <h3 className="font-semibold text-[color:var(--text-primary)] mb-1 hover:text-[color:var(--honey-gold)] transition-colors">
+                            {post.title}
+                          </h3>
+                        </Link>
+                      )}
 
-                    {post.description && (
-                      <p className="text-sm text-[color:var(--text-secondary)] mb-3 line-clamp-3">
-                        {post.description}
-                      </p>
-                    )}
+                      {post.description && (
+                        <p className="text-sm text-[color:var(--text-secondary)] mb-3 line-clamp-2">
+                          {post.description}
+                        </p>
+                      )}
 
-                    {/* TAGS */}
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {post.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs px-2 py-0.5 bg-gray-100 text-[color:var(--text-tertiary)] rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                      {/* TAGS */}
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {post.tags.slice(0, 3).map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="text-xs px-2 py-0.5 bg-gray-100 text-[color:var(--text-tertiary)] rounded-full"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
-                    {/* CATEGORY */}
-                    <div className="flex items-center justify-between text-xs text-[color:var(--text-tertiary)] mb-3">
+                    {/* BOTTOM SECTION - Fixed at bottom */}
+                    <div className="mt-auto space-y-3">
+                      {/* CATEGORY */}
+                      <div className="flex items-center justify-between text-xs text-[color:var(--text-tertiary)]">
                       <span className="px-2 py-1 bg-[color:var(--sun-glow)] text-[color:var(--text-primary)] rounded-md font-medium">
                         {post.category}
                       </span>
                       <span>{post.timeAgo}</span>
                     </div>
 
-                    {/* ACTIONS */}
-                    <div className="flex items-center justify-between pt-3 border-t border-[color:var(--border-soft)]">
-                      <button
-                        onClick={() => handleToggleSave(post.id)}
-                        className={[
-                          "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                          userSaves[post.id]
-                            ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)]"
-                            : "bg-gray-100 text-[color:var(--text-secondary)] hover:bg-gray-200",
-                        ].join(" ")}
-                      >
-                        <span>{userSaves[post.id] ? "✓" : "📌"}</span>
-                        <span>{userSaves[post.id] ? "Saved" : "Save"}</span>
-                        {(post.saves || 0) > 0 && (
-                          <span className="text-xs opacity-75">({post.saves})</span>
-                        )}
-                      </button>
+                      {/* ACTIONS */}
+                      <div className="flex items-center justify-between border-t border-[color:var(--border-soft)] pt-3">
+                        <button
+                          onClick={() => handleToggleSave(post.id)}
+                          className={[
+                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                            userSaves[post.id]
+                              ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)]"
+                              : "bg-gray-100 text-[color:var(--text-secondary)] hover:bg-gray-200",
+                          ].join(" ")}
+                        >
+                          <span>{userSaves[post.id] ? "✓" : "📌"}</span>
+                          <span>{userSaves[post.id] ? "Saved" : "Save"}</span>
+                          {(post.saves || 0) > 0 && (
+                            <span className="text-xs opacity-75">({post.saves})</span>
+                          )}
+                        </button>
 
-                      <Link
-                        href={`/inspo-wall/${post.id}`}
-                        className="text-sm text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors"
-                      >
-                        💬 {post.replies || 0}
-                      </Link>
-                    </div>
+                        <Link
+                          href={`/inspo-wall/${post.id}`}
+                          className="text-sm text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors"
+                        >
+                          💬 {post.replies || 0}
+                        </Link>
+                      </div>
 
-                    {/* REACTIONS */}
-                    <div className="mt-3 pt-3 border-t border-[color:var(--border-soft)]">
-                      <ReactionBar
-                        availableReactions={["sunburst", "heart", "beautiful", "inspired", "savedThis"]}
-                        userReactions={userReactions[post.id] || {}}
-                        onReact={(reactionId) => handleReaction(post.id, reactionId)}
-                      />
-                    </div>
+                      {/* REACTIONS */}
+                      <div className="border-t border-[color:var(--border-soft)] pt-3">
+                        <ReactionBar
+                          availableReactions={["sunburst", "heart", "beautiful", "inspired", "savedThis"]}
+                          userReactions={userReactions[post.id] || {}}
+                          onReact={(reactionId) => handleReaction(post.id, reactionId)}
+                        />
+                      </div>
 
-                    {/* SHARED BY */}
-                    <div className="mt-3 text-xs text-[color:var(--text-tertiary)]">
-                      Shared by <span className="font-medium">{post.sharedBy}</span>
+                      {/* SHARED BY */}
+                      <div className="text-xs text-[color:var(--text-tertiary)]">
+                        Shared by <span className="font-medium">{post.sharedBy}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
