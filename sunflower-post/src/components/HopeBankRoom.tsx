@@ -125,71 +125,61 @@ export default function HopeBankRoom() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-      {/* TWO-COLUMN LAYOUT: SIDEBAR + MAIN, LIKE CIRCLE */}
-      <div className="grid md:grid-cols-4 gap-6 items-start">
-        {/* LEFT: ROOMS SIDEBAR */}
-        <div className="md:col-span-1">
-          <CommunitySidebar
-            filters={[
-              {
-                title: "Category",
-                options: CATEGORY_FILTERS.map((cat) => ({
-                  label: cat,
-                  value: cat,
-                })),
-                activeValue: activeCategory,
-                onChange: (value) => setActiveCategory(value as typeof CATEGORY_FILTERS[number]),
-              },
-            ]}
-          />
+    <div className="min-h-screen bg-white">
+      {/* HEADER */}
+      <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
+                <span>🌱</span>
+                <span>Hope Bank</span>
+              </h1>
+              <p className="text-sm text-[color:var(--text-secondary)] mt-1">
+                A library of real stories about things quietly getting better. For the days when you're tired of "it will all work out" and need proof from people who have been there.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowForm((s) => !s)}
+              className="px-5 py-2.5 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-[#ffcc00] transition"
+            >
+              {showForm ? "Close" : "Share your story"}
+            </button>
+          </div>
         </div>
+      </header>
 
-        {/* RIGHT: HOPE BANK CONTENT */}
-        <div className="md:col-span-3 space-y-8">
-          {/* HEADER */}
-          <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            {/* LEFT: TEXT + SEARCH */}
-            <div className="space-y-3 md:max-w-xl">
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A08960] font-medium">
-                  Room
-                </p>
-                <h1 className="text-2xl md:text-3xl font-semibold text-yellow-900">
-                  Hope Bank
-                </h1>
-                <p className="text-sm text-[#5C4A33] leading-relaxed">
-                  A library of real stories about things quietly getting better.
-                  For the days when you&apos;re tired of "it will all work out" and
-                  need proof from people who have been there.
-                </p>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* SIDEBAR */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <CommunitySidebar
+              filters={[
+                {
+                  title: "Category",
+                  options: CATEGORY_FILTERS.map((cat) => ({
+                    label: cat,
+                    value: cat,
+                  })),
+                  activeValue: activeCategory,
+                  onChange: (value) => setActiveCategory(value as typeof CATEGORY_FILTERS[number]),
+                },
+              ]}
+            />
+          </aside>
 
-              {/* SEARCH INPUT – under description */}
-              <div className="flex items-center gap-2 bg-white border border-yellow-200/60 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-yellow-300/50 focus-within:border-yellow-300">
-                <span className="text-base">🔍</span>
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search stories (e.g. visa, burnout, PCOS, overdraft)"
-                  className="flex-1 bg-transparent text-xs focus:outline-none placeholder:text-[#C0A987]"
-                />
-              </div>
+          {/* MAIN CONTENT */}
+          <main className="flex-1 min-w-0">
+            {/* SEARCH INPUT */}
+            <div className="mb-6">
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search stories..."
+                className="w-full rounded-2xl bg-white border border-[#E5E5EA] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD52A]/60"
+              />
             </div>
-
-            {/* RIGHT: BUTTONS */}
-            <div className="flex flex-wrap gap-2 justify-end md:justify-start text-xs">
-              <Link href="/hope-bank/share">
-                <BouncyButton variant="pill" size="sm" className="shadow-md text-xs">
-                  Share a hope story
-                </BouncyButton>
-              </Link>
-              <BouncyButton variant="secondary" size="sm" className="text-xs">
-                Save this room
-              </BouncyButton>
-            </div>
-          </section>
 
           {/* MAIN LAYOUT */}
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
@@ -366,6 +356,7 @@ export default function HopeBankRoom() {
               </div>
             </aside>
           </section>
+          </main>
         </div>
       </div>
     </div>
