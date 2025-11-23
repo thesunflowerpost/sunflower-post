@@ -406,28 +406,26 @@ export default function DilemmasRoom() {
               </div>
             )}
 
-            {/* SEARCH BAR */}
-            <div className="mb-4">
-              <input
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search dilemmas..."
-                className="w-full px-4 py-3 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] shadow-[var(--shadow-soft)]"
-              />
-            </div>
-
-            {/* SORT DROPDOWN */}
-            <div className="mb-6">
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value as SortOption)}
-                className="w-full sm:w-64 px-4 py-2.5 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] shadow-[var(--shadow-soft)]"
-              >
-                <option value="newest">Newest</option>
-                <option value="most_replies">Most perspectives</option>
-                <option value="most_saved">Most saved</option>
-              </select>
+            {/* SEARCH & SORT BAR */}
+            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 mb-6 shadow-[var(--shadow-soft)]">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search dilemmas..."
+                  className="flex-1 px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                />
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value as SortOption)}
+                  className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="most_replies">Most perspectives</option>
+                  <option value="most_saved">Most saved</option>
+                </select>
+              </div>
             </div>
 
             {/* DILEMMA LIST */}

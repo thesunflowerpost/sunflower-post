@@ -336,17 +336,14 @@ export default function TVAndMoviesRoom() {
           </header>
 
           {/* SEARCH */}
-          <div className="relative">
+          <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
             <input
-              type="text"
+              type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, mood, genre, platform, era, or who shared it…"
-              className="w-full border border-yellow-200 rounded-2xl px-5 py-3 pl-11 text-sm bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+              placeholder="Search by title, mood, genre, platform..."
+              className="w-full px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
             />
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A08960]">
-              🔍
-            </span>
           </div>
 
           {/* ADD FORM */}

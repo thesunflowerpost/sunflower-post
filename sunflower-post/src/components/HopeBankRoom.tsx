@@ -196,15 +196,17 @@ export default function HopeBankRoom() {
             {/* STORIES LIST */}
             <div className="lg:col-span-2 space-y-4">
               {/* SORTING BAR */}
-              <div className="flex items-center justify-between gap-3 text-[11px] text-[#7A674C]">
-                <p className="text-[10px] text-[#A08960]">
-                  Stories are sorted by relevance and recency.
-                </p>
-                <select className="border border-yellow-200/60 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 shadow-sm hover:shadow-md transition-all text-[11px]">
-                  <option>Most saved</option>
-                  <option>Most recent</option>
-                  <option>Most relevant</option>
-                </select>
+              <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs text-[color:var(--text-tertiary)]">
+                    Stories are sorted by relevance and recency
+                  </p>
+                  <select className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] text-sm">
+                    <option>Most saved</option>
+                    <option>Most recent</option>
+                    <option>Most relevant</option>
+                  </select>
+                </div>
               </div>
 
               {/* STORY CARDS */}
