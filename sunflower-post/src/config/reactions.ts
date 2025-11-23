@@ -41,7 +41,7 @@ export type ReactionId =
   | "bingeWorthy"
   | "cinematography"
   | "needSeason2"
-  // Pinterest Wall extras
+  // Inspo Wall extras
   | "beautiful"
   | "inspired"
   | "savedThis"
