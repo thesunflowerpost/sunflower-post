@@ -265,8 +265,42 @@ export default function DilemmasRoom() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* SIDEBAR */}
-          <aside className="lg:w-64 flex-shrink-0">
+          <aside className="lg:w-64 flex-shrink-0 space-y-4">
             <CommunitySidebar />
+
+            {/* CATEGORY FILTERS */}
+            <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
+              <h3 className="text-sm font-semibold text-[color:var(--text-primary)] mb-3">
+                Category
+              </h3>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setCategoryFilter("All")}
+                  className={[
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors border text-left",
+                    categoryFilter === "All"
+                      ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
+                      : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
+                  ].join(" ")}
+                >
+                  All
+                </button>
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategoryFilter(cat)}
+                    className={[
+                      "px-4 py-2 rounded-lg text-sm font-medium transition-colors border text-left",
+                      categoryFilter === cat
+                        ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
+                        : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
+                    ].join(" ")}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
           </aside>
 
           {/* MAIN CONTENT */}
@@ -372,55 +406,25 @@ export default function DilemmasRoom() {
               </div>
             )}
 
-            {/* FILTERS */}
+            {/* SEARCH & SORT BAR */}
             <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 mb-6 shadow-[var(--shadow-soft)]">
-              {/* Search & Sort */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search dilemmas..."
-                  className="flex-1 px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                  className="flex-1 px-4 py-2.5 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
                 />
                 <select
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  className="px-4 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                  className="sm:w-48 px-4 py-2.5 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
                 >
                   <option value="newest">Newest</option>
                   <option value="most_replies">Most perspectives</option>
                   <option value="most_saved">Most saved</option>
                 </select>
-              </div>
-
-              {/* Category Chips */}
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setCategoryFilter("All")}
-                  className={[
-                    "px-4 py-1.5 rounded-full text-sm font-medium transition-colors border",
-                    categoryFilter === "All"
-                      ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
-                      : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
-                  ].join(" ")}
-                >
-                  All
-                </button>
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat)}
-                    className={[
-                      "px-4 py-1.5 rounded-full text-sm font-medium transition-colors border",
-                      categoryFilter === cat
-                        ? "bg-[color:var(--sunflower-gold)] text-[color:var(--text-primary)] border-[color:var(--honey-gold)]"
-                        : "bg-white text-[color:var(--text-secondary)] border-[color:var(--border-medium)] hover:border-[color:var(--border-strong)]",
-                    ].join(" ")}
-                  >
-                    {cat}
-                  </button>
-                ))}
               </div>
             </div>
 
