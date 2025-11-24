@@ -702,29 +702,12 @@ export default function BookClubRoom() {
                     key={book.id}
                     className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group w-full"
                   >
-                    {/* BOOK COVER */}
-                    <a
-                      href={`/book-club/${book.id}`}
-                      className="block relative"
-                    >
-                      <div className="aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
-                        {book.coverUrl ? (
-                          <img
-                            src={book.coverUrl}
-                            alt={`Cover of ${book.title}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[10px] text-[#A08960] text-center p-4">
-                            Book cover
-                          </div>
-                        )}
-                      </div>
-
-                      {/* STATUS BADGE OVERLAY */}
-                      <div className="absolute top-2 left-2">
+                    {/* HEADER: STATUS + CATEGORY */}
+                    <div className="p-4 pb-0 space-y-2">
+                      {/* STATUS PILL */}
+                      <div>
                         <span
-                          className={`px-2 py-1 rounded-full border text-[9px] font-semibold shadow-md ${statusBadge(
+                          className={`px-3 py-1 rounded-full border text-xs font-semibold inline-block ${statusBadge(
                             book.status
                           )}`}
                         >
@@ -734,39 +717,59 @@ export default function BookClubRoom() {
                           {book.status}
                         </span>
                       </div>
+
+                      {/* CATEGORY/MOOD BADGE */}
+                      <div>
+                        <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
+                          {book.mood}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* BOOK COVER - 1:1 SQUARE */}
+                    <a
+                      href={`/book-club/${book.id}`}
+                      className="block"
+                    >
+                      <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                        {book.coverUrl ? (
+                          <img
+                            src={book.coverUrl}
+                            alt={`Cover of ${book.title}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-[#A08960] text-center p-4">
+                            Book cover
+                          </div>
+                        )}
+                      </div>
                     </a>
 
                     {/* CONTENT */}
-                    <div className="p-5 flex-1 flex flex-col">
-                      {/* TOP SECTION */}
-                      <div className="flex-1 min-h-0 mb-4">
+                    <div className="p-4 flex-1 flex flex-col space-y-3">
+                      {/* BOOK INFO */}
+                      <div className="space-y-2">
                         <a href={`/book-club/${book.id}`}>
-                          <h3 className="text-base font-bold text-yellow-900 mb-2 hover:text-yellow-700 transition-colors line-clamp-2 leading-snug">
+                          <h3 className="text-base font-bold text-yellow-900 hover:text-yellow-700 transition-colors line-clamp-2 leading-snug">
                             {book.title}
                           </h3>
                         </a>
-                        <p className="text-sm text-[#7A674C] mb-3 line-clamp-1">
+                        <p className="text-sm text-[#7A674C] line-clamp-1">
                           {book.author}
                         </p>
 
-                        {/* MOOD BADGE */}
-                        <div className="flex items-center gap-1.5 mb-3">
-                          <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
-                            {book.mood}
-                          </span>
-                        </div>
-
-                        {/* ONE-LINER DESCRIPTION */}
+                        {/* SHORT TEXT / DESCRIPTION */}
                         {book.note && (
-                          <p className="text-xs text-[#5C4A33] leading-relaxed line-clamp-3 mb-3 italic">
+                          <p className="text-xs text-[#5C4A33] leading-relaxed line-clamp-2 italic">
                             "{book.note}"
                           </p>
                         )}
                       </div>
 
-                      {/* BOTTOM SECTION - Fixed at bottom */}
-                      <div className="mt-auto space-y-3">
-                        {/* STATUS CHANGE + SHELF BUTTON */}
+                      {/* ACTIONS */}
+                      <div className="space-y-2">
+                        {/* STATUS DROPDOWN + SHELF BUTTON */}
                         <div className="flex gap-2">
                           <select
                             value={book.status}
@@ -784,7 +787,7 @@ export default function BookClubRoom() {
                           <button
                             type="button"
                             onClick={() => toggleShelf(book.id)}
-                            className={`px-3 py-2 rounded-lg border text-xs transition-all ${
+                            className={`px-3 py-2 rounded-lg border text-xs transition-all whitespace-nowrap ${
                               shelf
                                 ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
                                 : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
@@ -795,29 +798,32 @@ export default function BookClubRoom() {
                           </button>
                         </div>
 
-                        {/* REACTIONS */}
-                        <div className="pt-2 border-t border-yellow-100">
-                          <ReactionBar
-                            roomId="bookClub"
-                            postId={book.id}
-                            reactions={bookReactions}
-                            onReactionToggle={(reactionId, active) =>
-                              toggleReaction(book.id, reactionId, active)
-                            }
-                          />
+                        {/* REACTIONS + DISCUSSION BUTTON */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <ReactionBar
+                              roomId="bookClub"
+                              postId={book.id}
+                              reactions={bookReactions}
+                              onReactionToggle={(reactionId, active) =>
+                                toggleReaction(book.id, reactionId, active)
+                              }
+                            />
+                          </div>
+                          <a
+                            href={`/book-club/${book.id}`}
+                            className="text-center px-3 py-1.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-[10px] font-medium text-[#111111] transition-all shadow-sm whitespace-nowrap"
+                          >
+                            {book.discussionCount === 0
+                              ? "💬"
+                              : `${book.discussionCount} 💬`}
+                          </a>
                         </div>
 
-                        {/* DISCUSSION LINK */}
-                        <a
-                          href={`/book-club/${book.id}`}
-                          className="block text-center px-4 py-2.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-xs font-medium text-[#111111] transition-all shadow-sm"
-                        >
-                          {book.discussionCount === 0
-                            ? "Start a discussion 💬"
-                            : `${book.discussionCount} discussion${
-                                book.discussionCount === 1 ? "" : "s"
-                              } 💬`}
-                        </a>
+                        {/* REACTIONS EXPLANATION */}
+                        <p className="text-[9px] text-[#A08960] leading-relaxed">
+                          Reactions are for care, not counts. Only you see what you&apos;ve sent.
+                        </p>
                       </div>
                     </div>
                   </div>
