@@ -1186,8 +1186,10 @@ export default function MusicRoom() {
                               <button
                                 key={reactionId}
                                 onClick={() => toggleReaction(track.id, reactionId, !isActive)}
-                                className={`text-base transition-transform hover:scale-110 ${
-                                  isActive ? "opacity-100" : "opacity-40 hover:opacity-70"
+                                className={`text-base transition-all duration-200 hover:scale-125 active:scale-150 ${
+                                  isActive
+                                    ? "opacity-100 scale-110 animate-bounce"
+                                    : "opacity-40 hover:opacity-80 grayscale hover:grayscale-0"
                                 }`}
                                 title={reactionId === "onRepeat" ? "On Repeat" : reactionId === "bigVibe" ? "Big Vibe" : reactionId === "feltThat" ? "Felt That" : "Mood Shift"}
                               >
@@ -1202,7 +1204,7 @@ export default function MusicRoom() {
                           href={`/music-room/${track.id}`}
                           className="block text-center text-[10px] text-[#A08960] hover:text-[#7A674C] transition-colors pt-1"
                         >
-                          💬 {comments[track.id]?.length || 0}
+                          {comments[track.id]?.length || 0} {(comments[track.id]?.length || 0) === 1 ? 'discussion' : 'discussions'} 💬
                         </Link>
                       </div>
                     </div>
