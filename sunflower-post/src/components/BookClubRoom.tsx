@@ -115,6 +115,7 @@ export default function BookClubRoom() {
   const [submitting, setSubmitting] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [currentlyReadingExpanded, setCurrentlyReadingExpanded] = useState(true);
+  const [guidelinesExpanded, setGuidelinesExpanded] = useState(true);
 
   const [newBook, setNewBook] = useState({
     title: "",
@@ -827,8 +828,23 @@ export default function BookClubRoom() {
               </div>
 
               {/* RIGHT: GUIDELINES SIDEBAR */}
-              <aside className="lg:w-64 flex-shrink-0">
+              <aside className="lg:w-48 flex-shrink-0">
                 <div className="space-y-4 sticky top-20">
+                  {/* Collapsible Header */}
+                  <button
+                    onClick={() => setGuidelinesExpanded(!guidelinesExpanded)}
+                    className="w-full bg-white border border-yellow-100 rounded-2xl p-3 flex items-center justify-between hover:border-yellow-300 transition-all"
+                  >
+                    <span className="text-[11px] font-semibold text-yellow-900">
+                      Guidelines
+                    </span>
+                    <span className="text-yellow-900 text-base">
+                      {guidelinesExpanded ? "−" : "+"}
+                    </span>
+                  </button>
+
+                  {guidelinesExpanded && (
+                    <>
                   <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
                     <p className="text-[11px] font-semibold text-yellow-900">
                       How this Book Club works
@@ -862,6 +878,8 @@ export default function BookClubRoom() {
                       <li>• "A cosy, low-stakes read when your brain is tired…"</li>
                     </ul>
                   </div>
+                    </>
+                  )}
                 </div>
               </aside>
             </div>
