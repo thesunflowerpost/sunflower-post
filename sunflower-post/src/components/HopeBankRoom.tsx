@@ -202,7 +202,26 @@ export default function HopeBankRoom() {
 
               {/* STORY CARDS */}
               <div className="space-y-5">
-                {filteredStories.length === 0 && (
+                {STORIES.length === 0 ? (
+                  <div className="bg-gradient-to-br from-white to-yellow-50/30 border-2 border-yellow-200/60 rounded-2xl p-8 text-center space-y-4 shadow-sm">
+                    <div className="text-6xl">🌈</div>
+                    <div className="space-y-2">
+                      <p className="text-lg font-semibold text-yellow-900">
+                        Hope Bank is waiting for its first story
+                      </p>
+                      <p className="text-sm text-[#7A674C] max-w-md mx-auto">
+                        Be the first to share a moment when things shifted, when hope found a way in, or when you made it through. Your story might be the one someone else needs right now. 💛
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowForm(true)}
+                      className="px-6 py-3 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-md hover:bg-[#ffcc00] transition-all inline-flex items-center gap-2"
+                    >
+                      <span>🌻</span>
+                      <span>Share your first story</span>
+                    </button>
+                  </div>
+                ) : filteredStories.length === 0 ? (
                   <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
                       No stories match that yet.
@@ -212,7 +231,7 @@ export default function HopeBankRoom() {
                       first to share a story about this in Hope Bank. 🌻
                     </p>
                   </div>
-                )}
+                ) : null}
 
                 {filteredStories.map((story) => {
                   const storyReactions = reactions[story.id] || {};
