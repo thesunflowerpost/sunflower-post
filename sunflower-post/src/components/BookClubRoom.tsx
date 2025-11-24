@@ -692,7 +692,7 @@ export default function BookClubRoom() {
             )}
 
             {/* BOOK GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
               {filteredBooks.map((book) => {
                 const shelf = !!myShelf[book.id];
                 const bookReactions = reactions[book.id] || {};
@@ -700,7 +700,7 @@ export default function BookClubRoom() {
                 return (
                   <div
                     key={book.id}
-                    className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group max-w-[560px] w-full mx-auto"
+                    className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group w-full"
                   >
                     {/* BOOK COVER */}
                     <a
