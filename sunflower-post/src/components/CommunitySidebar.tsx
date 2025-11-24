@@ -41,6 +41,12 @@ const ROOMS: Room[] = [
     description: "Stories of things quietly getting better",
   },
   {
+    href: "/dilemmas",
+    icon: "💭",
+    label: "Dilemmas",
+    description: "Get perspective on life's tricky moments",
+  },
+  {
     href: "/music-room",
     icon: "🎵",
     label: "Music Room",
@@ -51,7 +57,7 @@ const ROOMS: Room[] = [
     icon: "📚",
     label: "Book Club",
     description: "Chapters, quotes & gentle debates",
-    
+
   },
   {
     href: "/tv-movies",
@@ -64,12 +70,6 @@ const ROOMS: Room[] = [
     icon: "✨",
     label: "Inspo Wall",
     description: "Visual inspo & saved sunshine",
-  },
-  {
-    href: "/dilemmas",
-    icon: "💭",
-    label: "Dilemmas",
-    description: "Get perspective on life's tricky moments",
   },
 ];
 
