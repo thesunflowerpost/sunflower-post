@@ -630,7 +630,7 @@ export default function MusicRoom() {
             </div>
 
           {/* TIME-BASED RECOMMENDATION BANNER */}
-          <section className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-yellow-300/60 rounded-2xl p-4 md:p-5 shadow-lg">
+          <section className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-yellow-300/60 rounded-2xl p-4 md:p-5 shadow-lg mb-6">
             <div className="flex items-start gap-3">
               <div className="text-3xl">{timeRecommendation.emoji}</div>
               <div className="flex-1 space-y-1">
@@ -655,7 +655,7 @@ export default function MusicRoom() {
 
           {/* ADD TRACK FORM */}
           {showAddForm && (
-            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg">
+            <section className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-3xl p-5 md:p-6 space-y-4 text-xs md:text-sm shadow-lg mb-6">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-base font-semibold text-yellow-900">
                   Share a song for the room 🎧
@@ -1031,11 +1031,11 @@ export default function MusicRoom() {
           )}
 
           {/* MAIN LAYOUT */}
-          <section className="grid lg:grid-cols-3 gap-6 text-xs">
+          <section className="grid lg:grid-cols-3 gap-6 text-xs mt-6">
             {/* TRACK LIST */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 space-y-5">
               {/* SORT & DISCOVERY */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-yellow-100">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E5E5EA]">
                 <div className="flex flex-wrap items-center gap-2">
                   <label className="text-[11px] text-[#A08960] font-medium">Sort by:</label>
                   <select
@@ -1074,7 +1074,7 @@ export default function MusicRoom() {
                 <div className="flex gap-2">
                   <button
                     onClick={handleSurpriseMe}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 text-purple-900 text-[11px] font-medium hover:shadow-md transition-all flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-300 text-yellow-900 text-[11px] font-medium hover:shadow-md transition-all flex items-center gap-1"
                   >
                     <span>✨</span>
                     <span>Surprise Me</span>
@@ -1083,13 +1083,13 @@ export default function MusicRoom() {
               </div>
 
               {/* TRACK CARDS */}
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {filteredTracks.length === 0 && (
-                  <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
-                    <p className="font-semibold text-yellow-900 mb-1">
+                  <div className="bg-white border border-[#E5E5EA] rounded-2xl p-5 shadow-sm">
+                    <p className="font-semibold text-[color:var(--text-primary)] mb-1">
                       Nothing matches that (yet).
                     </p>
-                    <p>
+                    <p className="text-xs text-[color:var(--text-secondary)]">
                       Try a different word or filter… or add the song you were
                       hoping to see. Someone else probably needs it too. 🌻
                     </p>
@@ -1106,9 +1106,9 @@ export default function MusicRoom() {
                   return (
                     <article
                       key={track.id}
-                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-4 md:p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
+                      className="bg-white border-2 border-[#FFD52A] rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-3 mb-4">
                         {/* Author Avatar */}
                         <div
                           className={`w-10 h-10 rounded-full ${getAvatarColor(
@@ -1118,7 +1118,7 @@ export default function MusicRoom() {
                           {getAuthorInitial(track.sharedBy)}
                         </div>
 
-                        <div className="flex-1 min-w-0 space-y-2">
+                        <div className="flex-1 min-w-0 space-y-3">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-semibold text-[#5C4A33]">
                               {track.sharedBy}
@@ -1188,7 +1188,7 @@ export default function MusicRoom() {
 
                               {/* Playlist Adds Count */}
                               {(track.playlistAdds || 0) > 0 && (
-                                <p className="text-[10px] text-purple-700 mt-1 flex items-center gap-1">
+                                <p className="text-[10px] text-[#7A674C] mt-1 flex items-center gap-1">
                                   <span>🎧</span>
                                   <span>{track.playlistAdds} {track.playlistAdds === 1 ? 'person' : 'people'} added to playlist</span>
                                 </p>
@@ -1272,7 +1272,7 @@ export default function MusicRoom() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-1">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-4 border-t border-[#E5E5EA]">
                         {/* REACTIONS - Using ReactionBar with Music Room config */}
                         <div className="flex-1">
                           <ReactionBar
@@ -1306,7 +1306,7 @@ export default function MusicRoom() {
                           <button
                             type="button"
                             onClick={() => setShowSimilarFor(showSimilarFor === track.id ? null : track.id)}
-                            className="px-3 py-1.5 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[10px] text-purple-900 flex items-center gap-1 transition-all"
+                            className="px-3 py-1.5 rounded-xl border border-yellow-200 bg-yellow-50 hover:bg-yellow-100 text-[10px] text-yellow-900 flex items-center gap-1 transition-all"
                           >
                             <span>✨</span>
                             <span>Similar vibes</span>
@@ -1354,14 +1354,14 @@ export default function MusicRoom() {
             <aside className="space-y-4">
               {/* Hidden Gems */}
               {hiddenGems.length > 0 && (
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-300/60 rounded-2xl p-5 space-y-3 shadow-md">
+                <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-300/60 rounded-2xl p-5 space-y-3 shadow-md">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">💎</span>
-                    <p className="text-xs font-semibold text-purple-900">
+                    <p className="text-xs font-semibold text-yellow-900">
                       Hidden Gems
                     </p>
                   </div>
-                  <p className="text-[11px] text-purple-700">
+                  <p className="text-[11px] text-[#7A674C]">
                     Loved by many, but quietly waiting to be discovered
                   </p>
                   <div className="space-y-2">
@@ -1372,12 +1372,12 @@ export default function MusicRoom() {
                           setSearch(gem.title);
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="w-full text-left p-2 rounded-lg bg-white/60 hover:bg-white border border-purple-200 hover:border-purple-300 transition-all group"
+                        className="w-full text-left p-2 rounded-lg bg-white/60 hover:bg-white border border-yellow-200 hover:border-yellow-300 transition-all group"
                       >
-                        <p className="text-xs font-medium text-purple-900 group-hover:text-purple-950">
+                        <p className="text-xs font-medium text-yellow-900 group-hover:text-yellow-950">
                           {gem.title}
                         </p>
-                        <p className="text-[10px] text-purple-700">
+                        <p className="text-[10px] text-[#7A674C]">
                           {gem.artist} · {gem.playlistAdds} adds
                         </p>
                       </button>
