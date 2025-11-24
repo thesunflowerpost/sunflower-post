@@ -1103,8 +1103,8 @@ export default function MusicRoom() {
                     key={track.id}
                     className="flex flex-col bg-white border-2 border-[#FFD52A] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
                   >
-                    {/* ALBUM ART */}
-                    <Link href={`/music-room/${track.id}`} className="block">
+                    {/* ALBUM ART WITH MOOD OVERLAY */}
+                    <Link href={`/music-room/${track.id}`} className="block relative">
                       <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-yellow-50 to-amber-50">
                         {track.imageUrl ? (
                           <img
@@ -1117,6 +1117,14 @@ export default function MusicRoom() {
                             {moodEmoji(track.mood)}
                           </div>
                         )}
+                      </div>
+
+                      {/* MOOD BADGE OVERLAY */}
+                      <div className="absolute top-3 left-3">
+                        <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center gap-1.5 shadow-md">
+                          <span>{moodEmoji(track.mood)}</span>
+                          <span>{track.mood}</span>
+                        </span>
                       </div>
                     </Link>
 
@@ -1132,14 +1140,6 @@ export default function MusicRoom() {
                         <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
                           {track.artist}
                         </p>
-
-                        {/* Mood badge */}
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <span className="text-[10px] px-2 py-0.5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center gap-1">
-                            <span>{moodEmoji(track.mood)}</span>
-                            <span className="line-clamp-1">{track.mood}</span>
-                          </span>
-                        </div>
                       </div>
 
                       {/* BOTTOM SECTION - Fixed at bottom */}
@@ -1199,12 +1199,14 @@ export default function MusicRoom() {
                           })}
                         </div>
 
-                        {/* COMMENT LINK */}
+                        {/* DISCUSSION BUTTON */}
                         <Link
                           href={`/music-room/${track.id}`}
-                          className="block text-center text-[10px] text-[#A08960] hover:text-[#7A674C] transition-colors pt-1"
+                          className="block text-center px-3 py-1.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-xs font-medium text-[#111111] transition-all shadow-sm"
                         >
-                          {comments[track.id]?.length || 0} {(comments[track.id]?.length || 0) === 1 ? 'discussion' : 'discussions'} 💬
+                          {comments[track.id]?.length || 0 === 0
+                            ? "Start discussion 💬"
+                            : `${comments[track.id]?.length || 0} ${(comments[track.id]?.length || 0) === 1 ? 'discussion' : 'discussions'} 💬`}
                         </Link>
                       </div>
                     </div>
