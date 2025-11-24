@@ -32,6 +32,9 @@ export type ReactionId =
   | "tearUp"
   | "quotable"
   | "beautifully"
+  | "loveThisBook"
+  | "needToRead"
+  | "changedMyLife"
   // TV & Movies extras
   | "bigCackle"
   | "comfortRewatch"
@@ -256,6 +259,33 @@ export const reactionDefinitions: Record<ReactionId, ReactionDefinition> = {
     bgColor: "bg-pink-50",
     borderColor: "border-pink-200",
   },
+  loveThisBook: {
+    id: "loveThisBook",
+    emoji: "🌻",
+    label: "Love this book",
+    tooltip: "Love this book",
+    color: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+  },
+  needToRead: {
+    id: "needToRead",
+    emoji: "📖",
+    label: "Need to read",
+    tooltip: "Need to read this",
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+  },
+  changedMyLife: {
+    id: "changedMyLife",
+    emoji: "🫶",
+    label: "Changed my life",
+    tooltip: "This changed my life",
+    color: "text-rose-500",
+    bgColor: "bg-rose-50",
+    borderColor: "border-rose-200",
+  },
 
   // TV & Movies extras
   bigCackle: {
@@ -431,14 +461,9 @@ export const roomReactions: Record<string, ReactionId[]> = {
     "dopamineHit",
   ],
   bookClub: [
-    "bookmark",
-    "resonated",
-    "sameHere",
-    "tearUp",
-    "quotable",
-    "beautifully",
-    "sunburst",
-    "heart",
+    "loveThisBook",
+    "needToRead",
+    "changedMyLife",
   ],
   tvMovies: [
     "bigCackle",
