@@ -393,7 +393,7 @@ export default function BookClubRoom() {
                 </button>
 
                 {currentlyReadingExpanded && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-3">
                     {books
                       .filter((b) => b.status === "Reading")
                       .slice(0, 5)
@@ -403,7 +403,7 @@ export default function BookClubRoom() {
                           href={`/book-club/${book.id}`}
                           className="group bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden hover:border-yellow-300 hover:shadow-md transition-all duration-200"
                         >
-                          <div className="aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                          <div className="aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
                             {book.coverUrl ? (
                               <img
                                 src={book.coverUrl}
@@ -692,7 +692,7 @@ export default function BookClubRoom() {
             )}
 
             {/* BOOK GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
               {filteredBooks.map((book) => {
                 const shelf = !!myShelf[book.id];
                 const bookReactions = reactions[book.id] || {};
@@ -700,14 +700,14 @@ export default function BookClubRoom() {
                 return (
                   <div
                     key={book.id}
-                    className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group"
+                    className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group max-w-[560px] w-full mx-auto"
                   >
                     {/* BOOK COVER */}
                     <a
                       href={`/book-club/${book.id}`}
                       className="block relative"
                     >
-                      <div className="aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                      <div className="aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
                         {book.coverUrl ? (
                           <img
                             src={book.coverUrl}
@@ -737,43 +737,43 @@ export default function BookClubRoom() {
                     </a>
 
                     {/* CONTENT */}
-                    <div className="p-3 flex-1 flex flex-col">
+                    <div className="p-5 flex-1 flex flex-col">
                       {/* TOP SECTION */}
-                      <div className="flex-1 min-h-0 mb-3">
+                      <div className="flex-1 min-h-0 mb-4">
                         <a href={`/book-club/${book.id}`}>
-                          <h3 className="text-sm font-bold text-yellow-900 mb-1 hover:text-yellow-700 transition-colors line-clamp-2 leading-tight">
+                          <h3 className="text-base font-bold text-yellow-900 mb-2 hover:text-yellow-700 transition-colors line-clamp-2 leading-snug">
                             {book.title}
                           </h3>
                         </a>
-                        <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
+                        <p className="text-sm text-[#7A674C] mb-3 line-clamp-1">
                           {book.author}
                         </p>
 
                         {/* MOOD BADGE */}
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <span className="text-[10px] px-2 py-0.5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
+                        <div className="flex items-center gap-1.5 mb-3">
+                          <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
                             {book.mood}
                           </span>
                         </div>
 
                         {/* ONE-LINER DESCRIPTION */}
                         {book.note && (
-                          <p className="text-[10px] text-[#5C4A33] leading-relaxed line-clamp-3 mb-2 italic">
+                          <p className="text-xs text-[#5C4A33] leading-relaxed line-clamp-3 mb-3 italic">
                             "{book.note}"
                           </p>
                         )}
                       </div>
 
                       {/* BOTTOM SECTION - Fixed at bottom */}
-                      <div className="mt-auto space-y-2">
+                      <div className="mt-auto space-y-3">
                         {/* STATUS CHANGE + SHELF BUTTON */}
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2">
                           <select
                             value={book.status}
                             onChange={(e) =>
                               changeBookStatus(book.id, e.target.value as BookStatus)
                             }
-                            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
+                            className="flex-1 text-xs px-3 py-2 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
                             title="Change reading status"
                           >
                             <option value="To read">🔖 To read</option>
@@ -784,7 +784,7 @@ export default function BookClubRoom() {
                           <button
                             type="button"
                             onClick={() => toggleShelf(book.id)}
-                            className={`px-2 py-1.5 rounded-lg border text-[10px] transition-all ${
+                            className={`px-3 py-2 rounded-lg border text-xs transition-all ${
                               shelf
                                 ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
                                 : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
@@ -810,7 +810,7 @@ export default function BookClubRoom() {
                         {/* DISCUSSION LINK */}
                         <a
                           href={`/book-club/${book.id}`}
-                          className="block text-center px-3 py-2 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-[10px] font-medium text-[#111111] transition-all shadow-sm"
+                          className="block text-center px-4 py-2.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-xs font-medium text-[#111111] transition-all shadow-sm"
                         >
                           {book.discussionCount === 0
                             ? "Start a discussion 💬"
