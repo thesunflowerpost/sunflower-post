@@ -403,7 +403,7 @@ export default function BookClubRoom() {
                           href={`/book-club/${book.id}`}
                           className="group bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden hover:border-yellow-300 hover:shadow-md transition-all duration-200"
                         >
-                          <div className="aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                          <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
                             {book.coverUrl ? (
                               <img
                                 src={book.coverUrl}
