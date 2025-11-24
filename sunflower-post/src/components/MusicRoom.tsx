@@ -1031,11 +1031,9 @@ export default function MusicRoom() {
           )}
 
           {/* MAIN LAYOUT */}
-          <section className="grid lg:grid-cols-3 gap-6 text-xs mt-6">
-            {/* TRACK LIST */}
-            <div className="lg:col-span-2 space-y-5">
-              {/* SORT & DISCOVERY */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E5E5EA]">
+          <section className="mt-6">
+            {/* SORT & DISCOVERY */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-[#E5E5EA]">
                 <div className="flex flex-wrap items-center gap-2">
                   <label className="text-[11px] text-[#A08960] font-medium">Sort by:</label>
                   <select
@@ -1082,373 +1080,136 @@ export default function MusicRoom() {
                 </div>
               </div>
 
-              {/* TRACK CARDS */}
-              <div className="space-y-5">
-                {filteredTracks.length === 0 && (
-                  <div className="bg-white border border-[#E5E5EA] rounded-2xl p-5 shadow-sm">
-                    <p className="font-semibold text-[color:var(--text-primary)] mb-1">
-                      Nothing matches that (yet).
-                    </p>
-                    <p className="text-xs text-[color:var(--text-secondary)]">
-                      Try a different word or filter… or add the song you were
-                      hoping to see. Someone else probably needs it too. 🌻
-                    </p>
-                  </div>
-                )}
-
-                {filteredTracks.map((track) => {
-                  const trackReactions = reactions[track.id] || {};
-                  const isInPlaylist = !!playlist[track.id];
-                  const embedInfo = track.link ? getEmbedUrl(track.link) : { type: null, embedUrl: null };
-                  const isPlayerExpanded = expandedPlayerId === track.id;
-                  const similarTracks = showSimilarFor === track.id ? findSimilarTracks(track, tracks) : [];
-
-                  return (
-                    <article
-                      key={track.id}
-                      className="bg-white border-2 border-[#FFD52A] rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start gap-2.5 mb-3">
-                        {/* Author Avatar */}
-                        <div
-                          className={`w-10 h-10 rounded-full ${getAvatarColor(
-                            track.sharedBy
-                          )} flex items-center justify-center text-sm font-semibold text-[#3A2E1F] shadow-md flex-shrink-0 ring-2 ring-white`}
-                        >
-                          {getAuthorInitial(track.sharedBy)}
-                        </div>
-
-                        <div className="flex-1 min-w-0 space-y-2">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-semibold text-[#5C4A33]">
-                              {track.sharedBy}
-                            </span>
-                            <span className="text-[10px] text-[#A08960]">
-                              {track.timeAgo}
-                            </span>
-                            <span className="flex items-center gap-1 text-[10px]">
-                              <span>{moodEmoji(track.mood)}</span>
-                              <span className="text-[#7A674C]">{track.mood}</span>
-                            </span>
-                            {track.era && (
-                              <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33] text-[10px]">
-                                {track.era}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Activity Tags */}
-                          {track.activities && track.activities.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                              {track.activities.map((actId) => {
-                                const activity = ACTIVITY_TAGS.find((a) => a.id === actId);
-                                if (!activity) return null;
-                                return (
-                                  <span
-                                    key={actId}
-                                    className="px-2 py-0.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-orange-200/60 text-[10px] text-orange-900 flex items-center gap-1"
-                                  >
-                                    <span>{activity.emoji}</span>
-                                    <span>{activity.label}</span>
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          )}
-
-                          <div className="flex gap-2.5">
-                            {/* Album art thumbnail */}
-                            {track.imageUrl && (
-                              <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-yellow-50 border-2 border-yellow-100 flex-shrink-0 shadow-md">
-                                <img
-                                  src={track.imageUrl}
-                                  alt={`Album art for ${track.title}`}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            )}
-
-                            <div className="flex-1">
-                              <h2 className="text-base font-bold text-yellow-900 leading-snug">
-                                {track.title}
-                              </h2>
-                              <p className="text-xs text-[#7A674C] mt-0.5">
-                                {track.artist}
-                                {track.genre && <span> · {track.genre}</span>}
-                                {track.source && (
-                                  <span>
-                                    {" "}
-                                    ·{" "}
-                                    <span className="italic">
-                                      {track.source}
-                                    </span>
-                                  </span>
-                                )}
-                              </p>
-
-                              {/* Playlist Adds Count */}
-                              {(track.playlistAdds || 0) > 0 && (
-                                <p className="text-[10px] text-[#7A674C] mt-1 flex items-center gap-1">
-                                  <span>🎧</span>
-                                  <span>{track.playlistAdds} {track.playlistAdds === 1 ? 'person' : 'people'} added to playlist</span>
-                                </p>
-                              )}
-
-                              {track.note && (
-                                <p className="text-xs text-[#5C4A33] mt-1.5 leading-relaxed">
-                                  {track.note}
-                                </p>
-                              )}
-
-                              {/* Favorite Lyric */}
-                              {track.favoriteLyric && (
-                                <blockquote className="mt-1.5 pl-3 border-l-2 border-yellow-300 text-xs italic text-[#7A674C] leading-relaxed">
-                                  "{track.favoriteLyric}"
-                                </blockquote>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Embedded Music Player */}
-                          {embedInfo.embedUrl && (
-                            <div className="space-y-1.5">
-                              <button
-                                onClick={() => setExpandedPlayerId(isPlayerExpanded ? null : track.id)}
-                                className="text-[11px] text-yellow-700 hover:text-yellow-900 font-medium underline underline-offset-2 flex items-center gap-1"
-                              >
-                                <span>🎵</span>
-                                <span>{isPlayerExpanded ? 'Hide player' : 'Show player'}</span>
-                              </button>
-                              {isPlayerExpanded && (
-                                <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-yellow-200">
-                                  {embedInfo.type === 'spotify' && (
-                                    <iframe
-                                      src={embedInfo.embedUrl}
-                                      width="100%"
-                                      height="152"
-                                      frameBorder="0"
-                                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                      loading="lazy"
-                                    ></iframe>
-                                  )}
-                                  {embedInfo.type === 'youtube' && (
-                                    <iframe
-                                      width="100%"
-                                      height="200"
-                                      src={embedInfo.embedUrl}
-                                      frameBorder="0"
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                      allowFullScreen
-                                    ></iframe>
-                                  )}
-                                  {embedInfo.type === 'apple' && (
-                                    <div className="p-4 bg-white text-center">
-                                      <a
-                                        href={track.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-sm text-yellow-700 hover:text-yellow-900 font-medium"
-                                      >
-                                        Open in Apple Music →
-                                      </a>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              {!isPlayerExpanded && track.link && (
-                                <a
-                                  href={track.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-[11px] text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
-                                >
-                                  <span>🎵</span>
-                                  <span>Listen to song</span>
-                                  <span>↗</span>
-                                </a>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 pt-3 border-t border-[#E5E5EA]">
-                        {/* REACTIONS - Using ReactionBar with Music Room config */}
-                        <div className="flex-1">
-                          <ReactionBar
-                            roomId="musicRoom"
-                            postId={track.id}
-                            reactions={trackReactions}
-                            onReactionToggle={(reactionId, active) =>
-                              toggleReaction(track.id, reactionId, active)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => togglePlaylist(track.id)}
-                            className={`px-3 py-1.5 rounded-xl border text-[10px] flex items-center gap-1 transition-all ${
-                              isInPlaylist
-                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
-                                : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50"
-                            }`}
-                          >
-                            <span>🎧</span>
-                            <span>
-                              {isInPlaylist
-                                ? "In playlist"
-                                : "Add to playlist"}
-                            </span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setShowSimilarFor(showSimilarFor === track.id ? null : track.id)}
-                            className="px-3 py-1.5 rounded-xl border border-yellow-200 bg-yellow-50 hover:bg-yellow-100 text-[10px] text-yellow-900 flex items-center gap-1 transition-all"
-                          >
-                            <span>✨</span>
-                            <span>Similar vibes</span>
-                          </button>
-
-                          <Link
-                            href={`/music-room/${track.id}`}
-                            className="flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-[10px] md:text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                          >
-                            <span>💬</span>
-                            <span className="hidden sm:inline">{track.replies || 0} {track.replies === 1 ? 'comment' : 'comments'}</span>
-                            <span className="sm:hidden">{track.replies || 0}</span>
-                            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Similar Vibes Section */}
-                      {showSimilarFor === track.id && similarTracks.length > 0 && (
-                        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 rounded-xl p-3 space-y-1.5">
-                          <p className="text-xs font-semibold text-yellow-900">Similar Vibes:</p>
-                          <div className="space-y-1.5">
-                            {similarTracks.map((similar) => (
-                              <div key={similar.id} className="flex items-center gap-2 text-[11px]">
-                                <span className="text-yellow-600">•</span>
-                                <span className="font-medium text-yellow-900">{similar.title}</span>
-                                <span className="text-[#7A674C]">by {similar.artist}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <p className="text-[9px] text-[#C0A987] italic">
-                        Reactions &amp; playlist are just for you. No public
-                        scores, just shared vibes.
-                      </p>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* SIDEBAR INFO - Modernized */}
-            <aside className="space-y-4">
-              {/* Hidden Gems */}
-              {hiddenGems.length > 0 && (
-                <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-300/60 rounded-2xl p-5 space-y-3 shadow-md">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">💎</span>
-                    <p className="text-xs font-semibold text-yellow-900">
-                      Hidden Gems
-                    </p>
-                  </div>
-                  <p className="text-[11px] text-[#7A674C]">
-                    Loved by many, but quietly waiting to be discovered
+            {/* PINTEREST-STYLE GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredTracks.length === 0 && (
+                <div className="col-span-full text-center py-12 px-4">
+                  <p className="font-semibold text-[color:var(--text-primary)] mb-1">
+                    Nothing matches that (yet).
                   </p>
-                  <div className="space-y-2">
-                    {hiddenGems.map((gem) => (
-                      <button
-                        key={gem.id}
-                        onClick={() => {
-                          setSearch(gem.title);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                        className="w-full text-left p-2 rounded-lg bg-white/60 hover:bg-white border border-yellow-200 hover:border-yellow-300 transition-all group"
-                      >
-                        <p className="text-xs font-medium text-yellow-900 group-hover:text-yellow-950">
-                          {gem.title}
-                        </p>
-                        <p className="text-[10px] text-[#7A674C]">
-                          {gem.artist} · {gem.playlistAdds} adds
-                        </p>
-                      </button>
-                    ))}
-                  </div>
+                  <p className="text-xs text-[color:var(--text-secondary)]">
+                    Try a different word or filter… or add the song you were
+                    hoping to see. Someone else probably needs it too. 🌻
+                  </p>
                 </div>
               )}
 
-              <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md">
-                <p className="text-xs font-semibold text-yellow-900">
-                  How people use this room
-                </p>
-                <ul className="space-y-2 text-xs text-[#7A674C]">
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-600">•</span>
-                    <span>Build "I can't be bothered" playlists together</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-600">•</span>
-                    <span>Share nostalgia songs that feel like home</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-600">•</span>
-                    <span>Collect walking / cleaning / shower concert songs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-600">•</span>
-                    <span>Swap "I forgot about this banger" tracks</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-600">•</span>
-                    <span>Discover new tracks through activity tags</span>
-                  </li>
-                </ul>
-              </div>
+              {filteredTracks.map((track) => {
+                const trackReactions = reactions[track.id] || {};
+                const isInPlaylist = !!playlist[track.id];
 
-              <div className="bg-white border border-yellow-200/60 rounded-2xl p-5 space-y-2 shadow-md">
-                <p className="text-xs font-semibold text-yellow-900">
-                  Gentle boundaries
-                </p>
-                <p className="text-xs text-[#7A674C] leading-relaxed">
-                  Please avoid lyrics or visuals that are hateful or explicitly
-                  violent. It&apos;s okay if songs have heavy themes – just flag them
-                  gently in your note (e.g. grief, heartbreak, faith, etc.).
-                </p>
-              </div>
+                return (
+                  <div
+                    key={track.id}
+                    className="flex flex-col bg-white border-2 border-[#FFD52A] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+                  >
+                    {/* ALBUM ART */}
+                    <Link href={`/music-room/${track.id}`} className="block">
+                      <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-yellow-50 to-amber-50">
+                        {track.imageUrl ? (
+                          <img
+                            src={track.imageUrl}
+                            alt={`${track.title} by ${track.artist}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-6xl">
+                            {moodEmoji(track.mood)}
+                          </div>
+                        )}
+                      </div>
+                    </Link>
 
-              <div className="bg-gradient-to-br from-amber-50 to-orange-50/30 border border-orange-200/60 rounded-2xl p-5 space-y-3 shadow-md">
-                <p className="text-xs font-semibold text-orange-900">
-                  Stuck on what to add?
-                </p>
-                <ul className="space-y-2 text-xs text-[#6C4A33]">
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600">💭</span>
-                    <span>"A song that always gets me out of bed…"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600">💭</span>
-                    <span>"The soundtrack to my healing era…"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600">💭</span>
-                    <span>"A song that makes cleaning less annoying…"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-600">💭</span>
-                    <span>"My go-to workout hype track…"</span>
-                  </li>
-                </ul>
-              </div>
-            </aside>
+                    {/* CONTENT */}
+                    <div className="p-3 flex-1 flex flex-col">
+                      {/* TOP SECTION */}
+                      <div className="flex-1 min-h-0 mb-3">
+                        <Link href={`/music-room/${track.id}`}>
+                          <h3 className="text-sm font-bold text-yellow-900 mb-0.5 hover:text-yellow-700 transition-colors line-clamp-2 leading-tight">
+                            {track.title}
+                          </h3>
+                        </Link>
+                        <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
+                          {track.artist}
+                        </p>
+
+                        {/* Mood badge */}
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="text-[10px] px-2 py-0.5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center gap-1">
+                            <span>{moodEmoji(track.mood)}</span>
+                            <span className="line-clamp-1">{track.mood}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* BOTTOM SECTION - Fixed at bottom */}
+                      <div className="mt-auto space-y-2">
+                        {/* ACTION BUTTONS */}
+                        <div className="flex gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => togglePlaylist(track.id)}
+                            className={`flex-1 px-2 py-1 rounded-lg border text-[10px] font-medium transition-all ${
+                              isInPlaylist
+                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8]"
+                                : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
+                            }`}
+                          >
+                            {isInPlaylist ? "✓ Playlist" : "+ Playlist"}
+                          </button>
+                          <Link
+                            href={`/music-room/${track.id}`}
+                            className="flex-1 px-2 py-1 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 text-[10px] font-medium text-[#7A674C] transition-all text-center"
+                          >
+                            ✨ Similar
+                          </Link>
+                        </div>
+
+                        {/* PLAYER LINK */}
+                        {track.link && (
+                          <a
+                            href={track.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-center text-[10px] text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
+                          >
+                            🎵 Listen
+                          </a>
+                        )}
+
+                        {/* REACTIONS */}
+                        <div className="flex items-center justify-center gap-2 pt-2 border-t border-yellow-100">
+                          {(["onRepeat", "bigVibe", "feltThat", "instantMoodShift"] as const).map((reactionId) => {
+                            const reactionEmoji = reactionId === "onRepeat" ? "🔁" : reactionId === "bigVibe" ? "🔥" : reactionId === "feltThat" ? "😭" : "🌈";
+                            const isActive = trackReactions[reactionId];
+                            return (
+                              <button
+                                key={reactionId}
+                                onClick={() => toggleReaction(track.id, reactionId, !isActive)}
+                                className={`text-base transition-transform hover:scale-110 ${
+                                  isActive ? "opacity-100" : "opacity-40 hover:opacity-70"
+                                }`}
+                                title={reactionId === "onRepeat" ? "On Repeat" : reactionId === "bigVibe" ? "Big Vibe" : reactionId === "feltThat" ? "Felt That" : "Mood Shift"}
+                              >
+                                {reactionEmoji}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* COMMENT LINK */}
+                        <Link
+                          href={`/music-room/${track.id}`}
+                          className="block text-center text-[10px] text-[#A08960] hover:text-[#7A674C] transition-colors pt-1"
+                        >
+                          💬 {comments[track.id]?.length || 0}
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </section>
           </main>
         </div>
