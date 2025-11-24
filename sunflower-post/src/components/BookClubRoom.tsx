@@ -702,34 +702,10 @@ export default function BookClubRoom() {
                     key={book.id}
                     className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group w-full"
                   >
-                    {/* HEADER: STATUS + CATEGORY */}
-                    <div className="p-4 pb-0 space-y-2">
-                      {/* STATUS PILL */}
-                      <div>
-                        <span
-                          className={`px-3 py-1 rounded-full border text-xs font-semibold inline-block ${statusBadge(
-                            book.status
-                          )}`}
-                        >
-                          {book.status === "Reading" && "📖 "}
-                          {book.status === "Finished" && "✅ "}
-                          {book.status === "To read" && "🔖 "}
-                          {book.status}
-                        </span>
-                      </div>
-
-                      {/* CATEGORY/MOOD BADGE */}
-                      <div>
-                        <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
-                          {book.mood}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* BOOK COVER - 1:1 SQUARE */}
+                    {/* BOOK COVER - 1:1 SQUARE WITH OVERLAYS */}
                     <a
                       href={`/book-club/${book.id}`}
-                      className="block"
+                      className="block relative"
                     >
                       <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
                         {book.coverUrl ? (
@@ -743,6 +719,30 @@ export default function BookClubRoom() {
                             Book cover
                           </div>
                         )}
+                      </div>
+
+                      {/* OVERLAYS: STATUS + CATEGORY */}
+                      <div className="absolute top-3 left-3 space-y-2">
+                        {/* STATUS PILL */}
+                        <div>
+                          <span
+                            className={`px-3 py-1 rounded-full border text-xs font-semibold inline-block shadow-md ${statusBadge(
+                              book.status
+                            )}`}
+                          >
+                            {book.status === "Reading" && "📖 "}
+                            {book.status === "Finished" && "✅ "}
+                            {book.status === "To read" && "🔖 "}
+                            {book.status}
+                          </span>
+                        </div>
+
+                        {/* CATEGORY/MOOD BADGE */}
+                        <div>
+                          <span className="text-xs px-3 py-1 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center shadow-md">
+                            {book.mood}
+                          </span>
+                        </div>
                       </div>
                     </a>
 
@@ -787,14 +787,15 @@ export default function BookClubRoom() {
                           <button
                             type="button"
                             onClick={() => toggleShelf(book.id)}
-                            className={`px-3 py-2 rounded-lg border text-xs transition-all whitespace-nowrap ${
+                            className={`px-3 py-2 rounded-lg border text-xs transition-all whitespace-nowrap flex items-center gap-1.5 ${
                               shelf
                                 ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
                                 : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
                             }`}
                             title={shelf ? "On your shelf" : "Save to shelf"}
                           >
-                            📚
+                            <span>📚</span>
+                            <span>{shelf ? "Saved" : "Add to shelf"}</span>
                           </button>
                         </div>
 
@@ -812,11 +813,13 @@ export default function BookClubRoom() {
                           </div>
                           <a
                             href={`/book-club/${book.id}`}
-                            className="text-center px-3 py-1.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-[10px] font-medium text-[#111111] transition-all shadow-sm whitespace-nowrap"
+                            className="text-center px-3 py-1.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-xs font-medium text-[#111111] transition-all shadow-sm whitespace-nowrap"
                           >
                             {book.discussionCount === 0
-                              ? "💬"
-                              : `${book.discussionCount} 💬`}
+                              ? "Start discussion"
+                              : book.discussionCount === 1
+                              ? "1 discussion"
+                              : `${book.discussionCount} discussions`}
                           </a>
                         </div>
 
