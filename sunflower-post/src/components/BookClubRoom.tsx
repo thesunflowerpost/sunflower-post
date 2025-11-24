@@ -692,7 +692,27 @@ export default function BookClubRoom() {
             )}
 
             {/* BOOK GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+            {books.length === 0 ? (
+              <div className="bg-gradient-to-br from-white to-yellow-50/30 border-2 border-yellow-200/60 rounded-2xl p-8 text-center space-y-4 shadow-sm">
+                <div className="text-6xl">📚</div>
+                <div className="space-y-2">
+                  <p className="text-lg font-semibold text-yellow-900">
+                    The Book Club is empty (for now)
+                  </p>
+                  <p className="text-sm text-[#7A674C] max-w-md mx-auto">
+                    Be the first to share a book that moved you, helped you heal, or just made you feel less alone. No pressure for perfect summaries – just honest recommendations. 🌻
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="px-6 py-3 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-md hover:bg-[#ffcc00] transition-all inline-flex items-center gap-2"
+                >
+                  <span>📖</span>
+                  <span>Share your first book</span>
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
               {filteredBooks.map((book) => {
                 const shelf = !!myShelf[book.id];
                 const bookReactions = reactions[book.id] || {};
@@ -833,6 +853,7 @@ export default function BookClubRoom() {
                 );
               })}
             </div>
+            )}
           </section>
               </div>
 
