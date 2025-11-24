@@ -114,6 +114,7 @@ export default function BookClubRoom() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
+  const [currentlyReadingExpanded, setCurrentlyReadingExpanded] = useState(true);
 
   const [newBook, setNewBook] = useState({
     title: "",
@@ -358,6 +359,9 @@ export default function BookClubRoom() {
 
           {/* MAIN CONTENT */}
           <main className="flex-1 min-w-0">
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* LEFT: MAIN CONTENT AREA */}
+              <div className="flex-1">
             {/* SEARCH BAR */}
             <div className="mb-6">
               <input
@@ -371,16 +375,24 @@ export default function BookClubRoom() {
 
             {/* HERO: CURRENTLY READING */}
             {books.filter((b) => b.status === "Reading").length > 0 && (
-              <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border-2 border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg mb-6">
-                <div className="space-y-5">
+              <div className="bg-white border-2 border-yellow-200 rounded-2xl p-4 shadow-sm mb-6">
+                <button
+                  onClick={() => setCurrentlyReadingExpanded(!currentlyReadingExpanded)}
+                  className="w-full flex items-center justify-between gap-2 mb-2"
+                >
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">📖</span>
-                    <h2 className="text-base md:text-lg font-semibold text-yellow-900">
+                    <span className="text-lg">📖</span>
+                    <h2 className="text-base font-semibold text-yellow-900">
                       Currently Reading
                     </h2>
                   </div>
+                  <span className="text-yellow-900 text-lg">
+                    {currentlyReadingExpanded ? "−" : "+"}
+                  </span>
+                </button>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {currentlyReadingExpanded && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
                     {books
                       .filter((b) => b.status === "Reading")
                       .slice(0, 5)
@@ -423,7 +435,7 @@ export default function BookClubRoom() {
                         </a>
                       ))}
                   </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -679,7 +691,7 @@ export default function BookClubRoom() {
             )}
 
             {/* BOOK GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredBooks.map((book) => {
                 const shelf = !!myShelf[book.id];
                 const bookReactions = reactions[book.id] || {};
@@ -811,44 +823,48 @@ export default function BookClubRoom() {
                 );
               })}
             </div>
-
-            {/* HELPFUL INFO BOXES - Now at bottom */}
-            <div className="grid md:grid-cols-3 gap-4 mt-8">
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
-                  How this Book Club works
-                </p>
-                <ul className="space-y-1 text-[10px] text-[#7A674C]">
-                  <li>• Add books that genuinely moved you or held you</li>
-                  <li>• Tag the mood so people can find what fits their season</li>
-                  <li>• Use discussion pages for chapters, quotes &amp; themes</li>
-                  <li>• Read at your own pace – lurking is also participation</li>
-                </ul>
-              </div>
-
-              <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
-                  Gentle boundaries
-                </p>
-                <p className="text-[10px] text-[#7A674C]">
-                  You&apos;re welcome to disagree with a book or author, as long
-                  as it&apos;s done with care. No shaming people for what they do or
-                  don&apos;t read – this is a soft space.
-                </p>
-              </div>
-
-              <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
-                <p className="text-[11px] font-semibold text-yellow-900">
-                  Stuck on what to add?
-                </p>
-                <ul className="space-y-1 text-[10px] text-[#7A674C]">
-                  <li>• "A book I wish I had at 18…"</li>
-                  <li>• "The book that made me feel less alone about X…"</li>
-                  <li>• "A cosy, low-stakes read when your brain is tired…"</li>
-                </ul>
-              </div>
-            </div>
           </section>
+              </div>
+
+              {/* RIGHT: GUIDELINES SIDEBAR */}
+              <aside className="lg:w-64 flex-shrink-0">
+                <div className="space-y-4 sticky top-20">
+                  <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-yellow-900">
+                      How this Book Club works
+                    </p>
+                    <ul className="space-y-1 text-[10px] text-[#7A674C]">
+                      <li>• Add books that genuinely moved you or held you</li>
+                      <li>• Tag the mood so people can find what fits their season</li>
+                      <li>• Use discussion pages for chapters, quotes &amp; themes</li>
+                      <li>• Read at your own pace – lurking is also participation</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#FFFCF5] border border-yellow-100 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-yellow-900">
+                      Gentle boundaries
+                    </p>
+                    <p className="text-[10px] text-[#7A674C]">
+                      You&apos;re welcome to disagree with a book or author, as long
+                      as it&apos;s done with care. No shaming people for what they do or
+                      don&apos;t read – this is a soft space.
+                    </p>
+                  </div>
+
+                  <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-yellow-900">
+                      Stuck on what to add?
+                    </p>
+                    <ul className="space-y-1 text-[10px] text-[#7A674C]">
+                      <li>• "A book I wish I had at 18…"</li>
+                      <li>• "The book that made me feel less alone about X…"</li>
+                      <li>• "A cosy, low-stakes read when your brain is tired…"</li>
+                    </ul>
+                  </div>
+                </div>
+              </aside>
+            </div>
           </main>
         </div>
       </div>
