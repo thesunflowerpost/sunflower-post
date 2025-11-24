@@ -371,8 +371,8 @@ export default function BookClubRoom() {
 
             {/* HERO: CURRENTLY READING */}
             {books.filter((b) => b.status === "Reading").length > 0 && (
-              <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg">
-                <div className="space-y-4">
+              <div className="bg-gradient-to-br from-[#FFF7D6] via-white to-[#FFF7ED] border-2 border-yellow-200 rounded-3xl p-6 md:p-8 shadow-lg mb-6">
+                <div className="space-y-5">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">📖</span>
                     <h2 className="text-base md:text-lg font-semibold text-yellow-900">
@@ -380,52 +380,45 @@ export default function BookClubRoom() {
                     </h2>
                   </div>
 
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {books
                       .filter((b) => b.status === "Reading")
-                      .slice(0, 3)
+                      .slice(0, 5)
                       .map((book) => (
                         <a
                           key={book.id}
                           href={`/book-club/${book.id}`}
-                          className="group bg-white border border-yellow-100 rounded-2xl p-4 hover:border-yellow-300 hover:shadow-md transition-all duration-200"
+                          className="group bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden hover:border-yellow-300 hover:shadow-md transition-all duration-200"
                         >
-                          <div className="flex gap-3">
-                            <div className="w-20 h-28 rounded-lg overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5] border border-yellow-200 flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
-                              {book.coverUrl ? (
-                                <img
-                                  src={book.coverUrl}
-                                  alt={`Cover of ${book.title}`}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-[10px] text-[#A08960] text-center p-2">
-                                  Book cover
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-sm font-semibold text-yellow-900 mb-1 truncate group-hover:text-yellow-700 transition-colors">
-                                {book.title}
-                              </h3>
-                              <p className="text-[11px] text-[#7A674C] mb-2">
-                                {book.author}
-                              </p>
-                              {book.mood && (
-                                <span className="inline-block px-2 py-1 rounded-full bg-[#FFFEFA] border border-yellow-100 text-[10px] text-[#5C4A33]">
-                                  {book.mood}
+                          <div className="aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                            {book.coverUrl ? (
+                              <img
+                                src={book.coverUrl}
+                                alt={`Cover of ${book.title}`}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-[10px] text-[#A08960] text-center p-4">
+                                Book cover
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-2.5">
+                            <h3 className="text-xs font-semibold text-yellow-900 mb-0.5 line-clamp-2 leading-tight group-hover:text-yellow-700 transition-colors">
+                              {book.title}
+                            </h3>
+                            <p className="text-[10px] text-[#7A674C] line-clamp-1">
+                              {book.author}
+                            </p>
+                            {book.discussionCount > 0 && (
+                              <p className="text-[9px] text-[#A08960] mt-1.5 flex items-center gap-1">
+                                <span>💬</span>
+                                <span>
+                                  {book.discussionCount} discussion
+                                  {book.discussionCount === 1 ? "" : "s"}
                                 </span>
-                              )}
-                              {book.discussionCount > 0 && (
-                                <p className="text-[10px] text-[#A08960] mt-2 flex items-center gap-1">
-                                  <span>💬</span>
-                                  <span>
-                                    {book.discussionCount} discussion
-                                    {book.discussionCount === 1 ? "" : "s"}
-                                  </span>
-                                </p>
-                              )}
-                            </div>
+                              </p>
+                            )}
                           </div>
                         </a>
                       ))}
@@ -669,181 +662,163 @@ export default function BookClubRoom() {
             </section>
           )}
 
-          {/* MAIN LAYOUT */}
-          <section className="grid lg:grid-cols-3 gap-6 text-xs">
-            {/* BOOK LIST */}
-            <div className="lg:col-span-2 space-y-4">
+          {/* PINTEREST-STYLE GRID */}
+          <section className="space-y-6">
+            {/* NO RESULTS */}
+            {filteredBooks.length === 0 && (
+              <div className="bg-white border border-yellow-100 rounded-2xl p-6 text-center">
+                <p className="text-sm font-semibold text-yellow-900 mb-2">
+                  No books or discussions match that (yet).
+                </p>
+                <p className="text-xs text-[#7A674C]">
+                  Try a different word or status… or add the book / topic you
+                  were hoping to find. Someone else will probably be glad it&apos;s
+                  here. 🌻
+                </p>
+              </div>
+            )}
 
-              {/* BOOK CARDS */}
-              <div className="space-y-3">
-                {filteredBooks.length === 0 && (
-                  <div className="bg-white border border-yellow-100 rounded-2xl p-4 text-[11px] text-[#7A674C]">
-                    <p className="font-semibold text-yellow-900 mb-1">
-                      No books or discussions match that (yet).
-                    </p>
-                    <p>
-                      Try a different word or status… or add the book / topic you
-                      were hoping to find. Someone else will probably be glad it&apos;s
-                      here. 🌻
-                    </p>
-                  </div>
-                )}
+            {/* BOOK GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {filteredBooks.map((book) => {
+                const shelf = !!myShelf[book.id];
+                const bookReactions = reactions[book.id] || {};
 
-                {filteredBooks.map((book) => {
-                  const shelf = !!myShelf[book.id];
-                  const bookReactions = reactions[book.id] || {};
-
-                  return (
-                    <article
-                      key={book.id}
-                      className="group bg-white border border-yellow-100 rounded-2xl p-4 space-y-3 hover:border-yellow-300 hover:shadow-lg transition-all duration-200"
+                return (
+                  <div
+                    key={book.id}
+                    className="flex flex-col bg-white border-2 border-yellow-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all duration-200 group"
+                  >
+                    {/* BOOK COVER */}
+                    <a
+                      href={`/book-club/${book.id}`}
+                      className="block relative"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[#A08960]">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`px-2 py-[2px] rounded-full border ${statusBadge(
-                              book.status
-                            )}`}
-                          >
-                            {book.status}
+                      <div className="aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5]">
+                        {book.coverUrl ? (
+                          <img
+                            src={book.coverUrl}
+                            alt={`Cover of ${book.title}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[10px] text-[#A08960] text-center p-4">
+                            Book cover
+                          </div>
+                        )}
+                      </div>
+
+                      {/* STATUS BADGE OVERLAY */}
+                      <div className="absolute top-2 left-2">
+                        <span
+                          className={`px-2 py-1 rounded-full border text-[9px] font-semibold shadow-md ${statusBadge(
+                            book.status
+                          )}`}
+                        >
+                          {book.status === "Reading" && "📖 "}
+                          {book.status === "Finished" && "✅ "}
+                          {book.status === "To read" && "🔖 "}
+                          {book.status}
+                        </span>
+                      </div>
+                    </a>
+
+                    {/* CONTENT */}
+                    <div className="p-3 flex-1 flex flex-col">
+                      {/* TOP SECTION */}
+                      <div className="flex-1 min-h-0 mb-3">
+                        <a href={`/book-club/${book.id}`}>
+                          <h3 className="text-sm font-bold text-yellow-900 mb-1 hover:text-yellow-700 transition-colors line-clamp-2 leading-tight">
+                            {book.title}
+                          </h3>
+                        </a>
+                        <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
+                          {book.author}
+                        </p>
+
+                        {/* MOOD BADGE */}
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="text-[10px] px-2 py-0.5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 text-yellow-900 rounded-full font-medium inline-flex items-center">
+                            {book.mood}
                           </span>
-                          {/* Status Change Dropdown */}
+                        </div>
+
+                        {/* ONE-LINER DESCRIPTION */}
+                        {book.note && (
+                          <p className="text-[10px] text-[#5C4A33] leading-relaxed line-clamp-3 mb-2 italic">
+                            "{book.note}"
+                          </p>
+                        )}
+                      </div>
+
+                      {/* BOTTOM SECTION - Fixed at bottom */}
+                      <div className="mt-auto space-y-2">
+                        {/* STATUS CHANGE + SHELF BUTTON */}
+                        <div className="flex gap-1.5">
                           <select
                             value={book.status}
                             onChange={(e) =>
                               changeBookStatus(book.id, e.target.value as BookStatus)
                             }
-                            className="text-[10px] px-2 py-1 rounded-lg border border-yellow-100 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
+                            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-yellow-200 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
                             title="Change reading status"
                           >
-                            <option value="To read">To read</option>
-                            <option value="Reading">Reading</option>
-                            <option value="Finished">Finished</option>
+                            <option value="To read">🔖 To read</option>
+                            <option value="Reading">📖 Reading</option>
+                            <option value="Finished">✅ Finished</option>
                           </select>
-                        </div>
-                        <span>{book.timeAgo}</span>
-                      </div>
 
-                      <div className="flex justify-between gap-3">
-                        <div className="flex gap-4">
-                          {/* COVER THUMBNAIL - Larger and more prominent */}
-                          <div className="w-20 h-28 md:w-24 md:h-32 rounded-lg overflow-hidden bg-gradient-to-br from-[#FFF7D6] to-[#FFE4B5] border border-yellow-200 flex items-center justify-center text-[10px] text-[#A08960] shadow-md group-hover:shadow-xl transition-shadow flex-shrink-0">
-                            {book.coverUrl ? (
-                              <img
-                                src={book.coverUrl}
-                                alt={`Cover of ${book.title}`}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <span className="text-center p-2">Book cover</span>
-                            )}
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <h2 className="text-sm md:text-base font-semibold text-yellow-900 group-hover:text-yellow-700 transition-colors">
-                              {book.title}
-                            </h2>
-                            <p className="text-[11px] md:text-xs text-[#7A674C] mt-0.5">
-                              {book.author}
-                            </p>
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                              <span className="inline-block px-2 py-1 rounded-full bg-[#FFFEFA] border border-yellow-100 text-[10px] text-[#5C4A33]">
-                                {book.mood}
-                              </span>
-                              {book.theme && (
-                                <span className="inline-block px-2 py-1 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[10px] text-[#7C2D12]">
-                                  {book.theme}
-                                </span>
-                              )}
-                              {book.format && (
-                                <span className="inline-block px-2 py-1 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[10px] text-[#166534]">
-                                  {book.format}
-                                </span>
-                              )}
-                            </div>
-                            {book.note && (
-                              <p className="text-[11px] text-[#5C4A33] mt-2 line-clamp-2">
-                                {book.note}
-                              </p>
-                            )}
-                            {book.link && (
-                              <a
-                                href={book.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 mt-2 text-[11px] text-[#7A674C] underline hover:text-yellow-900 transition-colors"
-                              >
-                                <span>View book</span>
-                                <span>↗</span>
-                              </a>
-                            )}
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => toggleShelf(book.id)}
+                            className={`px-2 py-1.5 rounded-lg border text-[10px] transition-all ${
+                              shelf
+                                ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
+                                : "bg-white border-yellow-200 text-[#7A674C] hover:bg-yellow-50"
+                            }`}
+                            title={shelf ? "On your shelf" : "Save to shelf"}
+                          >
+                            📚
+                          </button>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => toggleShelf(book.id)}
-                          className={`px-3 py-1 h-fit rounded-full border text-[10px] flex items-center gap-1 transition-all ${
-                            shelf
-                              ? "bg-[#E0F2FE] border-[#BFDBFE] text-[#1D4ED8] shadow-sm"
-                              : "bg-white border-yellow-100 text-[#7A674C] hover:bg-yellow-50 hover:shadow-sm"
-                          }`}
-                        >
-                          <span>📖</span>
-                          <span className="hidden sm:inline">
-                            {shelf ? "On your shelf" : "Save to shelf"}
-                          </span>
-                        </button>
-                      </div>
+                        {/* REACTIONS */}
+                        <div className="pt-2 border-t border-yellow-100">
+                          <ReactionBar
+                            roomId="bookClub"
+                            postId={book.id}
+                            reactions={bookReactions}
+                            onReactionToggle={(reactionId, active) =>
+                              toggleReaction(book.id, reactionId, active)
+                            }
+                          />
+                        </div>
 
-                      {/* REACTIONS */}
-                      <div className="pt-2 border-t border-yellow-50">
-                        <ReactionBar
-                          roomId="bookClub"
-                          postId={book.id}
-                          reactions={bookReactions}
-                          onReactionToggle={(reactionId, active) =>
-                            toggleReaction(book.id, reactionId, active)
-                          }
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between text-[11px] text-[#7A674C]">
-                        <span>
-                          Shared by{" "}
-                          {book.sharedBy ? (
-                            <span className="font-medium">{book.sharedBy}</span>
-                          ) : (
-                            <span className="font-medium">Anon</span>
-                          )}
-                        </span>
+                        {/* DISCUSSION LINK */}
                         <a
                           href={`/book-club/${book.id}`}
-                          className="flex items-center gap-1 hover:text-yellow-900 transition-colors font-medium"
+                          className="block text-center text-[10px] text-[#A08960] hover:text-[#7A674C] transition-colors pt-1"
                         >
-                          <span>💬</span>
-                          <span>
-                            {book.discussionCount === 0
-                              ? "Start a discussion"
-                              : `${book.discussionCount} discussion${
-                                  book.discussionCount === 1 ? "" : "s"
-                                }`}
-                          </span>
+                          {book.discussionCount === 0
+                            ? "Start a discussion 💬"
+                            : `${book.discussionCount} discussion${
+                                book.discussionCount === 1 ? "" : "s"
+                              } 💬`}
                         </a>
                       </div>
-                    </article>
-                  );
-                })}
-              </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* SIDEBAR INFO */}
-            <aside className="space-y-4">
+            {/* HELPFUL INFO BOXES - Now at bottom */}
+            <div className="grid md:grid-cols-3 gap-4 mt-8">
               <div className="bg-white border border-yellow-100 rounded-2xl p-4 space-y-2">
                 <p className="text-[11px] font-semibold text-yellow-900">
                   How this Book Club works
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
+                <ul className="space-y-1 text-[10px] text-[#7A674C]">
                   <li>• Add books that genuinely moved you or held you</li>
                   <li>• Tag the mood so people can find what fits their season</li>
                   <li>• Use discussion pages for chapters, quotes &amp; themes</li>
@@ -855,7 +830,7 @@ export default function BookClubRoom() {
                 <p className="text-[11px] font-semibold text-yellow-900">
                   Gentle boundaries
                 </p>
-                <p className="text-[#7A674C]">
+                <p className="text-[10px] text-[#7A674C]">
                   You&apos;re welcome to disagree with a book or author, as long
                   as it&apos;s done with care. No shaming people for what they do or
                   don&apos;t read – this is a soft space.
@@ -866,13 +841,13 @@ export default function BookClubRoom() {
                 <p className="text-[11px] font-semibold text-yellow-900">
                   Stuck on what to add?
                 </p>
-                <ul className="space-y-1 text-[#7A674C]">
-                  <li>• “A book I wish I had at 18…”</li>
-                  <li>• “The book that made me feel less alone about X…”</li>
-                  <li>• “A cosy, low-stakes read when your brain is tired…”</li>
+                <ul className="space-y-1 text-[10px] text-[#7A674C]">
+                  <li>• "A book I wish I had at 18…"</li>
+                  <li>• "The book that made me feel less alone about X…"</li>
+                  <li>• "A cosy, low-stakes read when your brain is tired…"</li>
                 </ul>
               </div>
-            </aside>
+            </div>
           </section>
           </main>
         </div>
