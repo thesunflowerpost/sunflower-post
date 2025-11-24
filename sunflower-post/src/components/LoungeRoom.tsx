@@ -525,7 +525,7 @@ export default function LoungeRoom() {
                   return (
                     <article
                       key={post.id}
-                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-5 space-y-3 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group"
+                      className="bg-gradient-to-br from-white to-yellow-50/20 border border-yellow-200/60 rounded-2xl p-5 md:p-6 space-y-4 shadow-md hover:shadow-xl hover:border-yellow-300/80 transition-all duration-300 group max-w-4xl"
                     >
                       <div className="flex items-start gap-3">
                         {/* Author Avatar */}

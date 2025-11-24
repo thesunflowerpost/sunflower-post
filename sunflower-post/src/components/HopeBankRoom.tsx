@@ -185,7 +185,7 @@ export default function HopeBankRoom() {
           {/* MAIN LAYOUT */}
           <section className="grid lg:grid-cols-3 gap-6 text-xs">
             {/* STORIES LIST */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 space-y-5">
               {/* SORTING BAR */}
               <div className="bg-white border border-[color:var(--border-medium)] rounded-xl p-4 shadow-[var(--shadow-soft)]">
                 <div className="flex items-center justify-between gap-3">
@@ -201,7 +201,7 @@ export default function HopeBankRoom() {
               </div>
 
               {/* STORY CARDS */}
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {filteredStories.length === 0 && (
                   <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
@@ -220,7 +220,7 @@ export default function HopeBankRoom() {
                   return (
                     <article
                       key={story.id}
-                      className="bg-white border border-yellow-200/60 rounded-xl p-3 space-y-2 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group"
+                      className="bg-white border border-yellow-200/60 rounded-2xl p-5 md:p-6 space-y-3 shadow-sm hover:shadow-md hover:border-yellow-300/60 transition-all group max-w-4xl"
                     >
                       <div className="flex items-start gap-2">
                         {/* Author Avatar */}
