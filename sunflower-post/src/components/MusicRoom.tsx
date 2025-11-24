@@ -1106,9 +1106,9 @@ export default function MusicRoom() {
                   return (
                     <article
                       key={track.id}
-                      className="bg-white border-2 border-[#FFD52A] rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                      className="bg-white border-2 border-[#FFD52A] rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start gap-3 mb-4">
+                      <div className="flex items-start gap-2.5 mb-3">
                         {/* Author Avatar */}
                         <div
                           className={`w-10 h-10 rounded-full ${getAvatarColor(
@@ -1118,7 +1118,7 @@ export default function MusicRoom() {
                           {getAuthorInitial(track.sharedBy)}
                         </div>
 
-                        <div className="flex-1 min-w-0 space-y-3">
+                        <div className="flex-1 min-w-0 space-y-2">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-semibold text-[#5C4A33]">
                               {track.sharedBy}
@@ -1146,7 +1146,7 @@ export default function MusicRoom() {
                                 return (
                                   <span
                                     key={actId}
-                                    className="px-2 py-1 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-orange-200/60 text-[10px] text-orange-900 flex items-center gap-1"
+                                    className="px-2 py-0.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-orange-200/60 text-[10px] text-orange-900 flex items-center gap-1"
                                   >
                                     <span>{activity.emoji}</span>
                                     <span>{activity.label}</span>
@@ -1156,7 +1156,7 @@ export default function MusicRoom() {
                             </div>
                           )}
 
-                          <div className="flex gap-3">
+                          <div className="flex gap-2.5">
                             {/* Album art thumbnail */}
                             {track.imageUrl && (
                               <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-yellow-50 border-2 border-yellow-100 flex-shrink-0 shadow-md">
@@ -1195,14 +1195,14 @@ export default function MusicRoom() {
                               )}
 
                               {track.note && (
-                                <p className="text-xs text-[#5C4A33] mt-2 leading-relaxed">
+                                <p className="text-xs text-[#5C4A33] mt-1.5 leading-relaxed">
                                   {track.note}
                                 </p>
                               )}
 
                               {/* Favorite Lyric */}
                               {track.favoriteLyric && (
-                                <blockquote className="mt-2 pl-3 border-l-2 border-yellow-300 text-xs italic text-[#7A674C] leading-relaxed">
+                                <blockquote className="mt-1.5 pl-3 border-l-2 border-yellow-300 text-xs italic text-[#7A674C] leading-relaxed">
                                   "{track.favoriteLyric}"
                                 </blockquote>
                               )}
@@ -1211,7 +1211,7 @@ export default function MusicRoom() {
 
                           {/* Embedded Music Player */}
                           {embedInfo.embedUrl && (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               <button
                                 onClick={() => setExpandedPlayerId(isPlayerExpanded ? null : track.id)}
                                 className="text-[11px] text-yellow-700 hover:text-yellow-900 font-medium underline underline-offset-2 flex items-center gap-1"
@@ -1272,7 +1272,7 @@ export default function MusicRoom() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-4 border-t border-[#E5E5EA]">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 pt-3 border-t border-[#E5E5EA]">
                         {/* REACTIONS - Using ReactionBar with Music Room config */}
                         <div className="flex-1">
                           <ReactionBar
@@ -1326,14 +1326,14 @@ export default function MusicRoom() {
 
                       {/* Similar Vibes Section */}
                       {showSimilarFor === track.id && similarTracks.length > 0 && (
-                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-3 space-y-2">
-                          <p className="text-xs font-semibold text-purple-900">Similar Vibes:</p>
-                          <div className="space-y-2">
+                        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-yellow-200 rounded-xl p-3 space-y-1.5">
+                          <p className="text-xs font-semibold text-yellow-900">Similar Vibes:</p>
+                          <div className="space-y-1.5">
                             {similarTracks.map((similar) => (
                               <div key={similar.id} className="flex items-center gap-2 text-[11px]">
-                                <span className="text-purple-600">•</span>
-                                <span className="font-medium text-purple-900">{similar.title}</span>
-                                <span className="text-purple-700">by {similar.artist}</span>
+                                <span className="text-yellow-600">•</span>
+                                <span className="font-medium text-yellow-900">{similar.title}</span>
+                                <span className="text-[#7A674C]">by {similar.artist}</span>
                               </div>
                             ))}
                           </div>
