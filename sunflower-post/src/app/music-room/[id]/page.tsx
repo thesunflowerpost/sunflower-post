@@ -129,6 +129,36 @@ function getAvatarColor(author: string): string {
   return colors[index];
 }
 
+// Helper to get embed URL from music links
+function getEmbedUrl(link: string): { type: 'spotify' | 'youtube' | 'apple' | null; embedUrl: string | null } {
+  if (!link) return { type: null, embedUrl: null };
+
+  // Spotify
+  const spotifyMatch = link.match(/spotify\.com\/track\/([a-zA-Z0-9]+)/);
+  if (spotifyMatch) {
+    return {
+      type: 'spotify',
+      embedUrl: `https://open.spotify.com/embed/track/${spotifyMatch[1]}?utm_source=generator&theme=0`,
+    };
+  }
+
+  // YouTube
+  const youtubeMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (youtubeMatch) {
+    return {
+      type: 'youtube',
+      embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}`,
+    };
+  }
+
+  // Apple Music
+  if (link.includes('music.apple.com')) {
+    return { type: 'apple', embedUrl: link };
+  }
+
+  return { type: null, embedUrl: null };
+}
+
 type PageProps = {
   params: { id: string };
 };
@@ -140,6 +170,7 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
 
   const [replies, setReplies] = useState<TrackReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
 
   // Toggle helper for reactions
@@ -159,10 +190,12 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
       author: "You",
       timeAgo: "Just now",
       body: replyText.trim(),
+      ...(mediaUrl.trim() && { imageUrl: mediaUrl.trim() }),
     };
 
     setReplies([...replies, newReply]);
     setReplyText("");
+    setMediaUrl("");
   }
 
   return (
@@ -257,20 +290,76 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
                     {track.note}
                   </p>
                 )}
-                {track.link && (
-                  <a
-                    href={track.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-sm font-semibold text-[#3A2E1F] shadow-md hover:shadow-lg transition-all"
-                  >
-                    <span>🎵</span>
-                    <span>Listen to song</span>
-                    <span>↗</span>
-                  </a>
-                )}
               </div>
             </div>
+
+            {/* EMBEDDED MUSIC PLAYER */}
+            {track.link && (() => {
+              const { type, embedUrl } = getEmbedUrl(track.link);
+
+              if (type === 'spotify' && embedUrl) {
+                return (
+                  <div className="mt-5 pt-5 border-t border-yellow-200/40">
+                    <p className="text-xs font-semibold text-yellow-900 mb-3">🎵 Listen now</p>
+                    <iframe
+                      src={embedUrl}
+                      width="100%"
+                      height="152"
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      className="rounded-xl border border-yellow-200 shadow-md"
+                    />
+                  </div>
+                );
+              } else if (type === 'youtube' && embedUrl) {
+                return (
+                  <div className="mt-5 pt-5 border-t border-yellow-200/40">
+                    <p className="text-xs font-semibold text-yellow-900 mb-3">🎵 Listen now</p>
+                    <div className="aspect-video rounded-xl overflow-hidden border border-yellow-200 shadow-md">
+                      <iframe
+                        src={embedUrl}
+                        width="100%"
+                        height="100%"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                );
+              } else if (type === 'apple' && embedUrl) {
+                return (
+                  <div className="mt-5 pt-5 border-t border-yellow-200/40">
+                    <a
+                      href={embedUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-sm font-semibold text-[#3A2E1F] shadow-md hover:shadow-lg transition-all"
+                    >
+                      <span>🎵</span>
+                      <span>Listen on Apple Music</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
+                );
+              } else if (track.link) {
+                return (
+                  <div className="mt-5 pt-5 border-t border-yellow-200/40">
+                    <a
+                      href={track.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-sm font-semibold text-[#3A2E1F] shadow-md hover:shadow-lg transition-all"
+                    >
+                      <span>🎵</span>
+                      <span>Listen to song</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
+                );
+              }
+              return null;
+            })()}
 
             {/* INTERACTIVE REACTIONS */}
             <div className="flex flex-col gap-3 pt-2 border-t border-yellow-200/40">
@@ -375,6 +464,36 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
                 className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
               />
 
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-[#7A674C] flex items-center gap-1.5">
+                    <span>📎</span>
+                    <span>Add a GIF or image (optional)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={mediaUrl}
+                    onChange={(e) => setMediaUrl(e.target.value)}
+                    placeholder="Paste image or GIF URL (e.g., from Giphy, Tenor, Imgur)"
+                    className="w-full border border-yellow-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
+                  />
+                  {mediaUrl.trim() && (
+                    <div className="mt-2 p-2 bg-yellow-50/50 border border-yellow-200 rounded-xl">
+                      <p className="text-[10px] text-[#7A674C] mb-2 font-medium">Preview:</p>
+                      <img
+                        src={mediaUrl}
+                        alt="Preview"
+                        className="max-w-xs max-h-40 rounded-lg border border-yellow-200 shadow-sm"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <BouncyButton
                   type="submit"
@@ -386,8 +505,7 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
                   Post comment
                 </BouncyButton>
                 <p className="text-[10px] text-[#A08960] italic">
-                  In future, you&apos;ll also be able to reply with GIFs –
-                  always within gentle boundaries.
+                  Share stories, memories, and visuals – always within gentle boundaries. 🌻
                 </p>
               </div>
             </form>
