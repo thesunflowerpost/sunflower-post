@@ -59,7 +59,7 @@ export default function HomePage() {
 
       <div className="px-4 py-6 md:py-8 space-y-6 md:space-y-8">
         {/* THIS WEEK'S SUNFLOWER POST */}
-        <section className="max-w-4xl mx-auto">
+        <section className="max-w-4xl">
           <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 md:p-5 space-y-2.5 shadow-[var(--shadow-gentle)] hover:shadow-[var(--shadow-soft)] transition-shadow">
             <p className="text-[10px] font-semibold text-[color:var(--deep-soil)] uppercase tracking-wide">
               This Week&apos;s Sunflower Post 💌
@@ -404,7 +404,7 @@ export default function HomePage() {
         </section>
 
         {/* WHAT'S HAPPENING IN THE COMMUNITY */}
-        <section className="space-y-5 max-w-3xl mx-auto">
+        <section className="space-y-5 max-w-3xl">
           <div className="space-y-2">
             <h2 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-normal text-[color:var(--deep-soil)]">
               What&apos;s Happening in the Community
