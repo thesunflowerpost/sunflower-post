@@ -505,7 +505,26 @@ export default function LoungeRoom() {
 
               {/* FEED CARDS - Modernized */}
               <div className="space-y-4">
-                {visiblePosts.length === 0 && (
+                {posts.length === 0 ? (
+                  <div className="bg-gradient-to-br from-white to-yellow-50/30 border-2 border-yellow-200/60 rounded-2xl p-8 text-center space-y-4 shadow-sm">
+                    <div className="text-6xl">🌻</div>
+                    <div className="space-y-2">
+                      <p className="text-lg font-semibold text-yellow-900">
+                        The Lounge is quiet (for now)
+                      </p>
+                      <p className="text-sm text-[#7A674C] max-w-md mx-auto">
+                        Be the first to share a small joy, a soft rant, or a pick-me-up. This is a gentle space for the little things that don't fit anywhere else. 🌱
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddForm(true)}
+                      className="px-6 py-3 rounded-full bg-[#FFD52A] text-sm font-medium text-[#111111] shadow-md hover:bg-[#ffcc00] transition-all inline-flex items-center gap-2"
+                    >
+                      <span>✨</span>
+                      <span>Share your first post</span>
+                    </button>
+                  </div>
+                ) : visiblePosts.length === 0 ? (
                   <div className="bg-gradient-to-br from-white to-yellow-50/30 border border-yellow-200/60 rounded-2xl p-5 text-xs text-[#7A674C] shadow-sm">
                     <p className="font-semibold text-yellow-900 mb-1">
                       No posts match that yet.
@@ -515,7 +534,7 @@ export default function LoungeRoom() {
                       searching for. Someone else probably needs it too. 🌻
                     </p>
                   </div>
-                )}
+                ) : null}
 
                 {visiblePosts.map((post) => {
                   const postReactions = reactions[post.id] || {};
