@@ -825,7 +825,7 @@ export default function BookClubRoom() {
 
                         {/* REACTIONS EXPLANATION */}
                         <p className="text-[9px] text-[#A08960] leading-relaxed">
-                          Reactions are for care, not counts. Only you see what you&apos;ve sent.
+                          Your reactions are private to you.
                         </p>
                       </div>
                     </div>
