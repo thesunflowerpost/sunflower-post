@@ -692,7 +692,7 @@ export default function BookClubRoom() {
             )}
 
             {/* BOOK GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBooks.map((book) => {
                 const shelf = !!myShelf[book.id];
                 const bookReactions = reactions[book.id] || {};
@@ -810,7 +810,7 @@ export default function BookClubRoom() {
                         {/* DISCUSSION LINK */}
                         <a
                           href={`/book-club/${book.id}`}
-                          className="block text-center text-[10px] text-[#A08960] hover:text-[#7A674C] transition-colors pt-1"
+                          className="block text-center px-3 py-2 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-[10px] font-medium text-[#111111] transition-all shadow-sm"
                         >
                           {book.discussionCount === 0
                             ? "Start a discussion 💬"
@@ -833,12 +833,12 @@ export default function BookClubRoom() {
                   {/* Collapsible Header */}
                   <button
                     onClick={() => setGuidelinesExpanded(!guidelinesExpanded)}
-                    className="w-full bg-white border border-yellow-100 rounded-2xl p-3 flex items-center justify-between hover:border-yellow-300 transition-all"
+                    className="w-full bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full px-4 py-2.5 flex items-center justify-between transition-all shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                   >
-                    <span className="text-[11px] font-semibold text-yellow-900">
+                    <span className="text-sm font-medium text-[#111111]">
                       Guidelines
                     </span>
-                    <span className="text-yellow-900 text-base">
+                    <span className="text-[#111111] text-base font-semibold">
                       {guidelinesExpanded ? "−" : "+"}
                     </span>
                   </button>
