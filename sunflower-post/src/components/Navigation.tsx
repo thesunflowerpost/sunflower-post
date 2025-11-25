@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Navigation() {
   const { user, logout } = useAuth();
@@ -109,18 +110,18 @@ export default function Navigation() {
       ) : (
         <>
           <div className="w-px h-4 bg-yellow-200 mx-1 hidden md:block" />
-          <a
+          <Link
             href="/login"
             className="px-2.5 py-1.5 rounded-full hover:bg-yellow-50 hover:text-yellow-900 transition font-medium"
           >
             Login
-          </a>
-          <a
+          </Link>
+          <Link
             href="/signup"
             className="px-2.5 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm transition-all hover:shadow-md"
           >
             Sign up
-          </a>
+          </Link>
         </>
       )}
     </nav>
