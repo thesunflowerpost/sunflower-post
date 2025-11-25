@@ -4,9 +4,9 @@ export default function HomePage() {
       {/* HERO SECTION - Magazine-style with full-width image */}
       <section className="relative w-full h-[360px] md:h-[420px] overflow-hidden rounded-b-3xl shadow-[var(--shadow-medium)]">
         {/* Hero Image Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--sunflower-gold)]/30 via-[color:var(--soft-cream)] to-[color:var(--sun-glow)]/40">
+        <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--sunflower-gold)]/60 via-[color:var(--honey-gold)]/40 to-[color:var(--sun-glow)]/70">
           {/* Placeholder for hero image - replace with actual image */}
-          <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_var(--honey-gold)_0,_transparent_60%)]" />
+          <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_var(--sunflower-gold)_0,_transparent_50%)]" />
         </div>
 
         {/* Soft gradient overlay for text readability */}
@@ -15,8 +15,8 @@ export default function HomePage() {
         {/* Hero Text Overlay */}
         <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-6 md:pb-8">
           <div className="max-w-2xl space-y-3">
-            <div className="inline-block px-3 py-1.5 rounded-full bg-[color:var(--deep-soil)]/60 backdrop-blur-sm border border-white/20">
-              <p className="text-xs uppercase tracking-[0.16em] text-white font-semibold">
+            <div className="inline-block px-3 py-1.5 rounded-full bg-[color:var(--sunflower-gold)]/90 backdrop-blur-sm border border-[color:var(--honey-gold)]">
+              <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--deep-soil)] font-semibold">
                 A softer corner of the internet
               </p>
             </div>
