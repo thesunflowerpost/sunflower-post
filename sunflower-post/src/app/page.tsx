@@ -2,15 +2,15 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* HERO SECTION - Magazine-style with full-width image */}
-      <section className="relative w-full h-[320px] md:h-[380px] overflow-hidden rounded-b-3xl">
+      <section className="relative w-full h-[360px] md:h-[420px] overflow-hidden rounded-b-3xl shadow-[var(--shadow-medium)]">
         {/* Hero Image Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--sunflower-gold)]/40 via-[color:var(--soft-cream)] to-[color:var(--rose-beige)]/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--sunflower-gold)]/30 via-[color:var(--soft-cream)] to-[color:var(--sun-glow)]/40">
           {/* Placeholder for hero image - replace with actual image */}
-          <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_var(--honey-gold)_0,_transparent_50%)]" />
+          <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_var(--honey-gold)_0,_transparent_60%)]" />
         </div>
 
-        {/* Dark gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--deep-soil)]/70 via-[color:var(--deep-soil)]/30 to-transparent" />
+        {/* Soft gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--deep-soil)]/80 via-[color:var(--deep-soil)]/20 to-transparent" />
 
         {/* Hero Text Overlay */}
         <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-6 md:pb-8">
@@ -57,38 +57,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="px-4 py-6 md:py-8 space-y-6 md:space-y-8">
+      <div className="px-4 py-8 md:py-12 space-y-10 md:space-y-14">
         {/* THIS WEEK'S SUNFLOWER POST */}
         <section className="max-w-4xl">
-          <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 md:p-5 space-y-2.5 shadow-[var(--shadow-gentle)] hover:shadow-[var(--shadow-soft)] transition-shadow">
-            <p className="text-[10px] font-semibold text-[color:var(--deep-soil)] uppercase tracking-wide">
-              This Week&apos;s Sunflower Post 💌
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-base md:text-lg font-normal text-[color:var(--text-warm-dark)]">
+          <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border-2 border-[color:var(--sunflower-gold)]/20 rounded-3xl p-6 md:p-8 space-y-4 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-all">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--sunflower-gold)]/10 border border-[color:var(--sunflower-gold)]/30">
+              <span className="text-lg">💌</span>
+              <p className="text-xs font-semibold text-[color:var(--deep-soil)] uppercase tracking-wide">
+                This Week&apos;s Sunflower Post
+              </p>
+            </div>
+            <h2 className="font-[family-name:var(--font-display)] text-xl md:text-2xl font-normal text-[color:var(--text-warm-dark)] leading-snug">
               Twelve tiny joys that don&apos;t depend on your productivity levels.
             </h2>
-            <p className="text-xs md:text-sm text-[color:var(--text-warm-medium)] leading-relaxed">
+            <p className="text-sm md:text-base text-[color:var(--text-warm-medium)] leading-relaxed max-w-2xl">
               A gentle list of everyday moments you&apos;re still allowed to enjoy,
               even when you&apos;re tired, behind or figuring things out.
             </p>
-            <button className="inline-flex items-center justify-center px-3.5 py-2 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[10px] font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-gentle)] transition-all hover:shadow-[var(--shadow-soft)] hover:scale-105">
+            <button className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-xs font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-gentle)] transition-all hover:shadow-[var(--shadow-soft)] hover:scale-105">
               Preview the bulletin →
             </button>
           </div>
         </section>
 
         {/* WHAT'S BLOOMING THIS WEEK - Featured Section */}
-        <section className="space-y-4">
-          <div className="text-center space-y-1">
-            <h2 className="font-[family-name:var(--font-display)] text-base md:text-lg font-normal text-[color:var(--deep-soil)]">
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
               What&apos;s Blooming This Week 🌻
             </h2>
-            <p className="text-xs text-[color:var(--text-warm-light)]">
+            <p className="text-sm text-[color:var(--text-warm-light)]">
               Highlights from across the Circle
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {/* Featured Journal */}
             <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
               {/* Image */}
@@ -287,12 +290,12 @@ export default function HomePage() {
         </section>
 
                 {/* SUNFLOWER JOURNALS - Enhanced with reading badges */}
-        <section id="journals" className="space-y-5">
+        <section id="journals" className="space-y-6">
           <div className="space-y-2">
-            <h2 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-normal text-[color:var(--deep-soil)]">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
               Sunflower Journals 🪞
             </h2>
-            <p className="text-xs md:text-sm text-[color:var(--text-warm-medium)] max-w-2xl">
+            <p className="text-sm md:text-base text-[color:var(--text-warm-medium)] max-w-3xl leading-relaxed">
               Long-form reflections, essays and interviews from selected writers,
               educators and community members.
             </p>
@@ -404,12 +407,12 @@ export default function HomePage() {
         </section>
 
         {/* WHAT'S HAPPENING IN THE COMMUNITY */}
-        <section className="space-y-5 max-w-3xl">
+        <section className="space-y-6 max-w-3xl">
           <div className="space-y-2">
-            <h2 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-normal text-[color:var(--deep-soil)]">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
               What&apos;s Happening in the Community
             </h2>
-            <p className="text-sm text-[color:var(--text-warm-light)]">
+            <p className="text-sm md:text-base text-[color:var(--text-warm-light)]">
               Real conversations, happening right now
             </p>
           </div>
@@ -520,31 +523,31 @@ export default function HomePage() {
         </section>
 
         {/* INSIDE THE CIRCLE */}
-        <section id="inside-circle" className="space-y-5">
-          <h2 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-normal text-[color:var(--deep-soil)]">
+        <section id="inside-circle" className="space-y-6">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
             Inside the Circle
           </h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 text-xs">
+            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
               <p className="font-semibold text-[color:var(--text-warm-dark)]">🌻 The Lounge</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Daily check-ins, small joys, soft rants and gentle company.
               </p>
             </div>
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
               <p className="font-semibold text-[color:var(--text-warm-dark)]">📚 Book Club</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Read together, chapter by chapter. From comfort reads to
                 big-thinking.
               </p>
             </div>
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
               <p className="font-semibold text-[color:var(--text-warm-dark)]">🎧 Music Room</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Nostalgic tracks, diaspora sounds and songs that carried you.
               </p>
             </div>
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
               <p className="font-semibold text-[color:var(--text-warm-dark)]">🧩 Solution Rooms</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Co-create ideas on topics like SEND &amp; AI, mental health and
