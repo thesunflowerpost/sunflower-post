@@ -12,7 +12,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import type { Database, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply, TVMovieDiscussionReaction, TVMovieReplyReaction } from "./schema";
+import type { Database, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply, TVMovieDiscussionReaction, TVMovieReplyReaction, User } from "./schema";
 import { initialDatabase } from "./schema";
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
@@ -52,6 +52,101 @@ export async function readDatabase(): Promise<Database> {
 async function writeDatabase(db: Database): Promise<void> {
   await ensureDatabase();
   await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2));
+}
+
+// ============================================================================
+// USER OPERATIONS
+// ============================================================================
+
+/**
+ * Get all users
+ */
+export async function getUsers(): Promise<User[]> {
+  const db = await readDatabase();
+  return db.users;
+}
+
+/**
+ * Get a single user by ID
+ */
+export async function getUser(id: string): Promise<User | null> {
+  const db = await readDatabase();
+  return db.users.find((user) => user.id === id) || null;
+}
+
+/**
+ * Get a user by email
+ */
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const db = await readDatabase();
+  return db.users.find((user) => user.email.toLowerCase() === email.toLowerCase()) || null;
+}
+
+/**
+ * Create a new user
+ */
+export async function createUser(
+  user: Omit<User, "id" | "createdAt" | "updatedAt">
+): Promise<User> {
+  const db = await readDatabase();
+
+  // Check if user with email already exists
+  const existingUser = await getUserByEmail(user.email);
+  if (existingUser) {
+    throw new Error("User with this email already exists");
+  }
+
+  const newUser: User = {
+    ...user,
+    id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  db.users.push(newUser);
+  await writeDatabase(db);
+
+  return newUser;
+}
+
+/**
+ * Update an existing user
+ */
+export async function updateUser(
+  id: string,
+  updates: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "passwordHash">>
+): Promise<User | null> {
+  const db = await readDatabase();
+  const index = db.users.findIndex((user) => user.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  db.users[index] = {
+    ...db.users[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await writeDatabase(db);
+  return db.users[index];
+}
+
+/**
+ * Delete a user
+ */
+export async function deleteUser(id: string): Promise<boolean> {
+  const db = await readDatabase();
+  const index = db.users.findIndex((user) => user.id === id);
+
+  if (index === -1) {
+    return false;
+  }
+
+  db.users.splice(index, 1);
+  await writeDatabase(db);
+  return true;
 }
 
 // ============================================================================
