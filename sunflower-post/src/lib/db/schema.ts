@@ -10,6 +10,18 @@ export type BookStatus = "Reading" | "Finished" | "To read";
 
 export type TVMovieStatus = "Watching" | "Watched" | "Want to watch";
 
+// User types
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  profilePicture?: string;
+  sunflowerColor?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Book {
   id: string;
   title: string;
@@ -139,6 +151,7 @@ export interface TVMovieReplyReaction {
 
 // Database collections
 export interface Database {
+  users: User[];
   books: Book[];
   reactions: BookReaction[];
   userBookStatuses: UserBookStatus[];
@@ -155,6 +168,7 @@ export interface Database {
 
 // Initial seed data
 export const initialDatabase: Database = {
+  users: [],
   books: [
     {
       id: "1",
