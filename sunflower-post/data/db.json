@@ -49,6 +49,20 @@
   "replies": [],
   "tvMovies": [
     {
+      "title": "Dawsons Creek",
+      "type": "TV series",
+      "status": "Want to watch",
+      "mood": "Coming-of-age",
+      "era": "90s/Early 2000s",
+      "platform": "ITVx",
+      "note": "I was not expecting this to be as unfiltered.",
+      "sharedBy": "Anon",
+      "discussionCount": 0,
+      "id": "1764033004673",
+      "createdAt": "2025-11-25T01:10:04.673Z",
+      "updatedAt": "2025-11-25T01:10:04.673Z"
+    },
+    {
       "title": "fleabagm",
       "type": "TV series",
       "status": "Want to watch",
@@ -140,6 +154,20 @@
       "userId": "current-user",
       "reactionId": "bigCackle",
       "createdAt": "2025-11-22T18:07:36.110Z"
+    },
+    {
+      "id": "1764033025138",
+      "tvMovieId": "1764033004673",
+      "userId": "current-user",
+      "reactionId": "bigCackle",
+      "createdAt": "2025-11-25T01:10:25.138Z"
+    },
+    {
+      "id": "1764033029509",
+      "tvMovieId": "1764033004673",
+      "userId": "current-user",
+      "reactionId": "bingeWorthy",
+      "createdAt": "2025-11-25T01:10:29.509Z"
     }
   ],
   "userTVMovieStatuses": [
