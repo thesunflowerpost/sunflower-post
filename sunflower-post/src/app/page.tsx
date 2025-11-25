@@ -15,9 +15,11 @@ export default function HomePage() {
         {/* Hero Text Overlay */}
         <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-6 md:pb-8">
           <div className="max-w-2xl space-y-3">
-            <p className="text-[10px] uppercase tracking-[0.16em] text-[color:var(--sunflower-gold)]">
-              A softer corner of the internet
-            </p>
+            <div className="inline-block px-3 py-1.5 rounded-full bg-[color:var(--deep-soil)]/60 backdrop-blur-sm border border-white/20">
+              <p className="text-xs uppercase tracking-[0.16em] text-white font-semibold">
+                A softer corner of the internet
+              </p>
+            </div>
             <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl lg:text-4xl font-normal text-white leading-tight">
               Good news still exists.
               <br />
@@ -529,26 +531,26 @@ export default function HomePage() {
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 text-xs">
             <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="font-semibold text-[color:var(--text-warm-dark)]">🌻 The Lounge</p>
+              <p className="font-[family-name:var(--font-display)] text-sm font-normal text-[color:var(--text-warm-dark)]">🌻 The Lounge</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Daily check-ins, small joys, soft rants and gentle company.
               </p>
             </div>
             <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="font-semibold text-[color:var(--text-warm-dark)]">📚 Book Club</p>
+              <p className="font-[family-name:var(--font-display)] text-sm font-normal text-[color:var(--text-warm-dark)]">📚 Book Club</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Read together, chapter by chapter. From comfort reads to
                 big-thinking.
               </p>
             </div>
             <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="font-semibold text-[color:var(--text-warm-dark)]">🎧 Music Room</p>
+              <p className="font-[family-name:var(--font-display)] text-sm font-normal text-[color:var(--text-warm-dark)]">🎧 Music Room</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Nostalgic tracks, diaspora sounds and songs that carried you.
               </p>
             </div>
             <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl p-5 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="font-semibold text-[color:var(--text-warm-dark)]">🧩 Solution Rooms</p>
+              <p className="font-[family-name:var(--font-display)] text-sm font-normal text-[color:var(--text-warm-dark)]">🧩 Solution Rooms</p>
               <p className="text-[color:var(--text-warm-light)] leading-relaxed">
                 Co-create ideas on topics like SEND &amp; AI, mental health and
                 diaspora futures.
