@@ -2,16 +2,33 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login:', { email, password, rememberMe });
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+      // Redirect to homepage on success
+      router.push('/');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to log in');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -28,6 +45,13 @@ export default function LoginPage() {
             Log in to your little corner of the internet. Your posts, saves and journals will be right where you left them.
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,9 +111,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full px-6 py-3 rounded-full bg-[#FFD52A] hover:bg-[#ffcc00] text-[color:var(--deep-soil)] font-semibold transition-all shadow-sm hover:shadow-md"
+            disabled={isLoading}
+            className="w-full px-6 py-3 rounded-full bg-[#FFD52A] hover:bg-[#ffcc00] text-[color:var(--deep-soil)] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Log in
+            {isLoading ? 'Logging in...' : 'Log in'}
           </button>
         </form>
 

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 const sunflowerColors = [
   { id: 'classic', color: '#FFD52A', label: 'Classic Yellow' },
@@ -13,15 +15,30 @@ const sunflowerColors = [
 ];
 
 export default function SignupPage() {
+  const router = useRouter();
+  const { signup } = useAuth();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedColor, setSelectedColor] = useState('classic');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement signup logic
-    console.log('Signup:', { name, email, password, color: selectedColor });
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await signup(name, email, password, selectedColor);
+      // Redirect to homepage on success
+      router.push('/');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create account');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,6 +55,13 @@ export default function SignupPage() {
             Just the basics. No long forms, no personality quizzes. You can always tweak things later.
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -122,9 +146,10 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full px-6 py-3 rounded-full bg-[#FFD52A] hover:bg-[#ffcc00] text-[color:var(--deep-soil)] font-semibold transition-all shadow-sm hover:shadow-md"
+            disabled={isLoading}
+            className="w-full px-6 py-3 rounded-full bg-[#FFD52A] hover:bg-[#ffcc00] text-[color:var(--deep-soil)] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Create account
+            {isLoading ? 'Creating your account...' : 'Create account'}
           </button>
         </form>
 
