@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import GiphyPicker from "@/components/GiphyPicker";
 import ImageUpload from "@/components/ImageUpload";
@@ -61,6 +63,7 @@ type PageProps = {
 };
 
 export default function TVMovieDetailPage({ params }: PageProps) {
+  const { user } = useAuth();
   const [id, setId] = useState<string>("");
   const [tvMovie, setTVMovie] = useState<TVMovie | null>(null);
   const [discussions, setDiscussions] = useState<TVMovieDiscussion[]>([]);
@@ -76,6 +79,7 @@ export default function TVMovieDetailPage({ params }: PageProps) {
   const [discussionTitle, setDiscussionTitle] = useState("");
   const [discussionBody, setDiscussionBody] = useState("");
   const [discussionIsSpoiler, setDiscussionIsSpoiler] = useState(false);
+  const [discussionIsAnon, setDiscussionIsAnon] = useState(true);
   const [discussionGifUrl, setDiscussionGifUrl] = useState<string>("");
   const [discussionImageUrl, setDiscussionImageUrl] = useState<string>("");
   const [showDiscussionGiphyPicker, setShowDiscussionGiphyPicker] = useState(false);
@@ -83,6 +87,7 @@ export default function TVMovieDetailPage({ params }: PageProps) {
 
   // Reply form
   const [replyText, setReplyText] = useState("");
+  const [replyIsAnon, setReplyIsAnon] = useState(true);
   const [activeDiscussionId, setActiveDiscussionId] = useState<string | null>(null);
   const [replyGifUrl, setReplyGifUrl] = useState<string>("");
   const [replyImageUrl, setReplyImageUrl] = useState<string>("");
@@ -185,6 +190,11 @@ export default function TVMovieDetailPage({ params }: PageProps) {
     e.preventDefault();
     if (!discussionTitle.trim() || !discussionBody.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (discussionIsAnon ? user.alias : user.name)
+      : "Someone in TV & Movies";
+
     try {
       const res = await fetch(`/api/tv-movies/${id}/discussions`, {
         method: "POST",
@@ -192,7 +202,7 @@ export default function TVMovieDetailPage({ params }: PageProps) {
         body: JSON.stringify({
           title: discussionTitle,
           body: discussionBody,
-          author: "You",
+          author: displayName,
           isSpoiler: discussionIsSpoiler,
           gifUrl: discussionGifUrl || undefined,
           imageUrl: discussionImageUrl || undefined,
@@ -205,6 +215,7 @@ export default function TVMovieDetailPage({ params }: PageProps) {
         setDiscussionTitle("");
         setDiscussionBody("");
         setDiscussionIsSpoiler(false);
+        setDiscussionIsAnon(true); // Reset to anonymous
         setDiscussionGifUrl("");
         setDiscussionImageUrl("");
         setShowDiscussionForm(false);
@@ -219,12 +230,17 @@ export default function TVMovieDetailPage({ params }: PageProps) {
     e.preventDefault();
     if (!replyText.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (replyIsAnon ? user.alias : user.name)
+      : "Someone in TV & Movies";
+
     try {
       const res = await fetch(`/api/tv-movies/${id}/discussions/${discussionId}/replies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          author: "You",
+          author: displayName,
           body: replyText,
           isSpoiler: false,
           gifUrl: replyGifUrl || undefined,
@@ -239,6 +255,7 @@ export default function TVMovieDetailPage({ params }: PageProps) {
           [discussionId]: [...(prev[discussionId] || []), data.reply]
         }));
         setReplyText("");
+        setReplyIsAnon(true); // Reset to anonymous
         setReplyGifUrl("");
         setReplyImageUrl("");
         setActiveDiscussionId(null);
@@ -572,6 +589,23 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                   This contains spoilers
                 </label>
 
+                <div className="space-y-3">
+                  {user && (
+                    <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                      <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                      <p className="text-xs font-medium text-[#5C4A33]">
+                        {discussionIsAnon ? user.alias : user.name}
+                      </p>
+                    </div>
+                  )}
+
+                  <AnonymousToggle
+                    isAnonymous={discussionIsAnon}
+                    onChange={setDiscussionIsAnon}
+                    userAlias={user?.alias}
+                  />
+                </div>
+
                 <BouncyButton
                   type="submit"
                   disabled={!discussionTitle.trim() || !discussionBody.trim()}
@@ -742,6 +776,23 @@ export default function TVMovieDetailPage({ params }: PageProps) {
                               <span>📷</span>
                               <span>Image</span>
                             </button>
+                          </div>
+
+                          <div className="space-y-2">
+                            {user && (
+                              <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                                <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                                <p className="text-xs font-medium text-[#5C4A33]">
+                                  {replyIsAnon ? user.alias : user.name}
+                                </p>
+                              </div>
+                            )}
+
+                            <AnonymousToggle
+                              isAnonymous={replyIsAnon}
+                              onChange={setReplyIsAnon}
+                              userAlias={user?.alias}
+                            />
                           </div>
 
                           <div className="flex gap-2">
