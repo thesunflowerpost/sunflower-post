@@ -4,6 +4,7 @@ import { useState, useRef, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import AnonymousToggle from "@/components/AnonymousToggle";
+import PostActions from "@/components/PostActions";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -176,6 +177,8 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
   const [isAnon, setIsAnon] = useState(true);
   const [mediaUrl, setMediaUrl] = useState("");
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
+  const [editingReplyId, setEditingReplyId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   // Toggle helper for reactions
   function toggleReaction(reactionId: ReactionId, active: boolean) {
@@ -206,6 +209,36 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
     setReplyText("");
     setMediaUrl("");
     setIsAnon(true); // Reset to anonymous after posting
+  }
+
+  function handleEditReply(reply: TrackReply) {
+    setEditingReplyId(reply.id);
+    setEditText(reply.body);
+  }
+
+  function handleDeleteReply(replyId: number) {
+    setReplies(replies.filter((r) => r.id !== replyId));
+  }
+
+  function handleSaveEdit(replyId: number) {
+    if (!editText.trim()) return;
+    setReplies(
+      replies.map((r) =>
+        r.id === replyId ? { ...r, body: editText.trim() } : r
+      )
+    );
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function handleCancelEdit() {
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function isOwnReply(replyAuthor: string): boolean {
+    if (!user) return false;
+    return replyAuthor === user.name || replyAuthor === user.alias;
   }
 
   return (
@@ -415,25 +448,61 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
                     </div>
 
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-[#5C4A33]">
-                          {reply.author}
-                        </span>
-                        <span className="text-[10px] text-[#A08960]">
-                          {reply.timeAgo}
-                        </span>
-                      </div>
-                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed font-medium">
-                        {reply.body}
-                      </p>
-                      {reply.imageUrl && (
-                        <div className="mt-2">
-                          <img
-                            src={reply.imageUrl}
-                            alt="Reply attachment"
-                            className="max-w-xs rounded-xl border border-yellow-200 shadow-sm"
-                          />
+                      <div className="flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-[#5C4A33]">
+                            {reply.author}
+                          </span>
+                          <span className="text-[10px] text-[#A08960]">
+                            {reply.timeAgo}
+                          </span>
                         </div>
+                        {isOwnReply(reply.author) && editingReplyId !== reply.id && (
+                          <PostActions
+                            onEdit={() => handleEditReply(reply)}
+                            onDelete={() => handleDeleteReply(reply.id)}
+                          />
+                        )}
+                      </div>
+                      {editingReplyId === reply.id ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
+                            rows={3}
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleSaveEdit(reply.id)}
+                              disabled={!editText.trim()}
+                              className="px-3 py-1 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed font-medium">
+                            {reply.body}
+                          </p>
+                          {reply.imageUrl && (
+                            <div className="mt-2">
+                              <img
+                                src={reply.imageUrl}
+                                alt="Reply attachment"
+                                className="max-w-xs rounded-xl border border-yellow-200 shadow-sm"
+                              />
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>

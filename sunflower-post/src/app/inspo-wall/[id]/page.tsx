@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import AnonymousToggle from "@/components/AnonymousToggle";
+import PostActions from "@/components/PostActions";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import GiphyPicker from "@/components/GiphyPicker";
 import Link from "next/link";
@@ -126,6 +127,8 @@ export default function InspoWallThreadPage({ params }: PageProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [showGiphyPicker, setShowGiphyPicker] = useState(false);
   const [selectedGif, setSelectedGif] = useState<string | null>(null);
+  const [editingReplyId, setEditingReplyId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   function toggleReaction(reactionId: ReactionId, active: boolean) {
     setReactions((prev) => ({
@@ -161,6 +164,36 @@ export default function InspoWallThreadPage({ params }: PageProps) {
     setSelectedGif(null);
     setIsAnon(true); // Reset to anonymous after posting
   };
+
+  function handleEditReply(reply: InspoReply) {
+    setEditingReplyId(reply.id);
+    setEditText(reply.body);
+  }
+
+  function handleDeleteReply(replyId: number) {
+    setReplies(replies.filter((r) => r.id !== replyId));
+  }
+
+  function handleSaveEdit(replyId: number) {
+    if (!editText.trim()) return;
+    setReplies(
+      replies.map((r) =>
+        r.id === replyId ? { ...r, body: editText.trim() } : r
+      )
+    );
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function handleCancelEdit() {
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function isOwnReply(replyAuthor: string): boolean {
+    if (!user) return false;
+    return replyAuthor === user.name || replyAuthor === user.alias;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -376,23 +409,59 @@ export default function InspoWallThreadPage({ params }: PageProps) {
 
                       {/* CONTENT */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="font-semibold text-[color:var(--text-primary)]">
-                            {reply.author}
-                          </span>
-                          <span className="text-xs text-[color:var(--text-tertiary)]">
-                            {reply.timeAgo}
-                          </span>
+                        <div className="flex items-baseline gap-2 mb-1 justify-between">
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-semibold text-[color:var(--text-primary)]">
+                              {reply.author}
+                            </span>
+                            <span className="text-xs text-[color:var(--text-tertiary)]">
+                              {reply.timeAgo}
+                            </span>
+                          </div>
+                          {isOwnReply(reply.author) && editingReplyId !== reply.id && (
+                            <PostActions
+                              onEdit={() => handleEditReply(reply)}
+                              onDelete={() => handleDeleteReply(reply.id)}
+                            />
+                          )}
                         </div>
-                        <p className="text-[color:var(--text-secondary)] leading-relaxed">
-                          {reply.body}
-                        </p>
-                        {reply.imageUrl && (
-                          <img
-                            src={reply.imageUrl}
-                            alt="Reply attachment"
-                            className="mt-2 rounded-lg max-w-xs"
-                          />
+                        {editingReplyId === reply.id ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              className="w-full border border-[color:var(--border-medium)] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] transition-all resize-none"
+                              rows={3}
+                            />
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleSaveEdit(reply.id)}
+                                disabled={!editText.trim()}
+                                className="px-3 py-1 rounded-lg bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[color:var(--text-primary)] text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={handleCancelEdit}
+                                className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-[color:var(--text-secondary)] leading-relaxed">
+                              {reply.body}
+                            </p>
+                            {reply.imageUrl && (
+                              <img
+                                src={reply.imageUrl}
+                                alt="Reply attachment"
+                                className="mt-2 rounded-lg max-w-xs"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

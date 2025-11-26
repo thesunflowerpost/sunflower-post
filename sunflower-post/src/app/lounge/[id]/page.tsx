@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import AnonymousToggle from "@/components/AnonymousToggle";
+import PostActions from "@/components/PostActions";
 import { BouncyButton, Sunburst } from "@/components/ui";
 import Link from "next/link";
 
@@ -144,6 +145,8 @@ export default function LoungeThreadPage({ params }: PageProps) {
     support: false,
     here: false,
   });
+  const [editingReplyId, setEditingReplyId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   // Toggle helper for reactions
   function toggleReaction(key: keyof UserReactions) {
@@ -172,6 +175,36 @@ export default function LoungeThreadPage({ params }: PageProps) {
     setReplies([...replies, newReply]);
     setReplyText("");
     setIsAnon(true); // Reset to anonymous after posting
+  }
+
+  function handleEditReply(reply: LoungeReply) {
+    setEditingReplyId(reply.id);
+    setEditText(reply.body);
+  }
+
+  function handleDeleteReply(replyId: number) {
+    setReplies(replies.filter((r) => r.id !== replyId));
+  }
+
+  function handleSaveEdit(replyId: number) {
+    if (!editText.trim()) return;
+    setReplies(
+      replies.map((r) =>
+        r.id === replyId ? { ...r, body: editText.trim() } : r
+      )
+    );
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function handleCancelEdit() {
+    setEditingReplyId(null);
+    setEditText("");
+  }
+
+  function isOwnReply(replyAuthor: string): boolean {
+    if (!user) return false;
+    return replyAuthor === user.name || replyAuthor === user.alias;
   }
 
   return (
@@ -300,17 +333,51 @@ export default function LoungeThreadPage({ params }: PageProps) {
                     </div>
 
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-[#5C4A33]">
-                          {reply.author}
-                        </span>
-                        <span className="text-[10px] text-[#A08960]">
-                          {reply.timeAgo}
-                        </span>
+                      <div className="flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-[#5C4A33]">
+                            {reply.author}
+                          </span>
+                          <span className="text-[10px] text-[#A08960]">
+                            {reply.timeAgo}
+                          </span>
+                        </div>
+                        {isOwnReply(reply.author) && editingReplyId !== reply.id && (
+                          <PostActions
+                            onEdit={() => handleEditReply(reply)}
+                            onDelete={() => handleDeleteReply(reply.id)}
+                          />
+                        )}
                       </div>
-                      <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed font-medium">
-                        {reply.body}
-                      </p>
+                      {editingReplyId === reply.id ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
+                            rows={3}
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleSaveEdit(reply.id)}
+                              disabled={!editText.trim()}
+                              className="px-3 py-1 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-[#5C4A33] whitespace-pre-line leading-relaxed font-medium">
+                          {reply.body}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
