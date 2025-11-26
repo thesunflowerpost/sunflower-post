@@ -16,6 +16,7 @@ export interface User {
   name: string;
   email: string;
   passwordHash: string;
+  alias: string; // Anonymous display name
   profilePicture?: string;
   sunflowerColor?: string;
   createdAt: string;

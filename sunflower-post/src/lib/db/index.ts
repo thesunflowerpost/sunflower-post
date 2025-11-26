@@ -79,6 +79,7 @@ export async function createUser(
       name: user.name,
       email: user.email.toLowerCase(),
       password_hash: user.passwordHash,
+      alias: user.alias,
       profile_picture: user.profilePicture,
       sunflower_color: user.sunflowerColor || 'classic',
     }])
@@ -96,13 +97,15 @@ export async function updateUser(
   id: string,
   updates: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'passwordHash'>>
 ): Promise<User | null> {
+  const updateData: any = {};
+  if (updates.name !== undefined) updateData.name = updates.name;
+  if (updates.alias !== undefined) updateData.alias = updates.alias;
+  if (updates.profilePicture !== undefined) updateData.profile_picture = updates.profilePicture;
+  if (updates.sunflowerColor !== undefined) updateData.sunflower_color = updates.sunflowerColor;
+
   const { data, error } = await supabase
     .from('users')
-    .update({
-      name: updates.name,
-      profile_picture: updates.profilePicture,
-      sunflower_color: updates.sunflowerColor,
-    })
+    .update(updateData)
     .eq('id', id)
     .select()
     .single();
@@ -355,6 +358,7 @@ function mapUserFromDb(dbUser: any): User {
     name: dbUser.name,
     email: dbUser.email,
     passwordHash: dbUser.password_hash,
+    alias: dbUser.alias,
     profilePicture: dbUser.profile_picture,
     sunflowerColor: dbUser.sunflower_color,
     createdAt: dbUser.created_at,

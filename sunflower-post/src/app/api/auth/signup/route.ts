@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createUser, getUserByEmail } from '@/lib/db';
 import { hashPassword } from '@/lib/auth/password';
 import { generateToken } from '@/lib/auth/jwt';
+import { generateAlias } from '@/lib/utils/aliasGenerator';
 
 /**
  * POST /api/auth/signup
@@ -48,11 +49,15 @@ export async function POST(request: NextRequest) {
     // Hash the password
     const passwordHash = await hashPassword(body.password);
 
+    // Generate a unique alias for anonymous posting
+    const alias = generateAlias();
+
     // Create the user
     const newUser = await createUser({
       name: body.name,
       email: body.email.toLowerCase(),
       passwordHash,
+      alias,
       sunflowerColor: body.color || 'classic',
       profilePicture: undefined,
     });
