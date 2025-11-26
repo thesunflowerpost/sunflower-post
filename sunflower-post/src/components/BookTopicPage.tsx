@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 
 type BookStatus = "Reading" | "Finished" | "To read";
 
@@ -129,6 +131,7 @@ type Props = {
 };
 
 export default function BookTopicPage({ bookId, topicId }: Props) {
+  const { user } = useAuth();
   const book = useMemo(
     () => SAMPLE_BOOKS.find((b) => b.id === bookId) ?? SAMPLE_BOOKS[0],
     [bookId]
@@ -140,7 +143,7 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
     {
       id: topicId,
       title: "Topic not found yet",
-      body: "This topic doesn’t exist in the sample data yet, but the page is wired. Once topics are stored in a real database, this will load properly.",
+      body: "This topic doesn't exist in the sample data yet, but the page is wired. Once topics are stored in a real database, this will load properly.",
       author: "System",
       timeAgo: "Just now",
       containsSpoilers: false,
@@ -149,6 +152,7 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
 
   const [topic, setTopic] = useState<BookTopic>(initialTopic);
   const [replyText, setReplyText] = useState("");
+  const [replyIsAnon, setReplyIsAnon] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   const [reactions, setReactions] = useState<UserReactions>({
@@ -174,6 +178,11 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
 
     setSubmitting(true);
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (replyIsAnon ? user.alias : user.name)
+      : "Someone in Book Club";
+
     const nextId =
       topic.replies.length > 0
         ? topic.replies[topic.replies.length - 1].id + 1
@@ -182,7 +191,7 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
     const newReply: TopicReply = {
       id: nextId,
       body: text,
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
     };
 
@@ -191,6 +200,7 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
       replies: [...prev.replies, newReply],
     }));
     setReplyText("");
+    setReplyIsAnon(true); // Reset to anonymous
     setSubmitting(false);
   }
 
@@ -363,6 +373,25 @@ export default function BookTopicPage({ bookId, topicId }: Props) {
                 className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
                 placeholder="You can share how this landed, a gentle disagreement, or a 'same'. No need to write an essay."
               />
+
+              {/* Anonymous Toggle */}
+              <div className="space-y-2">
+                {user && (
+                  <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                    <p className="text-xs font-medium text-[#5C4A33]">
+                      {replyIsAnon ? user.alias : user.name}
+                    </p>
+                  </div>
+                )}
+
+                <AnonymousToggle
+                  isAnonymous={replyIsAnon}
+                  onChange={setReplyIsAnon}
+                  userAlias={user?.alias}
+                />
+              </div>
+
               <div className="flex items-center justify-between gap-2">
                 <button
                   type="submit"
