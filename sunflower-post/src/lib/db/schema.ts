@@ -61,7 +61,8 @@ export interface Discussion {
   bookId: string;
   title: string;
   body: string;
-  author: string;
+  userId: string; // The actual user who created this
+  isAnonymous: boolean; // Whether to display with alias
   createdAt: string;
   replyCount: number;
 }
@@ -69,7 +70,8 @@ export interface Discussion {
 export interface Reply {
   id: string;
   discussionId: string;
-  author: string;
+  userId: string; // The actual user who created this
+  isAnonymous: boolean; // Whether to display with alias
   body: string;
   createdAt: string;
 }
@@ -115,7 +117,8 @@ export interface TVMovieDiscussion {
   tvMovieId: string;
   title: string;
   body: string;
-  author: string;
+  userId: string; // The actual user who created this
+  isAnonymous: boolean; // Whether to display with alias
   isSpoiler?: boolean;
   imageUrl?: string;
   gifUrl?: string;
@@ -126,7 +129,8 @@ export interface TVMovieDiscussion {
 export interface TVMovieReply {
   id: string;
   discussionId: string;
-  author: string;
+  userId: string; // The actual user who created this
+  isAnonymous: boolean; // Whether to display with alias
   body: string;
   isSpoiler?: boolean;
   imageUrl?: string;
