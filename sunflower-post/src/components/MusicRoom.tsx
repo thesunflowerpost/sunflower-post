@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, useRef, type FormEvent, useEffect } from "react";
 import { matchesSearch } from "@/lib/search";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -231,6 +233,7 @@ function findSimilarTracks(track: TrackItem, allTracks: TrackItem[]): TrackItem[
 }
 
 export default function MusicRoom() {
+  const { user } = useAuth();
   const [tracks, setTracks] = useState<TrackItem[]>(INITIAL_TRACKS);
   const [search, setSearch] = useState("");
   const [moodFilter, setMoodFilter] = useState<MoodFilter>("All moods");
@@ -242,6 +245,9 @@ export default function MusicRoom() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
+
+  // Track anonymous state per comment/track
+  const [commentAnonymous, setCommentAnonymous] = useState<Record<number, boolean>>({});
 
   const [expandedPlayerId, setExpandedPlayerId] = useState<number | null>(null);
   const [showSimilarFor, setShowSimilarFor] = useState<number | null>(null);
@@ -525,6 +531,12 @@ export default function MusicRoom() {
     const body = (commentDrafts[trackId] || "").trim();
     if (!body) return;
 
+    // Use user's alias if anonymous, real name if not
+    const isAnon = commentAnonymous[trackId] ?? true;
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in Music Room";
+
     setComments((prev) => {
       const existing = prev[trackId] || [];
       const nextId =
@@ -532,7 +544,7 @@ export default function MusicRoom() {
 
       const newComment: ThreadComment = {
         id: nextId,
-        author: "You",
+        author: displayName,
         body,
         timeAgo: "Just now",
       };
@@ -546,6 +558,12 @@ export default function MusicRoom() {
     setCommentDrafts((prev) => ({
       ...prev,
       [trackId]: "",
+    }));
+
+    // Reset anonymous state for this track to default (true)
+    setCommentAnonymous((prev) => ({
+      ...prev,
+      [trackId]: true,
     }));
   }
 

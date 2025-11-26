@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { BouncyButton, ShimmerIcon, LoadingState, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -57,6 +59,7 @@ const INITIAL_POSTS: LoungePost[] = [
 type UserReactions = Record<ReactionId, boolean>;
 
 export default function LoungeRoom() {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<LoungePost[]>(INITIAL_POSTS);
   const [activeFilter, setActiveFilter] =
     useState<(typeof FILTERS)[number]>("Today");
@@ -75,7 +78,7 @@ export default function LoungeRoom() {
     title: "",
     body: "",
     authorName: "",
-    isAnon: false,
+    isAnon: true,
   });
 
   // Image upload state (only for joy posts)
@@ -104,12 +107,17 @@ export default function LoungeRoom() {
 
     const finalImageUrl = postType === "joy" ? (filePreviewUrl || mediaUrl.trim() || undefined) : undefined;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (form.isAnon ? user.alias : user.name)
+      : "Someone in the Lounge";
+
     const newPost: LoungePost = {
       id: posts.length + 1,
       type: postType,
       title: form.title.trim() || (postType === "joy" ? "A small joy from today" : "Could use a gentle reminder"),
       body: form.body.trim() || (postType === "joy" ? "Something good happened today." : "Just having one or two kind words would mean a lot today."),
-      author: form.isAnon ? "Anon" : form.authorName.trim() || "You",
+      author: displayName,
       timeAgo: "Just now",
       replies: 0,
       imageUrl: finalImageUrl,
@@ -120,7 +128,7 @@ export default function LoungeRoom() {
       title: "",
       body: "",
       authorName: "",
-      isAnon: false,
+      isAnon: true,
     });
     setMediaUrl("");
     setFilePreviewUrl(null);
@@ -421,35 +429,21 @@ export default function LoungeRoom() {
                 )}
 
                 <div className="grid md:grid-cols-2 gap-4 items-start">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-[#5C4A33]">
-                      Your name (or initials)
-                    </label>
-                    <input
-                      type="text"
-                      value={form.authorName}
-                      onChange={(e) =>
-                        setForm((f) => ({
-                          ...f,
-                          authorName: e.target.value,
-                        }))
-                      }
-                      required={!form.isAnon}
-                      disabled={form.isAnon}
-                      placeholder='e.g. "Alex" or "A."'
-                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
+                  <div className="space-y-3">
+                    {user && (
+                      <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                        <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                        <p className="text-xs font-medium text-[#5C4A33]">
+                          {form.isAnon ? user.alias : user.name}
+                        </p>
+                      </div>
+                    )}
+
+                    <AnonymousToggle
+                      isAnonymous={form.isAnon}
+                      onChange={(isAnon) => setForm((f) => ({ ...f, isAnon }))}
+                      userAlias={user?.alias}
                     />
-                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
-                      <input
-                        type="checkbox"
-                        checked={form.isAnon}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, isAnon: e.target.checked }))
-                        }
-                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
-                      />
-                      <span>Post anonymously (still linked to your account)</span>
-                    </label>
                   </div>
 
                   <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">

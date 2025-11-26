@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -123,6 +125,7 @@ const INITIAL_POSTS: InspoPost[] = [
 ];
 
 export default function InspoWall() {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<InspoPost[]>(INITIAL_POSTS);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("All");
@@ -138,6 +141,7 @@ export default function InspoWall() {
     category: "Other" as InspoCategory,
     tags: "",
     source: "",
+    isAnon: true,
   });
 
   const [userReactions, setUserReactions] = useState<Record<number, InspoReactions>>({});
@@ -178,6 +182,11 @@ export default function InspoWall() {
 
     setSubmitting(true);
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (newPost.isAnon ? user.alias : user.name)
+      : "Someone at Inspo Wall";
+
     const post: InspoPost = {
       id: Date.now(),
       title: newPost.title || undefined,
@@ -187,7 +196,7 @@ export default function InspoWall() {
       category: newPost.category,
       tags: newPost.tags ? newPost.tags.split(",").map((t) => t.trim()) : undefined,
       source: newPost.source || undefined,
-      sharedBy: "You",
+      sharedBy: displayName,
       timeAgo: "Just now",
       saves: 0,
       replies: 0,
@@ -204,6 +213,7 @@ export default function InspoWall() {
       category: "Other",
       tags: "",
       source: "",
+      isAnon: true,
     });
     setShowAddForm(false);
     setSubmitting(false);
@@ -369,6 +379,23 @@ export default function InspoWall() {
                       onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                       placeholder="cozy, peaceful, minimal"
                       className="w-full px-3 py-2 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)]"
+                    />
+                  </div>
+
+                  <div className="space-y-3 pt-3 border-t border-[color:var(--border-soft)]">
+                    {user && (
+                      <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                        <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                        <p className="text-xs font-medium text-[#5C4A33]">
+                          {newPost.isAnon ? user.alias : user.name}
+                        </p>
+                      </div>
+                    )}
+
+                    <AnonymousToggle
+                      isAnonymous={newPost.isAnon}
+                      onChange={(isAnon) => setNewPost({ ...newPost, isAnon })}
+                      userAlias={user?.alias}
                     />
                   </div>
 

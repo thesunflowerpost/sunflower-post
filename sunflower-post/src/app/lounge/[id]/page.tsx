@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import { BouncyButton, Sunburst } from "@/components/ui";
 import Link from "next/link";
 
@@ -129,12 +131,14 @@ type PageProps = {
 };
 
 export default function LoungeThreadPage({ params }: PageProps) {
+  const { user } = useAuth();
   const id = Number(params.id);
   const post = POSTS.find((p) => p.id === id) ?? POSTS[0];
   const initialReplies = INITIAL_REPLIES_BY_POST[id] ?? [];
 
   const [replies, setReplies] = useState<LoungeReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [isAnon, setIsAnon] = useState(true);
   const [reactions, setReactions] = useState<UserReactions>({
     warmth: false,
     support: false,
@@ -153,15 +157,21 @@ export default function LoungeThreadPage({ params }: PageProps) {
     e.preventDefault();
     if (!replyText.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in the Lounge";
+
     const newReply: LoungeReply = {
       id: replies.length + 1,
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       body: replyText.trim(),
     };
 
     setReplies([...replies, newReply]);
     setReplyText("");
+    setIsAnon(true); // Reset to anonymous after posting
   }
 
   return (
@@ -340,6 +350,23 @@ export default function LoungeThreadPage({ params }: PageProps) {
                 placeholder="What would you say to yourself if you had posted this?"
                 className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all resize-none"
               />
+
+              <div className="space-y-3">
+                {user && (
+                  <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                    <p className="text-xs font-medium text-[#5C4A33]">
+                      {isAnon ? user.alias : user.name}
+                    </p>
+                  </div>
+                )}
+
+                <AnonymousToggle
+                  isAnonymous={isAnon}
+                  onChange={setIsAnon}
+                  userAlias={user?.alias}
+                />
+              </div>
 
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <BouncyButton

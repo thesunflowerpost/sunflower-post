@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { BouncyButton } from "./ui";
 
 type DilemmaCategory = "Work & Money" | "Dating & Relationships" | "Family & Boundaries" | "Health & Burnout" | "Friendships" | "Life";
@@ -146,6 +148,7 @@ function getAvatarColor(author: string): string {
 }
 
 export default function DilemmasRoom() {
+  const { user } = useAuth();
   const [dilemmas, setDilemmas] = useState<Dilemma[]>(INITIAL_DILEMMAS);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("All");
@@ -187,13 +190,18 @@ export default function DilemmasRoom() {
     e.preventDefault();
     if (!newDilemma.title.trim() || !newDilemma.body.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (newDilemma.isAnonymous ? user.alias : user.name)
+      : "Someone in Dilemmas";
+
     const dilemma: Dilemma = {
       id: Date.now(),
       title: newDilemma.title,
       body: newDilemma.body,
       category: newDilemma.category,
       urgency: newDilemma.urgency,
-      author: newDilemma.isAnonymous ? "Anon" : "You",
+      author: displayName,
       isAnonymous: newDilemma.isAnonymous,
       timeAgo: "Just now",
       replies: 0,
@@ -383,24 +391,33 @@ export default function DilemmasRoom() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[color:var(--border-soft)]">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={newDilemma.isAnonymous}
-                        onChange={(e) => setNewDilemma({ ...newDilemma, isAnonymous: e.target.checked })}
-                        className="w-4 h-4 rounded border-[color:var(--border-medium)] text-[color:var(--sunflower-gold)] focus:ring-[color:var(--sunflower-gold)]"
-                      />
-                      <span className="text-sm text-[color:var(--text-secondary)]">Post anonymously</span>
-                    </label>
+                  <div className="pt-4 border-t border-[color:var(--border-soft)] space-y-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="space-y-3">
+                        {user && (
+                          <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                            <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                            <p className="text-xs font-medium text-[#5C4A33]">
+                              {newDilemma.isAnonymous ? user.alias : user.name}
+                            </p>
+                          </div>
+                        )}
 
-                    <button
-                      type="submit"
-                      disabled={!newDilemma.title.trim() || !newDilemma.body.trim()}
-                      className="bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] disabled:bg-gray-200 disabled:text-gray-400 text-[color:var(--text-primary)] px-6 py-2.5 rounded-full font-semibold shadow-[var(--shadow-soft)] transition-colors"
-                    >
-                      Post dilemma
-                    </button>
+                        <AnonymousToggle
+                          isAnonymous={newDilemma.isAnonymous}
+                          onChange={(isAnonymous) => setNewDilemma({ ...newDilemma, isAnonymous })}
+                          userAlias={user?.alias}
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={!newDilemma.title.trim() || !newDilemma.body.trim()}
+                        className="bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] disabled:bg-gray-200 disabled:text-gray-400 text-[color:var(--text-primary)] px-6 py-2.5 rounded-full font-semibold shadow-[var(--shadow-soft)] transition-colors"
+                      >
+                        Post dilemma
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
