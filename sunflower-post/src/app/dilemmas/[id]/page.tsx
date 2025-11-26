@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
 import AnonymousToggle from "@/components/AnonymousToggle";
+import PostActions from "@/components/PostActions";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -138,6 +139,8 @@ export default function DilemmaThreadPage({ params }: PageProps) {
   const [isAnon, setIsAnon] = useState(true);
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
   const [sameBoat, setSameBoat] = useState(false);
+  const [editingPerspectiveId, setEditingPerspectiveId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   const urgencyBadge = getUrgencyLabel(dilemma.urgency);
 
@@ -169,6 +172,36 @@ export default function DilemmaThreadPage({ params }: PageProps) {
     setPerspectiveText("");
     setIsAnon(true); // Reset to anonymous after posting
   };
+
+  function handleEditPerspective(perspective: Perspective) {
+    setEditingPerspectiveId(perspective.id);
+    setEditText(perspective.body);
+  }
+
+  function handleDeletePerspective(perspectiveId: number) {
+    setPerspectives(perspectives.filter((p) => p.id !== perspectiveId));
+  }
+
+  function handleSaveEdit(perspectiveId: number) {
+    if (!editText.trim()) return;
+    setPerspectives(
+      perspectives.map((p) =>
+        p.id === perspectiveId ? { ...p, body: editText.trim() } : p
+      )
+    );
+    setEditingPerspectiveId(null);
+    setEditText("");
+  }
+
+  function handleCancelEdit() {
+    setEditingPerspectiveId(null);
+    setEditText("");
+  }
+
+  function isOwnPerspective(perspectiveAuthor: string): boolean {
+    if (!user) return false;
+    return perspectiveAuthor === user.name || perspectiveAuthor === user.alias;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -336,21 +369,57 @@ export default function DilemmaThreadPage({ params }: PageProps) {
 
                       {/* CONTENT */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="font-semibold text-[color:var(--text-primary)]">
-                            {perspective.author}
-                          </span>
-                          <span className="text-xs text-[color:var(--text-tertiary)]">
-                            {perspective.timeAgo}
-                          </span>
+                        <div className="flex items-baseline gap-2 mb-1 justify-between">
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-semibold text-[color:var(--text-primary)]">
+                              {perspective.author}
+                            </span>
+                            <span className="text-xs text-[color:var(--text-tertiary)]">
+                              {perspective.timeAgo}
+                            </span>
+                          </div>
+                          {isOwnPerspective(perspective.author) && editingPerspectiveId !== perspective.id && (
+                            <PostActions
+                              onEdit={() => handleEditPerspective(perspective)}
+                              onDelete={() => handleDeletePerspective(perspective.id)}
+                            />
+                          )}
                         </div>
-                        <p className="text-[color:var(--text-secondary)] leading-relaxed mb-2">
-                          {perspective.body}
-                        </p>
-                        {perspective.isHelpful && (
-                          <span className="inline-flex items-center gap-1 text-xs text-[color:var(--text-tertiary)] bg-white px-2 py-1 rounded-full border border-[color:var(--border-soft)]">
-                            💡 Marked helpful by OP
-                          </span>
+                        {editingPerspectiveId === perspective.id ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              className="w-full border border-[color:var(--border-medium)] rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] transition-all resize-none"
+                              rows={3}
+                            />
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleSaveEdit(perspective.id)}
+                                disabled={!editText.trim()}
+                                className="px-3 py-1 rounded-lg bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[color:var(--text-primary)] text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={handleCancelEdit}
+                                className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-[color:var(--text-secondary)] leading-relaxed mb-2">
+                              {perspective.body}
+                            </p>
+                            {perspective.isHelpful && (
+                              <span className="inline-flex items-center gap-1 text-xs text-[color:var(--text-tertiary)] bg-white px-2 py-1 rounded-full border border-[color:var(--border-soft)]">
+                                💡 Marked helpful by OP
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
