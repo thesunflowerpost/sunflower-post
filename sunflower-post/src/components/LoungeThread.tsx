@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import AnonymousToggle from "./AnonymousToggle";
 
 type LoungePostType = "joy" | "pickmeup" | "softrant";
 
@@ -83,9 +85,9 @@ export default function LoungeThread({ postId }: Props) {
   const post =
     THREAD_POSTS.find((p) => p.id === postId) ?? THREAD_POSTS[1]; // default to id 2
 
+  const { user } = useAuth();
   const [replies, setReplies] = useState<Reply[]>(INITIAL_REPLIES);
   const [replyBody, setReplyBody] = useState("");
-  const [replyName, setReplyName] = useState("");
   const [replyMediaUrl, setReplyMediaUrl] = useState(""); // external URL (Giphy, etc.)
   const [replyFilePreviewUrl, setReplyFilePreviewUrl] = useState<string | null>(
     null
@@ -105,10 +107,14 @@ export default function LoungeThread({ postId }: Props) {
     const trimmedExternal = replyMediaUrl.trim();
     const finalMediaUrl = replyFilePreviewUrl || (trimmedExternal || undefined);
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in the Lounge";
+
     const newReply: Reply = {
       id: replies.length + 1,
-      author:
-        isAnon || !replyName.trim() ? "Someone in the Lounge" : replyName.trim(),
+      author: displayName,
       body: replyBody.trim(),
       timeAgo: "Just now",
       isOp: false,
@@ -117,7 +123,6 @@ export default function LoungeThread({ postId }: Props) {
 
     setReplies([...replies, newReply]);
     setReplyBody("");
-    setReplyName("");
     setReplyMediaUrl("");
     setReplyFilePreviewUrl(null);
     setIsAnon(true);
@@ -307,26 +312,21 @@ export default function LoungeThread({ postId }: Props) {
           </div>
 
           <div className="grid md:grid-cols-2 gap-3 items-start">
-            <div className="space-y-1">
-              <label className="text-[11px] font-medium text-[#5C4A33]">
-                Name (optional)
-              </label>
-              <input
-                type="text"
-                value={replyName}
-                onChange={(e) => setReplyName(e.target.value)}
-                placeholder="Leave blank if you’d like to stay a bit anonymous."
-                className="w-full border border-yellow-100 rounded-xl px-3 py-2 text-xs bg-[#FFFEFA] focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            <div className="space-y-3">
+              {user && (
+                <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                  <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                  <p className="text-xs font-medium text-[#5C4A33]">
+                    {isAnon ? user.alias : user.name}
+                  </p>
+                </div>
+              )}
+
+              <AnonymousToggle
+                isAnonymous={isAnon}
+                onChange={setIsAnon}
+                userAlias={user?.alias}
               />
-              <label className="inline-flex items-center gap-2 mt-1 text-[11px] text-[#7A674C]">
-                <input
-                  type="checkbox"
-                  checked={isAnon}
-                  onChange={(e) => setIsAnon(e.target.checked)}
-                  className="rounded border-yellow-300"
-                />
-                <span>Post without my name</span>
-              </label>
             </div>
 
             <div className="space-y-1 text-[11px] text-[#7A674C]">

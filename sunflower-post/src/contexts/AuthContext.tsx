@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  alias: string; // Anonymous display name
   profilePicture?: string;
   sunflowerColor?: string;
 }
