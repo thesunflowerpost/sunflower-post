@@ -5,7 +5,7 @@
  * All functions maintain the same API interface as the previous JSON-based implementation.
  */
 
-import { supabase } from '../supabase';
+import { supabase } from '@/lib/supabase';
 import type { User, Book, BookStatus, TVMovie, TVMovieStatus, TVMovieDiscussion, TVMovieReply } from './schema';
 
 // ============================================================================
