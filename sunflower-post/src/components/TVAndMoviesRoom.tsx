@@ -5,6 +5,7 @@ import { matchesSearch } from "@/lib/search";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
+import PostActions from "./PostActions";
 import { ReactionBar } from "./ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -37,6 +38,17 @@ export default function TVAndMoviesRoom() {
   const [addError, setAddError] = useState<string | null>(null);
   const [reactions, setReactions] = useState<UserReactions>({});
   const [userStatuses, setUserStatuses] = useState<Record<string, TVMovieStatus>>({});
+
+  // Editing state
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [editItemForm, setEditItemForm] = useState({
+    title: "",
+    mood: "",
+    note: "",
+    genre: "",
+    era: "",
+    platform: "",
+  });
 
   const [newItem, setNewItem] = useState({
     type: "TV series" as "TV series" | "Movie",
@@ -224,6 +236,72 @@ export default function TVAndMoviesRoom() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleEditItem(item: TVMovie) {
+    setEditingItemId(item.id);
+    setEditItemForm({
+      title: item.title,
+      mood: item.mood || "",
+      note: item.note || "",
+      genre: item.genre || "",
+      era: item.era || "",
+      platform: item.platform || "",
+    });
+  }
+
+  async function handleDeleteItem(itemId: string) {
+    try {
+      const res = await fetch(`/api/tv-movies/${itemId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setItems(items.filter((i) => i.id !== itemId));
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  }
+
+  async function handleSaveItemEdit(itemId: string) {
+    if (!editItemForm.title.trim()) return;
+
+    try {
+      const res = await fetch(`/api/tv-movies/${itemId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editItemForm.title.trim(),
+          mood: editItemForm.mood.trim() || undefined,
+          note: editItemForm.note.trim() || undefined,
+          genre: editItemForm.genre.trim() || undefined,
+          era: editItemForm.era.trim() || undefined,
+          platform: editItemForm.platform.trim() || undefined,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setItems(
+          items.map((i) =>
+            i.id === itemId ? data.tvMovie : i
+          )
+        );
+        setEditingItemId(null);
+      }
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
+  }
+
+  function handleCancelItemEdit() {
+    setEditingItemId(null);
+  }
+
+  function isOwnItem(itemSharedBy: string): boolean {
+    if (!user) return false;
+    return itemSharedBy === user.name || itemSharedBy === user.alias;
   }
 
   function moodEmoji(mood: string) {
@@ -614,68 +692,133 @@ export default function TVAndMoviesRoom() {
                         </div>
 
                         <div className="flex-1 min-w-0 space-y-2">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-semibold text-[#5C4A33]">
-                              {item.sharedBy}
-                            </span>
-                            <span className="text-[10px] text-[#A08960]">
-                              {new Date(item.createdAt).toLocaleDateString()}
-                            </span>
-                            <span className="flex items-center gap-1 text-[10px]">
-                              <span>{moodEmoji(item.mood)}</span>
-                              <span className="text-[#7A674C]">{item.mood}</span>
-                            </span>
-                            <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33] text-[10px]">
-                              {item.type}
-                            </span>
-                            {item.era && (
+                          <div className="flex items-center gap-2 flex-wrap justify-between">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-semibold text-[#5C4A33]">
+                                {item.sharedBy}
+                              </span>
+                              <span className="text-[10px] text-[#A08960]">
+                                {new Date(item.createdAt).toLocaleDateString()}
+                              </span>
+                              <span className="flex items-center gap-1 text-[10px]">
+                                <span>{moodEmoji(item.mood)}</span>
+                                <span className="text-[#7A674C]">{item.mood}</span>
+                              </span>
                               <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33] text-[10px]">
-                                {item.era}
+                                {item.type}
                               </span>
-                            )}
-                            {statusBadge && (
-                              <span className={`px-2 py-[2px] rounded-full border text-[10px] font-semibold ${statusBadge.color}`}>
-                                {statusBadge.emoji} {userStatus}
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex gap-3">
-                            {/* Cover Image */}
-                            {item.coverUrl && (
-                              <div className="w-20 h-28 md:w-24 md:h-32 rounded-lg overflow-hidden bg-yellow-50 border-2 border-yellow-100 flex-shrink-0 shadow-md">
-                                <img
-                                  src={item.coverUrl}
-                                  alt={`Cover for ${item.title}`}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            )}
-
-                            <div className="flex-1">
-                              <Link
-                                href={`/tv-movies/${item.id}`}
-                                className="text-base font-bold text-yellow-900 leading-snug hover:text-yellow-700 transition-colors"
-                              >
-                                {item.title}
-                              </Link>
-                              <p className="text-xs text-[#7A674C] mt-0.5">
-                                {item.genre && <span>{item.genre}</span>}
-                                {item.platform && (
-                                  <span>
-                                    {item.genre ? " · " : ""}
-                                    <span className="italic">{item.platform}</span>
-                                  </span>
-                                )}
-                              </p>
-
-                              {item.note && (
-                                <p className="text-xs text-[#5C4A33] mt-2 leading-relaxed">
-                                  {item.note}
-                                </p>
+                              {item.era && (
+                                <span className="px-2 py-[2px] rounded-full border border-yellow-100 bg-yellow-50 text-[#5C4A33] text-[10px]">
+                                  {item.era}
+                                </span>
+                              )}
+                              {statusBadge && (
+                                <span className={`px-2 py-[2px] rounded-full border text-[10px] font-semibold ${statusBadge.color}`}>
+                                  {statusBadge.emoji} {userStatus}
+                                </span>
                               )}
                             </div>
+                            {isOwnItem(item.sharedBy) && editingItemId !== item.id && (
+                              <PostActions
+                                onEdit={() => handleEditItem(item)}
+                                onDelete={() => handleDeleteItem(item.id)}
+                                className="flex-shrink-0"
+                              />
+                            )}
                           </div>
+
+                          {editingItemId === item.id ? (
+                            <div className="space-y-3 p-3 bg-yellow-50/50 rounded-lg border border-yellow-200">
+                              <input
+                                type="text"
+                                value={editItemForm.title}
+                                onChange={(e) =>
+                                  setEditItemForm((prev) => ({ ...prev, title: e.target.value }))
+                                }
+                                placeholder="Title"
+                                className="w-full border border-yellow-200 rounded-lg px-3 py-2 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                              />
+                              <input
+                                type="text"
+                                value={editItemForm.mood}
+                                onChange={(e) =>
+                                  setEditItemForm((prev) => ({ ...prev, mood: e.target.value }))
+                                }
+                                placeholder="Mood"
+                                className="w-full border border-yellow-200 rounded-lg px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                              />
+                              <input
+                                type="text"
+                                value={editItemForm.genre}
+                                onChange={(e) =>
+                                  setEditItemForm((prev) => ({ ...prev, genre: e.target.value }))
+                                }
+                                placeholder="Genre (optional)"
+                                className="w-full border border-yellow-200 rounded-lg px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                              />
+                              <textarea
+                                value={editItemForm.note}
+                                onChange={(e) =>
+                                  setEditItemForm((prev) => ({ ...prev, note: e.target.value }))
+                                }
+                                placeholder="Note (optional)"
+                                rows={2}
+                                className="w-full border border-yellow-200 rounded-lg px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 resize-none"
+                              />
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleSaveItemEdit(item.id)}
+                                  disabled={!editItemForm.title.trim()}
+                                  className="px-3 py-1 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={handleCancelItemEdit}
+                                  className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex gap-3">
+                              {/* Cover Image */}
+                              {item.coverUrl && (
+                                <div className="w-20 h-28 md:w-24 md:h-32 rounded-lg overflow-hidden bg-yellow-50 border-2 border-yellow-100 flex-shrink-0 shadow-md">
+                                  <img
+                                    src={item.coverUrl}
+                                    alt={`Cover for ${item.title}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+
+                              <div className="flex-1">
+                                <Link
+                                  href={`/tv-movies/${item.id}`}
+                                  className="text-base font-bold text-yellow-900 leading-snug hover:text-yellow-700 transition-colors"
+                                >
+                                  {item.title}
+                                </Link>
+                                <p className="text-xs text-[#7A674C] mt-0.5">
+                                  {item.genre && <span>{item.genre}</span>}
+                                  {item.platform && (
+                                    <span>
+                                      {item.genre ? " · " : ""}
+                                      <span className="italic">{item.platform}</span>
+                                    </span>
+                                  )}
+                                </p>
+
+                                {item.note && (
+                                  <p className="text-xs text-[#5C4A33] mt-2 leading-relaxed">
+                                    {item.note}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 

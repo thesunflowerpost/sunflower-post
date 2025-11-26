@@ -6,6 +6,7 @@ import { matchesSearch } from "@/lib/search";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
+import PostActions from "./PostActions";
 import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -251,6 +252,20 @@ export default function MusicRoom() {
 
   const [expandedPlayerId, setExpandedPlayerId] = useState<number | null>(null);
   const [showSimilarFor, setShowSimilarFor] = useState<number | null>(null);
+
+  // Track editing state
+  const [editingTrackId, setEditingTrackId] = useState<number | null>(null);
+  const [editTrackForm, setEditTrackForm] = useState({
+    title: "",
+    artist: "",
+    mood: "",
+    note: "",
+    genre: "",
+    era: "",
+    source: "",
+    link: "",
+    favoriteLyric: "",
+  });
 
   const [newTrack, setNewTrack] = useState({
     title: "",
@@ -568,6 +583,64 @@ export default function MusicRoom() {
       ...prev,
       [trackId]: true,
     }));
+  }
+
+  function handleEditTrack(track: TrackItem) {
+    setEditingTrackId(track.id);
+    setEditTrackForm({
+      title: track.title,
+      artist: track.artist,
+      mood: track.mood,
+      note: track.note || "",
+      genre: track.genre || "",
+      era: track.era || "",
+      source: track.source || "",
+      link: track.link || "",
+      favoriteLyric: track.favoriteLyric || "",
+    });
+  }
+
+  function handleDeleteTrack(trackId: number) {
+    setTracks(tracks.filter((t) => t.id !== trackId));
+    // Also clean up related state
+    setComments((prev) => {
+      const newComments = { ...prev };
+      delete newComments[trackId];
+      return newComments;
+    });
+  }
+
+  function handleSaveTrackEdit(trackId: number) {
+    if (!editTrackForm.title.trim() || !editTrackForm.artist.trim()) return;
+
+    setTracks(
+      tracks.map((t) =>
+        t.id === trackId
+          ? {
+              ...t,
+              title: editTrackForm.title.trim(),
+              artist: editTrackForm.artist.trim(),
+              mood: editTrackForm.mood.trim() || t.mood,
+              note: editTrackForm.note.trim() || undefined,
+              genre: editTrackForm.genre.trim() || undefined,
+              era: editTrackForm.era.trim() || undefined,
+              source: editTrackForm.source.trim() || undefined,
+              link: editTrackForm.link.trim() || undefined,
+              favoriteLyric: editTrackForm.favoriteLyric.trim() || undefined,
+            }
+          : t
+      )
+    );
+    setEditingTrackId(null);
+  }
+
+  function handleCancelTrackEdit() {
+    setEditingTrackId(null);
+  }
+
+  function isOwnTrack(trackSharedBy: string): boolean {
+    if (!user) return false;
+    return trackSharedBy === user.name || trackSharedBy === user.alias;
   }
 
   return (
@@ -1141,14 +1214,81 @@ export default function MusicRoom() {
                     <div className="p-3 flex-1 flex flex-col">
                       {/* TOP SECTION */}
                       <div className="flex-1 min-h-0 mb-3">
-                        <Link href={`/music-room/${track.id}`}>
-                          <h3 className="text-sm font-bold text-yellow-900 mb-0.5 hover:text-yellow-700 transition-colors line-clamp-2 leading-tight">
-                            {track.title}
-                          </h3>
-                        </Link>
-                        <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
-                          {track.artist}
-                        </p>
+                        {editingTrackId === track.id ? (
+                          <div className="space-y-2">
+                            <input
+                              type="text"
+                              value={editTrackForm.title}
+                              onChange={(e) =>
+                                setEditTrackForm((prev) => ({ ...prev, title: e.target.value }))
+                              }
+                              placeholder="Song title"
+                              className="w-full border border-yellow-200 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                            />
+                            <input
+                              type="text"
+                              value={editTrackForm.artist}
+                              onChange={(e) =>
+                                setEditTrackForm((prev) => ({ ...prev, artist: e.target.value }))
+                              }
+                              placeholder="Artist"
+                              className="w-full border border-yellow-200 rounded-lg px-2 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                            />
+                            <input
+                              type="text"
+                              value={editTrackForm.mood}
+                              onChange={(e) =>
+                                setEditTrackForm((prev) => ({ ...prev, mood: e.target.value }))
+                              }
+                              placeholder="Mood"
+                              className="w-full border border-yellow-200 rounded-lg px-2 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50"
+                            />
+                            <textarea
+                              value={editTrackForm.note}
+                              onChange={(e) =>
+                                setEditTrackForm((prev) => ({ ...prev, note: e.target.value }))
+                              }
+                              placeholder="Note (optional)"
+                              rows={2}
+                              className="w-full border border-yellow-200 rounded-lg px-2 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 resize-none"
+                            />
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleSaveTrackEdit(track.id)}
+                                disabled={!editTrackForm.title.trim() || !editTrackForm.artist.trim()}
+                                className="px-3 py-1 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={handleCancelTrackEdit}
+                                className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex items-start justify-between gap-2 mb-1">
+                              <Link href={`/music-room/${track.id}`} className="flex-1 min-w-0">
+                                <h3 className="text-sm font-bold text-yellow-900 hover:text-yellow-700 transition-colors line-clamp-2 leading-tight">
+                                  {track.title}
+                                </h3>
+                              </Link>
+                              {isOwnTrack(track.sharedBy) && (
+                                <PostActions
+                                  onEdit={() => handleEditTrack(track)}
+                                  onDelete={() => handleDeleteTrack(track.id)}
+                                  className="flex-shrink-0"
+                                />
+                              )}
+                            </div>
+                            <p className="text-xs text-[#7A674C] mb-2 line-clamp-1">
+                              {track.artist}
+                            </p>
+                          </>
+                        )}
                       </div>
 
                       {/* BOTTOM SECTION - Fixed at bottom */}
