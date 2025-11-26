@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import GiphyPicker from "@/components/GiphyPicker";
 import Link from "next/link";
@@ -112,12 +114,14 @@ type PageProps = {
 };
 
 export default function InspoWallThreadPage({ params }: PageProps) {
+  const { user } = useAuth();
   const id = Number(params.id);
   const post = POSTS.find((p) => p.id === id) ?? POSTS[0];
   const initialReplies = INITIAL_REPLIES_BY_POST[id] ?? [];
 
   const [replies, setReplies] = useState<InspoReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [isAnon, setIsAnon] = useState(true);
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
   const [isSaved, setIsSaved] = useState(false);
   const [showGiphyPicker, setShowGiphyPicker] = useState(false);
@@ -139,9 +143,14 @@ export default function InspoWallThreadPage({ params }: PageProps) {
     e.preventDefault();
     if (!replyText.trim() && !selectedGif) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone at Inspo Wall";
+
     const newReply: InspoReply = {
       id: Date.now(),
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       body: replyText,
       imageUrl: selectedGif || undefined,
@@ -150,6 +159,7 @@ export default function InspoWallThreadPage({ params }: PageProps) {
     setReplies([...replies, newReply]);
     setReplyText("");
     setSelectedGif(null);
+    setIsAnon(true); // Reset to anonymous after posting
   };
 
   return (
@@ -307,7 +317,25 @@ export default function InspoWallThreadPage({ params }: PageProps) {
                   </div>
                 )}
 
-                <div className="flex justify-between items-center mt-2">
+                {/* ANONYMOUS TOGGLE */}
+                <div className="space-y-3 mt-3">
+                  {user && (
+                    <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                      <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                      <p className="text-xs font-medium text-[#5C4A33]">
+                        {isAnon ? user.alias : user.name}
+                      </p>
+                    </div>
+                  )}
+
+                  <AnonymousToggle
+                    isAnonymous={isAnon}
+                    onChange={setIsAnon}
+                    userAlias={user?.alias}
+                  />
+                </div>
+
+                <div className="flex justify-between items-center mt-3">
                   <button
                     type="button"
                     onClick={() => setShowGiphyPicker(true)}

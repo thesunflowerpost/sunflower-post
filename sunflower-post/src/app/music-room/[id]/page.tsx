@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useRef, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -164,12 +166,14 @@ type PageProps = {
 };
 
 export default function MusicRoomThreadPage({ params }: PageProps) {
+  const { user } = useAuth();
   const id = Number(params.id);
   const track = TRACKS.find((t) => t.id === id) ?? TRACKS[0];
   const initialReplies = INITIAL_REPLIES_BY_TRACK[id] ?? [];
 
   const [replies, setReplies] = useState<TrackReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [isAnon, setIsAnon] = useState(true);
   const [mediaUrl, setMediaUrl] = useState("");
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
 
@@ -185,9 +189,14 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
     e.preventDefault();
     if (!replyText.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in Music Room";
+
     const newReply: TrackReply = {
       id: replies.length + 1,
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       body: replyText.trim(),
       ...(mediaUrl.trim() && { imageUrl: mediaUrl.trim() }),
@@ -196,6 +205,7 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
     setReplies([...replies, newReply]);
     setReplyText("");
     setMediaUrl("");
+    setIsAnon(true); // Reset to anonymous after posting
   }
 
   return (
@@ -492,6 +502,23 @@ export default function MusicRoomThreadPage({ params }: PageProps) {
                     </div>
                   )}
                 </div>
+              </div>
+
+              <div className="space-y-3">
+                {user && (
+                  <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                    <p className="text-xs font-medium text-[#5C4A33]">
+                      {isAnon ? user.alias : user.name}
+                    </p>
+                  </div>
+                )}
+
+                <AnonymousToggle
+                  isAnonymous={isAnon}
+                  onChange={setIsAnon}
+                  userAlias={user?.alias}
+                />
               </div>
 
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">

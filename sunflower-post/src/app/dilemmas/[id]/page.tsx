@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import { BouncyButton, ReactionBar } from "@/components/ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -126,12 +128,14 @@ type PageProps = {
 };
 
 export default function DilemmaThreadPage({ params }: PageProps) {
+  const { user } = useAuth();
   const id = Number(params.id);
   const dilemma = DILEMMAS.find((d) => d.id === id) ?? DILEMMAS[0];
   const initialPerspectives = INITIAL_PERSPECTIVES[id] ?? [];
 
   const [perspectives, setPerspectives] = useState<Perspective[]>(initialPerspectives);
   const [perspectiveText, setPerspectiveText] = useState("");
+  const [isAnon, setIsAnon] = useState(true);
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
   const [sameBoat, setSameBoat] = useState(false);
 
@@ -148,9 +152,14 @@ export default function DilemmaThreadPage({ params }: PageProps) {
     e.preventDefault();
     if (!perspectiveText.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in Dilemmas";
+
     const newPerspective: Perspective = {
       id: Date.now(),
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       body: perspectiveText,
       isHelpful: false,
@@ -158,6 +167,7 @@ export default function DilemmaThreadPage({ params }: PageProps) {
 
     setPerspectives([...perspectives, newPerspective]);
     setPerspectiveText("");
+    setIsAnon(true); // Reset to anonymous after posting
   };
 
   return (
@@ -266,7 +276,7 @@ export default function DilemmaThreadPage({ params }: PageProps) {
               </p>
 
               {/* PERSPECTIVE FORM */}
-              <form onSubmit={handleSubmitPerspective} className="mb-6">
+              <form onSubmit={handleSubmitPerspective} className="mb-6 space-y-4">
                 <textarea
                   value={perspectiveText}
                   onChange={(e) => setPerspectiveText(e.target.value)}
@@ -274,7 +284,25 @@ export default function DilemmaThreadPage({ params }: PageProps) {
                   rows={4}
                   className="w-full px-4 py-3 border border-[color:var(--border-medium)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[color:var(--sunflower-gold)] resize-none"
                 />
-                <div className="flex justify-end mt-2">
+
+                <div className="space-y-3">
+                  {user && (
+                    <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                      <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                      <p className="text-xs font-medium text-[#5C4A33]">
+                        {isAnon ? user.alias : user.name}
+                      </p>
+                    </div>
+                  )}
+
+                  <AnonymousToggle
+                    isAnonymous={isAnon}
+                    onChange={setIsAnon}
+                    userAlias={user?.alias}
+                  />
+                </div>
+
+                <div className="flex justify-end">
                   <BouncyButton
                     type="submit"
                     disabled={!perspectiveText.trim()}
