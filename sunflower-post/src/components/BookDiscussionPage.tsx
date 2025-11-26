@@ -2,7 +2,9 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { ReactionBar } from "./ui";
 import GiphyPicker from "./GiphyPicker";
 import ImageUpload from "./ImageUpload";
@@ -137,6 +139,7 @@ type Props = {
 };
 
 export default function BookDiscussionPage({ bookId }: Props) {
+  const { user } = useAuth();
   const book = useMemo(
     () => SAMPLE_BOOKS.find((b) => b.id === bookId) ?? SAMPLE_BOOKS[0],
     [bookId]
@@ -154,6 +157,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
     containsSpoilers: false,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [topicIsAnon, setTopicIsAnon] = useState(true);
 
   // Discussion GIF and image state
   const [discussionGifUrl, setDiscussionGifUrl] = useState<string>("");
@@ -166,6 +170,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
   const [replySubmitting, setReplySubmitting] = useState<
     Record<number, boolean>
   >({});
+  const [replyIsAnon, setReplyIsAnon] = useState<Record<number, boolean>>({});
 
   // Reply GIF and image state (per topic)
   const [replyGifUrls, setReplyGifUrls] = useState<Record<number, string>>({});
@@ -212,6 +217,11 @@ export default function BookDiscussionPage({ bookId }: Props) {
 
     setSubmitting(true);
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (topicIsAnon ? user.alias : user.name)
+      : "Someone in Book Club";
+
     const nextId = topics.length > 0 ? topics[0].id + 1 : 1;
 
     const newTopic: BookTopic = {
@@ -222,7 +232,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
       body:
         draft.body.trim() ||
         "This book landed in a way I don't fully have words for yet, but I wanted to mark that it did.",
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       containsSpoilers: draft.containsSpoilers,
       replies: [],
@@ -236,6 +246,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
       body: "",
       containsSpoilers: false,
     });
+    setTopicIsAnon(true); // Reset to anonymous
     setDiscussionGifUrl("");
     setDiscussionImageUrl("");
     setSubmitting(false);
@@ -248,6 +259,12 @@ export default function BookDiscussionPage({ bookId }: Props) {
 
     setReplySubmitting((prev) => ({ ...prev, [topicId]: true }));
 
+    // Use user's alias if anonymous, real name if not
+    const isAnon = replyIsAnon[topicId] ?? true;
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone in Book Club";
+
     setTopics((prevTopics) =>
       prevTopics.map((topic) => {
         if (topic.id !== topicId) return topic;
@@ -259,7 +276,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
         const newReply: TopicReply = {
           id: nextReplyId,
           body: text,
-          author: "You",
+          author: displayName,
           timeAgo: "Just now",
           gifUrl: replyGifUrls[topicId] || undefined,
           imageUrl: replyImageUrls[topicId] || undefined,
@@ -275,6 +292,7 @@ export default function BookDiscussionPage({ bookId }: Props) {
     setReplyDrafts((prev) => ({ ...prev, [topicId]: "" }));
     setReplyGifUrls((prev) => ({ ...prev, [topicId]: "" }));
     setReplyImageUrls((prev) => ({ ...prev, [topicId]: "" }));
+    setReplyIsAnon((prev) => ({ ...prev, [topicId]: true })); // Reset to anonymous
     setReplySubmitting((prev) => ({ ...prev, [topicId]: false }));
   }
 
@@ -598,6 +616,24 @@ export default function BookDiscussionPage({ bookId }: Props) {
                       </button>
                     </div>
 
+                    {/* Anonymous Toggle for Reply */}
+                    <div className="space-y-2">
+                      {user && (
+                        <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                          <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                          <p className="text-xs font-medium text-[#5C4A33]">
+                            {(replyIsAnon[topic.id] ?? true) ? user.alias : user.name}
+                          </p>
+                        </div>
+                      )}
+
+                      <AnonymousToggle
+                        isAnonymous={replyIsAnon[topic.id] ?? true}
+                        onChange={(isAnon) => setReplyIsAnon((prev) => ({ ...prev, [topic.id]: isAnon }))}
+                        userAlias={user?.alias}
+                      />
+                    </div>
+
                     <div className="flex items-center justify-between gap-2">
                       <button
                         type="submit"
@@ -776,6 +812,24 @@ export default function BookDiscussionPage({ bookId }: Props) {
                   <span>📷</span>
                   <span>Add Image</span>
                 </button>
+              </div>
+
+              {/* Anonymous Toggle */}
+              <div className="space-y-3">
+                {user && (
+                  <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                    <p className="text-xs font-medium text-[#5C4A33]">
+                      {topicIsAnon ? user.alias : user.name}
+                    </p>
+                  </div>
+                )}
+
+                <AnonymousToggle
+                  isAnonymous={topicIsAnon}
+                  onChange={setTopicIsAnon}
+                  userAlias={user?.alias}
+                />
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
