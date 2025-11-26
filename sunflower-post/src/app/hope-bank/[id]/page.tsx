@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "@/components/CommunitySidebar";
+import AnonymousToggle from "@/components/AnonymousToggle";
 import Link from "next/link";
 import { BouncyButton, ShimmerIcon, ReactionBar } from "@/components/ui";
 import type { ReactionId } from "@/config/reactions";
@@ -103,12 +105,14 @@ type PageProps = {
 };
 
 export default function HopeBankStoryPage({ params }: PageProps) {
+  const { user } = useAuth();
   const id = Number(params.id);
   const story = STORIES.find((s) => s.id === id) ?? STORIES[0];
 
   const initialReplies = INITIAL_REPLIES_BY_STORY[id] ?? [];
   const [replies, setReplies] = useState<HopeReply[]>(initialReplies);
   const [replyText, setReplyText] = useState("");
+  const [isAnon, setIsAnon] = useState(true);
 
   // per-story reactions for THIS viewer only
   const [reactions, setReactions] = useState<UserReactions>({} as UserReactions);
@@ -117,15 +121,21 @@ export default function HopeBankStoryPage({ params }: PageProps) {
     e.preventDefault();
     if (!replyText.trim()) return;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (isAnon ? user.alias : user.name)
+      : "Someone reading Hope Bank";
+
     const newReply: HopeReply = {
       id: replies.length + 1,
-      author: "You",
+      author: displayName,
       timeAgo: "Just now",
       body: replyText.trim(),
     };
 
     setReplies([...replies, newReply]);
     setReplyText("");
+    setIsAnon(true); // Reset to anonymous after posting
   }
 
   // toggle helper for reactions
@@ -279,6 +289,23 @@ export default function HopeBankStoryPage({ params }: PageProps) {
                 placeholder="e.g. &quot;This reminded me that my story isn't over either.&quot;"
                 className="w-full border border-yellow-200 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
               />
+
+              <div className="space-y-3">
+                {user && (
+                  <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                    <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                    <p className="text-xs font-medium text-[#5C4A33]">
+                      {isAnon ? user.alias : user.name}
+                    </p>
+                  </div>
+                )}
+
+                <AnonymousToggle
+                  isAnonymous={isAnon}
+                  onChange={setIsAnon}
+                  userAlias={user?.alias}
+                />
+              </div>
 
               <div className="flex items-center justify-between gap-3">
                 <BouncyButton
