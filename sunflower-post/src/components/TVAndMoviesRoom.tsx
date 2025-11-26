@@ -2,7 +2,9 @@
 
 import { useState, useEffect, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
+import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
+import AnonymousToggle from "./AnonymousToggle";
 import { ReactionBar } from "./ui";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
@@ -24,6 +26,7 @@ const BASE_MOODS: string[] = [
 ];
 
 export default function TVAndMoviesRoom() {
+  const { user } = useAuth();
   const [items, setItems] = useState<TVMovie[]>([]);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("All");
   const [moodFilter, setMoodFilter] = useState<MoodFilter>("All moods");
@@ -41,11 +44,11 @@ export default function TVAndMoviesRoom() {
     mood: "Comfort watch",
     genre: "",
     era: "",
-    sharedBy: "",
     note: "",
     platform: "",
     trailerUrl: "",
     link: "",
+    isAnon: true,
   });
 
   // Fetch TV shows/movies from database
@@ -171,6 +174,11 @@ export default function TVAndMoviesRoom() {
 
     setSubmitting(true);
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (newItem.isAnon ? user.alias : user.name)
+      : "Someone in TV & Movies";
+
     try {
       const res = await fetch("/api/tv-movies", {
         method: "POST",
@@ -181,7 +189,7 @@ export default function TVAndMoviesRoom() {
           mood: newItem.mood.trim() || "Other",
           genre: newItem.genre.trim() || undefined,
           era: newItem.era.trim() || undefined,
-          sharedBy: newItem.sharedBy.trim() || "Anon",
+          sharedBy: displayName,
           note: newItem.note.trim() || undefined,
           platform: newItem.platform.trim() || undefined,
           trailerUrl: newItem.trailerUrl.trim() || undefined,
@@ -200,11 +208,11 @@ export default function TVAndMoviesRoom() {
           mood: "Comfort watch",
           genre: "",
           era: "",
-          sharedBy: "",
           note: "",
           platform: "",
           trailerUrl: "",
           link: "",
+          isAnon: true,
         });
         setShowAddForm(false);
       } else {
@@ -527,22 +535,23 @@ export default function TVAndMoviesRoom() {
                   </div>
                 </div>
 
-                {/* Your name */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-[#5C4A33]">
-                    Your name (or initial)
-                  </label>
-                  <input
-                    type="text"
-                    value={newItem.sharedBy}
-                    onChange={(e) =>
-                      setNewItem((prev) => ({
-                        ...prev,
-                        sharedBy: e.target.value,
-                      }))
+                {/* Anonymous toggle */}
+                <div className="space-y-3">
+                  {user && (
+                    <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                      <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                      <p className="text-xs font-medium text-[#5C4A33]">
+                        {newItem.isAnon ? user.alias : user.name}
+                      </p>
+                    </div>
+                  )}
+
+                  <AnonymousToggle
+                    isAnonymous={newItem.isAnon}
+                    onChange={(isAnon) =>
+                      setNewItem((prev) => ({ ...prev, isAnon }))
                     }
-                    className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all"
-                    placeholder="Leave blank to show as Anon"
+                    userAlias={user?.alias}
                   />
                 </div>
 

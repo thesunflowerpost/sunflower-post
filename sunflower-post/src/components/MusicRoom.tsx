@@ -261,8 +261,7 @@ export default function MusicRoom() {
     source: "",
     link: "",
     note: "",
-    sharedBy: "",
-    isAnon: false,
+    isAnon: true,
     activities: [] as string[],
     favoriteLyric: "",
   });
@@ -478,6 +477,11 @@ export default function MusicRoom() {
 
     const finalImageUrl = trackFilePreviewUrl || trackMediaUrl.trim() || undefined;
 
+    // Use user's alias if anonymous, real name if not
+    const displayName = user
+      ? (newTrack.isAnon ? user.alias : user.name)
+      : "Someone in Music Room";
+
     const track: TrackItem = {
       id: tracks.length + 1,
       title,
@@ -488,7 +492,7 @@ export default function MusicRoom() {
       source: newTrack.source.trim() || undefined,
       link: newTrack.link.trim() || undefined,
       note: newTrack.note.trim() || undefined,
-      sharedBy: newTrack.isAnon ? "Anon" : newTrack.sharedBy.trim() || "Anon",
+      sharedBy: displayName,
       timeAgo: "Just now",
       imageUrl: finalImageUrl,
       replies: 0,
@@ -513,8 +517,7 @@ export default function MusicRoom() {
       source: "",
       link: "",
       note: "",
-      sharedBy: "",
-      isAnon: false,
+      isAnon: true,
       activities: [],
       favoriteLyric: "",
     });
@@ -981,35 +984,23 @@ export default function MusicRoom() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 items-start">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-[#5C4A33]">
-                      Your name (or initials)
-                    </label>
-                    <input
-                      type="text"
-                      value={newTrack.sharedBy}
-                      onChange={(e) =>
-                        setNewTrack((prev) => ({
-                          ...prev,
-                          sharedBy: e.target.value,
-                        }))
+                  <div className="space-y-3">
+                    {user && (
+                      <div className="space-y-1 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2">
+                        <p className="text-[10px] text-[#A08960]">Posting as:</p>
+                        <p className="text-xs font-medium text-[#5C4A33]">
+                          {newTrack.isAnon ? user.alias : user.name}
+                        </p>
+                      </div>
+                    )}
+
+                    <AnonymousToggle
+                      isAnonymous={newTrack.isAnon}
+                      onChange={(isAnon) =>
+                        setNewTrack((prev) => ({ ...prev, isAnon }))
                       }
-                      required={!newTrack.isAnon}
-                      disabled={newTrack.isAnon}
-                      className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-300/50 focus:border-yellow-300 transition-all disabled:bg-gray-50 disabled:text-gray-400"
-                      placeholder='e.g. "Jay" or "J."'
+                      userAlias={user?.alias}
                     />
-                    <label className="inline-flex items-center gap-2 mt-2 text-xs text-[#7A674C]">
-                      <input
-                        type="checkbox"
-                        checked={newTrack.isAnon}
-                        onChange={(e) =>
-                          setNewTrack((prev) => ({ ...prev, isAnon: e.target.checked }))
-                        }
-                        className="rounded border-yellow-300 text-yellow-500 focus:ring-yellow-300"
-                      />
-                      <span>Post anonymously (still linked to your account)</span>
-                    </label>
                   </div>
 
                   <div className="space-y-2 text-xs text-[#7A674C] bg-yellow-50/50 rounded-xl p-4 border border-yellow-100">
