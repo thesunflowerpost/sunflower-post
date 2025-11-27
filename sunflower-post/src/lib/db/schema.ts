@@ -18,7 +18,13 @@ export interface User {
   passwordHash: string;
   alias: string; // Anonymous display name
   profilePicture?: string;
+  bio?: string;
   sunflowerColor?: string;
+  profileVisibility?: 'public' | 'followers_only' | 'private';
+  followerApprovalRequired?: boolean;
+  defaultAnonymousMode?: boolean;
+  activityVisible?: boolean;
+  dataExportEnabled?: boolean;
   createdAt: string;
   updatedAt: string;
 }
