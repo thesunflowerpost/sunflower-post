@@ -11,7 +11,14 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   profile_picture TEXT,
+  bio TEXT,
+  alias TEXT,
   sunflower_color TEXT DEFAULT 'classic',
+  profile_visibility TEXT DEFAULT 'public' CHECK (profile_visibility IN ('public', 'followers_only', 'private')),
+  follower_approval_required BOOLEAN DEFAULT false,
+  default_anonymous_mode BOOLEAN DEFAULT false,
+  activity_visible BOOLEAN DEFAULT true,
+  data_export_enabled BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
