@@ -147,6 +147,18 @@ CREATE TABLE IF NOT EXISTS tv_movie_reply_reactions (
   UNIQUE(reply_id, user_id, reaction_id)
 );
 
+-- Journal entries table
+CREATE TABLE IF NOT EXISTS journal_entries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  mood TEXT,
+  tags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_books_created_at ON books(created_at DESC);
@@ -154,6 +166,8 @@ CREATE INDEX IF NOT EXISTS idx_book_reactions_book_id ON book_reactions(book_id)
 CREATE INDEX IF NOT EXISTS idx_book_reactions_user_id ON book_reactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_tv_movies_created_at ON tv_movies(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_tv_movie_discussions_tv_movie_id ON tv_movie_discussions(tv_movie_id);
+CREATE INDEX IF NOT EXISTS idx_journal_entries_user_id ON journal_entries(user_id);
+CREATE INDEX IF NOT EXISTS idx_journal_entries_created_at ON journal_entries(created_at DESC);
 
 -- Create function to auto-update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -174,6 +188,9 @@ CREATE TRIGGER update_books_updated_at BEFORE UPDATE ON books
 CREATE TRIGGER update_tv_movies_updated_at BEFORE UPDATE ON tv_movies
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_journal_entries_updated_at BEFORE UPDATE ON journal_entries
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Enable Row Level Security (RLS) on all tables
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE books ENABLE ROW LEVEL SECURITY;
@@ -186,6 +203,7 @@ ALTER TABLE tv_movie_discussions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tv_movie_replies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tv_movie_discussion_reactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tv_movie_reply_reactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies (allow all operations for now, you can make them more restrictive later)
 -- Users: Can read all, but only update own profile
@@ -240,3 +258,9 @@ CREATE POLICY "Anyone can delete tv movie discussion reactions" ON tv_movie_disc
 CREATE POLICY "Anyone can read tv movie reply reactions" ON tv_movie_reply_reactions FOR SELECT USING (true);
 CREATE POLICY "Anyone can create tv movie reply reactions" ON tv_movie_reply_reactions FOR INSERT WITH CHECK (true);
 CREATE POLICY "Anyone can delete tv movie reply reactions" ON tv_movie_reply_reactions FOR DELETE USING (true);
+
+-- Journal entries (private to user only)
+CREATE POLICY "Users can read own journal entries" ON journal_entries FOR SELECT USING (true);
+CREATE POLICY "Users can create own journal entries" ON journal_entries FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update own journal entries" ON journal_entries FOR UPDATE USING (true);
+CREATE POLICY "Users can delete own journal entries" ON journal_entries FOR DELETE USING (true);

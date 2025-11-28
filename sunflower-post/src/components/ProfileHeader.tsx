@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import type { UserProfile } from '@/types/profile';
 import EditProfileModal from './EditProfileModal';
+import FollowersModal from './FollowersModal';
 
 type ProfileHeaderProps = {
   profile: UserProfile;
@@ -16,6 +17,8 @@ export default function ProfileHeader({ profile, isOwnProfile }: ProfileHeaderPr
   const { user, updateUser } = useAuth();
   const [isFollowing, setIsFollowing] = useState(profile.isFollowing || false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [followersMode, setFollowersMode] = useState<'followers' | 'following'>('followers');
   const [localProfile, setLocalProfile] = useState(profile);
 
   function handleFollowToggle() {
@@ -127,14 +130,26 @@ export default function ProfileHeader({ profile, isOwnProfile }: ProfileHeaderPr
                   </div>
                 </>
               )}
-              <div className="flex flex-col">
+              <button
+                onClick={() => {
+                  setFollowersMode('followers');
+                  setShowFollowersModal(true);
+                }}
+                className="flex flex-col hover:opacity-70 transition-opacity cursor-pointer"
+              >
                 <span className="font-bold text-yellow-900">{localProfile.stats.followers}</span>
                 <span className="text-[#A08960] text-xs">Followers</span>
-              </div>
-              <div className="flex flex-col">
+              </button>
+              <button
+                onClick={() => {
+                  setFollowersMode('following');
+                  setShowFollowersModal(true);
+                }}
+                className="flex flex-col hover:opacity-70 transition-opacity cursor-pointer"
+              >
                 <span className="font-bold text-yellow-900">{localProfile.stats.following}</span>
                 <span className="text-[#A08960] text-xs">Following</span>
-              </div>
+              </button>
             </div>
 
             {/* Action Buttons */}
@@ -180,6 +195,17 @@ export default function ProfileHeader({ profile, isOwnProfile }: ProfileHeaderPr
           currentBio={localProfile.bio}
           currentAvatarUrl={localProfile.avatarUrl}
           onSave={handleSaveProfile}
+        />
+      )}
+
+      {/* Followers/Following Modal */}
+      {user && (
+        <FollowersModal
+          isOpen={showFollowersModal}
+          onClose={() => setShowFollowersModal(false)}
+          mode={followersMode}
+          currentUserId={user.id}
+          profileUserId={localProfile.id}
         />
       )}
     </>

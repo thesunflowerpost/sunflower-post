@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { JournalEntry } from '@/types/profile';
+import JournalEntryModal from '../JournalEntryModal';
 
 type JournalsTabProps = {
   journals: JournalEntry[];
@@ -29,21 +30,73 @@ function formatTime(timestamp: string): string {
 
 export default function JournalsTab({ journals }: JournalsTabProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
+
+  async function handleSaveJournal(entry: {
+    title: string;
+    body: string;
+    mood?: string;
+    tags?: string[];
+  }) {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/journal', {
+        method: editingEntry ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(editingEntry ? { ...entry, id: editingEntry.id } : entry),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save journal entry');
+      }
+
+      // Refresh the page to show the new entry
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to save journal entry:', error);
+      throw error;
+    }
+  }
+
+  function handleNewEntry() {
+    setEditingEntry(null);
+    setShowJournalModal(true);
+  }
+
+  function handleEditEntry(entry: JournalEntry) {
+    setEditingEntry(entry);
+    setShowJournalModal(true);
+  }
 
   if (journals.length === 0) {
     return (
-      <div className="text-center py-12 space-y-3">
-        <p className="text-3xl">📔</p>
-        <p className="text-[#A08960] text-sm font-medium">
-          Your journal is empty.
-        </p>
-        <p className="text-[#A08960] text-xs max-w-md mx-auto">
-          Journal entries are private and only visible to you. Use this space to reflect, process, and track your thoughts.
-        </p>
-        <button className="mt-4 px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all">
-          Write your first entry
-        </button>
-      </div>
+      <>
+        <div className="text-center py-12 space-y-3">
+          <p className="text-3xl">📔</p>
+          <p className="text-[#A08960] text-sm font-medium">
+            Your journal is empty.
+          </p>
+          <p className="text-[#A08960] text-xs max-w-md mx-auto">
+            Journal entries are private and only visible to you. Use this space to reflect, process, and track your thoughts.
+          </p>
+          <button
+            onClick={handleNewEntry}
+            className="mt-4 px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+          >
+            Write your first entry
+          </button>
+        </div>
+        <JournalEntryModal
+          isOpen={showJournalModal}
+          onClose={() => setShowJournalModal(false)}
+          onSave={handleSaveJournal}
+          initialEntry={editingEntry || undefined}
+        />
+      </>
     );
   }
 
@@ -52,15 +105,19 @@ export default function JournalsTab({ journals }: JournalsTabProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-[#7A674C]">
-          <span className="font-semibold text-yellow-900">{journals.length}</span> {journals.length === 1 ? 'entry' : 'entries'}
-        </p>
-        <button className="px-4 py-2 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all">
-          + New entry
-        </button>
-      </div>
+    <>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-[#7A674C]">
+            <span className="font-semibold text-yellow-900">{journals.length}</span> {journals.length === 1 ? 'entry' : 'entries'}
+          </p>
+          <button
+            onClick={handleNewEntry}
+            className="px-4 py-2 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+          >
+            + New entry
+          </button>
+        </div>
 
       <div className="space-y-3">
         {journals.map((entry) => {
@@ -115,7 +172,10 @@ export default function JournalsTab({ journals }: JournalsTabProps) {
                     </div>
                   )}
                   <div className="flex gap-2 pt-2">
-                    <button className="text-xs text-yellow-700 hover:text-yellow-900 font-medium hover:underline">
+                    <button
+                      onClick={() => handleEditEntry(entry)}
+                      className="text-xs text-yellow-700 hover:text-yellow-900 font-medium hover:underline"
+                    >
                       Edit
                     </button>
                     <span className="text-[#C0A987]">·</span>
@@ -135,6 +195,14 @@ export default function JournalsTab({ journals }: JournalsTabProps) {
           );
         })}
       </div>
-    </div>
+      </div>
+
+      <JournalEntryModal
+        isOpen={showJournalModal}
+        onClose={() => setShowJournalModal(false)}
+        onSave={handleSaveJournal}
+        initialEntry={editingEntry || undefined}
+      />
+    </>
   );
 }
