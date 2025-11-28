@@ -46,7 +46,14 @@ export async function GET(
       .eq('follower_id', currentUserId)
       .eq('status', 'approved');
 
-    if (followingError) throw followingError;
+    if (followingError) {
+      console.error('Error fetching current user following:', followingError);
+      // Return empty result instead of throwing
+      return NextResponse.json({
+        mutualCount: 0,
+        mutualUsers: [],
+      });
+    }
 
     const { data: targetFollowing, error: targetError } = await supabase
       .from('followers')
@@ -54,13 +61,28 @@ export async function GET(
       .eq('follower_id', targetUserId)
       .eq('status', 'approved');
 
-    if (targetError) throw targetError;
+    if (targetError) {
+      console.error('Error fetching target user following:', targetError);
+      // Return empty result instead of throwing
+      return NextResponse.json({
+        mutualCount: 0,
+        mutualUsers: [],
+      });
+    }
+
+    // Handle case where either user has no following
+    if (!mutualFollowing || mutualFollowing.length === 0 || !targetFollowing || targetFollowing.length === 0) {
+      return NextResponse.json({
+        mutualCount: 0,
+        mutualUsers: [],
+      });
+    }
 
     // Find mutual connections (users both follow)
     const currentFollowingIds = new Set(
-      mutualFollowing?.map((f) => f.following_id) || []
+      mutualFollowing.map((f) => f.following_id)
     );
-    const mutualIds = (targetFollowing || [])
+    const mutualIds = targetFollowing
       .map((f) => f.following_id)
       .filter((id) => currentFollowingIds.has(id));
 
@@ -113,9 +135,37 @@ async function getSuggestedUsers(userId: string) {
       .eq('follower_id', userId)
       .eq('status', 'approved');
 
-    if (followingError) throw followingError;
+    if (followingError) {
+      console.error('Error fetching user following:', followingError);
+      // Return empty suggestions on error
+      return NextResponse.json({ suggestions: [] });
+    }
 
     const followingIds = userFollowing?.map((f) => f.following_id) || [];
+
+    // If user doesn't follow anyone, get random active users
+    if (followingIds.length === 0) {
+      const { data: randomUsers, error: randomError } = await supabase
+        .from('users')
+        .select('id, name, alias, bio, profile_picture')
+        .neq('id', userId)
+        .limit(5);
+
+      if (randomError) {
+        console.error('Error fetching random users:', randomError);
+        return NextResponse.json({ suggestions: [] });
+      }
+
+      const users = randomUsers?.map((user) => ({
+        id: user.id,
+        name: user.name,
+        alias: user.alias,
+        bio: user.bio,
+        avatarUrl: user.profile_picture,
+      })) || [];
+
+      return NextResponse.json({ suggestions: users });
+    }
 
     // Get who the people current user follows are following
     const { data: secondDegree, error: secondError } = await supabase
@@ -125,7 +175,10 @@ async function getSuggestedUsers(userId: string) {
       .eq('status', 'approved')
       .limit(50);
 
-    if (secondError) throw secondError;
+    if (secondError) {
+      console.error('Error fetching second degree connections:', secondError);
+      return NextResponse.json({ suggestions: [] });
+    }
 
     // Count occurrences to find most common connections
     const suggestionCounts = new Map<string, number>();

@@ -72,7 +72,8 @@ export default function MutualConnections({
     );
   }
 
-  if (isOwnProfile && suggestions.length > 0) {
+  if (isOwnProfile) {
+    // For own profile, show suggestions or empty state
     return (
       <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-gray-100">
         <div className="flex items-center gap-3 mb-4">
@@ -82,20 +83,54 @@ export default function MutualConnections({
           <h3 className="text-lg font-bold text-[#3A2E1F]">Suggested for You</h3>
         </div>
 
-        <p className="text-sm text-gray-600 mb-4">
-          People you may know based on your connections
-        </p>
+        {suggestions.length > 0 ? (
+          <>
+            <p className="text-sm text-gray-600 mb-4">
+              People you may know based on your connections
+            </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {suggestions.map((user) => (
-            <UserCard key={user.id} user={user} />
-          ))}
-        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {suggestions.map((user) => (
+                <UserCard key={user.id} user={user} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-8">
+            <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-sm text-gray-500">
+              Follow some people to get personalized suggestions
+            </p>
+          </div>
+        )}
       </div>
     );
   }
 
-  if (!isOwnProfile && mutualCount > 0) {
+  if (!isOwnProfile) {
+    // For other profiles, show mutual connections or empty state
+    if (mutualCount === 0) {
+      return (
+        <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Users className="w-5 h-5 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-bold text-[#3A2E1F]">
+              Mutual Connections
+            </h3>
+          </div>
+
+          <div className="text-center py-6">
+            <Users className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+            <p className="text-sm text-gray-500">
+              No mutual connections yet
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-gray-100">
         <div className="flex items-center gap-3 mb-4">
