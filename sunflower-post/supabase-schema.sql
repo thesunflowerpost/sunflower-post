@@ -159,6 +159,16 @@ CREATE TABLE IF NOT EXISTS journal_entries (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Saved items table
+CREATE TABLE IF NOT EXISTS saved_items (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  item_type TEXT NOT NULL CHECK (item_type IN ('post', 'book', 'tv_movie', 'music', 'discussion')),
+  item_id TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, item_type, item_id)
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_books_created_at ON books(created_at DESC);
@@ -168,6 +178,8 @@ CREATE INDEX IF NOT EXISTS idx_tv_movies_created_at ON tv_movies(created_at DESC
 CREATE INDEX IF NOT EXISTS idx_tv_movie_discussions_tv_movie_id ON tv_movie_discussions(tv_movie_id);
 CREATE INDEX IF NOT EXISTS idx_journal_entries_user_id ON journal_entries(user_id);
 CREATE INDEX IF NOT EXISTS idx_journal_entries_created_at ON journal_entries(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_saved_items_user_id ON saved_items(user_id);
+CREATE INDEX IF NOT EXISTS idx_saved_items_type_id ON saved_items(item_type, item_id);
 
 -- Create function to auto-update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -204,6 +216,7 @@ ALTER TABLE tv_movie_replies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tv_movie_discussion_reactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tv_movie_reply_reactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE saved_items ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies (allow all operations for now, you can make them more restrictive later)
 -- Users: Can read all, but only update own profile
@@ -264,3 +277,8 @@ CREATE POLICY "Users can read own journal entries" ON journal_entries FOR SELECT
 CREATE POLICY "Users can create own journal entries" ON journal_entries FOR INSERT WITH CHECK (true);
 CREATE POLICY "Users can update own journal entries" ON journal_entries FOR UPDATE USING (true);
 CREATE POLICY "Users can delete own journal entries" ON journal_entries FOR DELETE USING (true);
+
+-- Saved items (private to user only)
+CREATE POLICY "Users can read own saved items" ON saved_items FOR SELECT USING (true);
+CREATE POLICY "Users can create own saved items" ON saved_items FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can delete own saved items" ON saved_items FOR DELETE USING (true);
