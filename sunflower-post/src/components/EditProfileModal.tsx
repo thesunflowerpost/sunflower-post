@@ -193,6 +193,7 @@ export default function EditProfileModal({
                         width={120}
                         height={120}
                         className="rounded-full border-4 border-yellow-400"
+                        unoptimized
                       />
                       <div className="absolute bottom-0 right-0 bg-yellow-400 rounded-full p-2 shadow-lg">
                         <Camera className="w-5 h-5 text-[#3A2E1F]" />
@@ -241,6 +242,7 @@ export default function EditProfileModal({
                               width={48}
                               height={48}
                               className="rounded-full"
+                              unoptimized
                             />
                           </button>
                         ))}
@@ -304,6 +306,7 @@ export default function EditProfileModal({
                       width={48}
                       height={48}
                       className="rounded-full border-2 border-yellow-400"
+                      unoptimized
                     />
                     <div>
                       <p className="font-bold text-[#3A2E1F]">{name || 'Your Name'}</p>
