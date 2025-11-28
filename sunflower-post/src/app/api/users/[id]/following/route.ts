@@ -31,7 +31,25 @@ export async function GET(
       );
     }
 
-    const { id: userId } = await params;
+    const { id: rawId } = await params;
+    let userId = rawId;
+
+    // Handle "current-user" special route parameter
+    if (rawId === 'current-user') {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser(token);
+
+      if (authError || !user) {
+        return NextResponse.json(
+          { error: 'Not authenticated' },
+          { status: 401 }
+        );
+      }
+
+      userId = user.id;
+    }
 
     // Get following from the followers table
     const { data: followingData, error: followingError } = await supabase
@@ -40,10 +58,16 @@ export async function GET(
       .eq('follower_id', userId)
       .eq('status', 'approved');
 
-    if (followingError) throw followingError;
+    if (followingError) {
+      console.error('Error fetching following:', followingError);
+      return NextResponse.json(
+        { error: 'Failed to fetch following', details: followingError.message },
+        { status: 500 }
+      );
+    }
 
     if (!followingData || followingData.length === 0) {
-      return NextResponse.json({ users: [] });
+      return NextResponse.json({ following: [] });
     }
 
     // Get user details for all users being followed
@@ -53,7 +77,13 @@ export async function GET(
       .select('id, name, alias, bio, profile_picture')
       .in('id', followingIds);
 
-    if (usersError) throw usersError;
+    if (usersError) {
+      console.error('Error fetching user details:', usersError);
+      return NextResponse.json(
+        { error: 'Failed to fetch user details', details: usersError.message },
+        { status: 500 }
+      );
+    }
 
     // Check which users the current user is following
     const { data: currentUserFollowing, error: currentFollowingError } = await supabase
@@ -62,14 +92,16 @@ export async function GET(
       .eq('follower_id', payload.userId)
       .eq('status', 'approved');
 
-    if (currentFollowingError) throw currentFollowingError;
+    if (currentFollowingError) {
+      console.error('Error fetching following status:', currentFollowingError);
+    }
 
     const currentFollowingIds = new Set(
       currentUserFollowing?.map((f) => f.following_id) || []
     );
 
     // Map to user summary format
-    const users = usersData?.map((user) => ({
+    const following = usersData?.map((user) => ({
       id: user.id,
       name: user.name,
       alias: user.alias,
@@ -78,11 +110,11 @@ export async function GET(
       isFollowing: currentFollowingIds.has(user.id),
     })) || [];
 
-    return NextResponse.json({ users });
+    return NextResponse.json({ following });
   } catch (error) {
     console.error('Error in GET /api/users/:id/following:', error);
     return NextResponse.json(
-      { error: 'Failed to get following' },
+      { error: 'Failed to get following', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
