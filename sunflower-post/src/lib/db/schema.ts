@@ -18,8 +18,12 @@ export interface User {
   passwordHash: string;
   alias: string; // Anonymous display name
   profilePicture?: string;
+  coverPhoto?: string;
   bio?: string;
+  badge?: string;
   sunflowerColor?: string;
+  themeColor?: string;
+  pinnedPostId?: string;
   profileVisibility?: 'public' | 'followers_only' | 'private';
   followerApprovalRequired?: boolean;
   defaultAnonymousMode?: boolean;

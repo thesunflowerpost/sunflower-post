@@ -147,10 +147,14 @@ Reusable save/bookmark system for all content types:
 
 ### New Tables:
 
-**1. Privacy Fields (users table)**
+**1. Privacy & Customization Fields (users table)**
 ```sql
 bio TEXT
 alias TEXT
+cover_photo TEXT
+theme_color TEXT (default '#FACC15')
+badge TEXT
+pinned_post_id TEXT
 profile_visibility TEXT ('public' | 'followers_only' | 'private')
 follower_approval_required BOOLEAN
 default_anonymous_mode BOOLEAN
@@ -202,12 +206,14 @@ UNIQUE(user_id, item_type, item_id)
 ### Profile Management
 - `PUT /api/profile` - Update user profile (name, bio, avatar)
 - `PUT /api/settings/privacy` - Update privacy settings
+- `PUT /api/profile/customize` - Update profile customization (cover, theme, badge, pinned post)
 
 ### Social Features
 - `GET /api/users/:id/followers` - Get followers list
 - `GET /api/users/:id/following` - Get following list
 - `POST /api/users/:id/follow` - Follow a user
 - `DELETE /api/users/:id/follow` - Unfollow a user
+- `GET /api/users/:id/mutual` - Get mutual connections or suggestions
 
 ### Journal
 - `GET /api/journal` - Get all journal entries
@@ -290,27 +296,95 @@ All required dependencies are already installed:
 - `next` - Framework
 - Other standard dependencies
 
+### 6. Activity Actions
+**Status:** ✅ Complete
+
+Comprehensive action menu for user activity with:
+- View original post in new tab
+- Delete posts from profile with confirmation
+- Pin/unpin posts to profile
+- Dropdown menu with Framer Motion animations
+- Loading states for all actions
+- Configurable visibility for each action
+
+**Features:**
+- Integrated into activity feeds
+- Three-dot menu (MoreVertical icon)
+- Backdrop to close on outside click
+- Disabled states during operations
+- Confirmation dialog for destructive actions
+
+**Files:**
+- `/src/components/ActivityActions.tsx`
+
+---
+
+### 7. Profile Customization
+**Status:** ✅ Complete
+
+Full profile appearance customization at `/settings/customize` with:
+
+**Cover Photo:**
+- Upload custom cover image (5MB max)
+- Preview before saving
+- Remove option if set
+
+**Theme Color:**
+- 8 preset colors (Sunflower Yellow, Sunset Orange, Rose Pink, etc.)
+- Custom color picker for any hex color
+- Live preview of selected color
+- Validation of hex format
+
+**Profile Badge:**
+- Custom badge/tagline (50 char max)
+- Live character counter
+- Preview display
+- Examples: "🌻 Garden Enthusiast", "✨ Creative Soul"
+
+**Pinned Post:**
+- Pin any post ID to top of profile
+- Input field with helpful instructions
+- Integration with Activity Actions menu
+
+**Files:**
+- `/src/app/settings/customize/page.tsx`
+- API: `PUT /api/profile/customize`
+
+---
+
+### 8. Mutual Connections
+**Status:** ✅ Complete
+
+Social connection discovery feature with:
+
+**For Viewing Others' Profiles:**
+- Shows "You both follow X people"
+- Displays up to 4 mutual connections
+- Clickable user cards with avatars and bios
+- "and X more" indicator for additional mutuals
+
+**For Own Profile:**
+- "Suggested for You" section
+- People you may know based on connections
+- Second-degree connection algorithm
+- Helps discover relevant users
+
+**Features:**
+- Integrated into profile pages
+- User cards with avatars, names, aliases, bios
+- Hover states and clickable links to profiles
+- Loading states
+- Empty state handling (no suggestions/mutuals)
+
+**Files:**
+- `/src/components/MutualConnections.tsx`
+- API: `GET /api/users/:id/mutual`
+
 ---
 
 ## 📝 Next Steps (Pending Implementation)
 
-### 1. Activity Actions
-- View original post button
-- Delete posts from profile
-- Pin favorite posts to top
-
-### 2. Profile Customization
-- Cover photo/banner image
-- Theme accent color picker
-- Pinned post display
-- Custom profile badge/tagline
-
-### 3. Mutual Connections
-- Show "You both follow X people"
-- Mutual connections list
-- Suggested similar users
-
-### 4. List Management
+### 1. List Management
 - Full CRUD for lists (books/shows/songs)
 - Edit/Remove functionality
 - Change status (Reading → Finished)
@@ -395,24 +469,30 @@ src/
 │   ├── FollowersModal.tsx (✅ Followers/following lists)
 │   ├── JournalEntryModal.tsx (✅ Journal creation/editing)
 │   ├── SaveButton.tsx (✅ Universal save button)
+│   ├── ActivityActions.tsx (✅ Activity action menu)
+│   ├── MutualConnections.tsx (✅ Mutual connections display)
 │   ├── ProfileHeader.tsx (✅ Updated with modals)
 │   └── profile/
 │       └── JournalsTab.tsx (✅ Updated with modal)
 ├── app/
 │   ├── api/
-│   │   ├── profile/route.ts (✅ Profile updates)
+│   │   ├── profile/
+│   │   │   ├── route.ts (✅ Profile updates)
+│   │   │   └── customize/route.ts (✅ Customization)
 │   │   ├── settings/privacy/route.ts (✅ Privacy settings)
 │   │   ├── journal/route.ts (✅ Journal CRUD)
 │   │   ├── saved/route.ts (✅ Save/unsave items)
 │   │   └── users/[id]/
 │   │       ├── followers/route.ts (✅ Get followers)
 │   │       ├── following/route.ts (✅ Get following)
-│   │       └── follow/route.ts (✅ Follow/unfollow)
+│   │       ├── follow/route.ts (✅ Follow/unfollow)
+│   │       └── mutual/route.ts (✅ Mutual connections)
 │   └── settings/
-│       └── privacy/page.tsx (✅ Privacy settings page)
+│       ├── privacy/page.tsx (✅ Privacy settings page)
+│       └── customize/page.tsx (✅ Customization page)
 └── lib/
     └── db/
-        ├── index.ts (✅ Updated with privacy fields)
+        ├── index.ts (✅ Updated with customization fields)
         └── schema.ts (✅ Updated types)
 ```
 
