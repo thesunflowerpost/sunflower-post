@@ -9,7 +9,7 @@ import { getUser } from '@/lib/db';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get token from Authorization header
@@ -32,7 +32,7 @@ export async function POST(
       );
     }
 
-    const userToFollow = params.id;
+    const { id: userToFollow } = await params;
     const currentUserId = payload.userId;
 
     // Can't follow yourself
@@ -93,7 +93,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get token from Authorization header
@@ -116,7 +116,7 @@ export async function DELETE(
       );
     }
 
-    const userToUnfollow = params.id;
+    const { id: userToUnfollow } = await params;
     const currentUserId = payload.userId;
 
     // Delete follow relationship

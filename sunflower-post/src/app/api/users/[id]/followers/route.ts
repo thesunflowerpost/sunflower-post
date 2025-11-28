@@ -8,7 +8,7 @@ import { verifyToken } from '@/lib/auth/jwt';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get token from Authorization header
@@ -31,7 +31,7 @@ export async function GET(
       );
     }
 
-    const userId = params.id;
+    const { id: userId } = await params;
 
     // Get followers from the followers table
     const { data: followersData, error: followersError } = await supabase
