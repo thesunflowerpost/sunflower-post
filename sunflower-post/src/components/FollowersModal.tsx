@@ -81,8 +81,9 @@ export default function FollowersModal({
       }
 
       const data = await response.json();
-      setUsers(data.users || []);
-      setFilteredUsers(data.users || []);
+      const usersList = mode === 'followers' ? data.followers : data.following;
+      setUsers(usersList || []);
+      setFilteredUsers(usersList || []);
     } catch (err) {
       console.error('Failed to load users:', err);
       setError('Failed to load users. Please try again.');
