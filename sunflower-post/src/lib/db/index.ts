@@ -101,8 +101,12 @@ export async function updateUser(
   if (updates.name !== undefined) updateData.name = updates.name;
   if (updates.alias !== undefined) updateData.alias = updates.alias;
   if (updates.profilePicture !== undefined) updateData.profile_picture = updates.profilePicture;
+  if (updates.coverPhoto !== undefined) updateData.cover_photo = updates.coverPhoto;
   if (updates.bio !== undefined) updateData.bio = updates.bio;
+  if (updates.badge !== undefined) updateData.badge = updates.badge;
   if (updates.sunflowerColor !== undefined) updateData.sunflower_color = updates.sunflowerColor;
+  if (updates.themeColor !== undefined) updateData.theme_color = updates.themeColor;
+  if (updates.pinnedPostId !== undefined) updateData.pinned_post_id = updates.pinnedPostId;
   if (updates.profileVisibility !== undefined) updateData.profile_visibility = updates.profileVisibility;
   if (updates.followerApprovalRequired !== undefined) updateData.follower_approval_required = updates.followerApprovalRequired;
   if (updates.defaultAnonymousMode !== undefined) updateData.default_anonymous_mode = updates.defaultAnonymousMode;
@@ -366,8 +370,12 @@ function mapUserFromDb(dbUser: any): User {
     passwordHash: dbUser.password_hash,
     alias: dbUser.alias,
     profilePicture: dbUser.profile_picture,
+    coverPhoto: dbUser.cover_photo,
     bio: dbUser.bio,
+    badge: dbUser.badge,
     sunflowerColor: dbUser.sunflower_color,
+    themeColor: dbUser.theme_color,
+    pinnedPostId: dbUser.pinned_post_id,
     profileVisibility: dbUser.profile_visibility,
     followerApprovalRequired: dbUser.follower_approval_required,
     defaultAnonymousMode: dbUser.default_anonymous_mode,
