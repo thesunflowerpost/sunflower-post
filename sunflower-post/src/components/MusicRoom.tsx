@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
 import PostActions from "./PostActions";
+import SaveButton from "./SaveButton";
 import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -1312,6 +1313,13 @@ export default function MusicRoom() {
                           >
                             ✨ Similar
                           </Link>
+                          <div className="flex-shrink-0">
+                            <SaveButton
+                              itemType="music"
+                              itemId={track.id.toString()}
+                              size="sm"
+                            />
+                          </div>
                         </div>
 
                         {/* PLAYER LINK */}
