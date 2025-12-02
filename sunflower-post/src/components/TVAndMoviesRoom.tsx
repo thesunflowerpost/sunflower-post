@@ -8,6 +8,7 @@ import AnonymousToggle from "./AnonymousToggle";
 import PostActions from "./PostActions";
 import { ReactionBar } from "./ui";
 import SaveButton from "./SaveButton";
+import AddToListButton from "./AddToListButton";
 import Link from "next/link";
 import type { ReactionId } from "@/config/reactions";
 import type { TVMovie, TVMovieStatus } from "@/lib/db/schema";
@@ -825,11 +826,22 @@ export default function TVAndMoviesRoom() {
 
                       {/* Discussion Link and Save */}
                       <div className="flex items-center justify-between gap-2">
-                        <SaveButton
-                          itemType="tv_movie"
-                          itemId={item.id}
-                          size="sm"
-                        />
+                        <div className="flex items-center gap-2">
+                          <AddToListButton
+                            itemType="tv_movie"
+                            title={item.title}
+                            subtitle={item.type}
+                            imageUrl={item.coverUrl}
+                            defaultStatus={item.status}
+                            size="sm"
+                            showLabel={false}
+                          />
+                          <SaveButton
+                            itemType="tv_movie"
+                            itemId={item.id}
+                            size="sm"
+                          />
+                        </div>
                         <Link
                           href={`/tv-movies/${item.id}`}
                           className="flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-[10px] md:text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95"
