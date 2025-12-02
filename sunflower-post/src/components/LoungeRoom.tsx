@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
 import UserHoverCard from "./UserHoverCard";
+import SaveButton from "./SaveButton";
 import { BouncyButton, ShimmerIcon, LoadingState, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -623,16 +624,24 @@ export default function LoungeRoom() {
                               />
                             </div>
 
-                            <Link
-                              href={`/lounge/${post.id}`}
-                              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95 group/reply"
-                            >
-                              <ShimmerIcon>
-                                <span className="text-sm">💬</span>
-                              </ShimmerIcon>
-                              <span>{post.replies} {post.replies === 1 ? 'reply' : 'replies'}</span>
-                              <span className="group-hover/reply:translate-x-0.5 transition-transform">→</span>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                              <SaveButton
+                                itemType="post"
+                                itemId={post.id.toString()}
+                                size="sm"
+                              />
+
+                              <Link
+                                href={`/lounge/${post.id}`}
+                                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 hover:from-yellow-100 hover:to-yellow-200/50 border border-yellow-200/80 text-xs font-semibold text-yellow-900 hover:text-yellow-950 transition-all hover:shadow-md hover:scale-105 active:scale-95 group/reply"
+                              >
+                                <ShimmerIcon>
+                                  <span className="text-sm">💬</span>
+                                </ShimmerIcon>
+                                <span>{post.replies} {post.replies === 1 ? 'reply' : 'replies'}</span>
+                                <span className="group-hover/reply:translate-x-0.5 transition-transform">→</span>
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>

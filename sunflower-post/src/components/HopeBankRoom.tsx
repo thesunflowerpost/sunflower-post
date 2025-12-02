@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import CommunitySidebar from "./CommunitySidebar";
 import UserHoverCard from "./UserHoverCard";
+import SaveButton from "./SaveButton";
 import { BouncyButton, ShimmerIcon, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -285,15 +286,12 @@ export default function HopeBankRoom() {
 
                           <div className="flex items-center justify-between gap-3 pt-1 flex-wrap">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all">
-                                <ShimmerIcon>
-                                  <span>📎</span>
-                                </ShimmerIcon>
-                                <span className="font-medium text-[10px]">Save</span>
-                                <span className="text-[10px] text-[#A08960]">
-                                  {story.saves}
-                                </span>
-                              </button>
+                              <SaveButton
+                                itemType="post"
+                                itemId={story.id.toString()}
+                                size="sm"
+                                showLabel={true}
+                              />
                               <Link
                                 href={`/hope-bank/${story.id}`}
                                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200/60 hover:shadow-sm transition-all font-medium text-[10px]"
