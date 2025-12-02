@@ -43,7 +43,7 @@ const STORIES: HopeStory[] = [
     summary:
       "I ignored symptoms for months. The diagnosis was early enough to change everything.",
     category: "Health",
-    turningPoint: "A nurse quietly told me, "I'm glad you came in today."",
+    turningPoint: "A nurse quietly told me, \"I'm glad you came in today.\"",
     author: "Maya Bloom",
     authorId: "c3d4e5f6-3333-3333-3333-333333333333",
     isAnon: false,
