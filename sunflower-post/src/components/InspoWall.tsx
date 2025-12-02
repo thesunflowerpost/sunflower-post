@@ -6,6 +6,7 @@ import { matchesSearch } from "@/lib/search";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
+import SaveButton from "./SaveButton";
 import { BouncyButton, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -487,15 +488,11 @@ export default function InspoWall() {
                         <span className="text-[10px] px-2 py-0.5 bg-[color:var(--sun-glow)] text-[color:var(--text-primary)] rounded font-medium truncate">
                           {post.category}
                         </span>
-                        <button
-                          onClick={() => handleToggleSave(post.id)}
-                          className={[
-                            "text-sm flex-shrink-0 transition-colors font-bold",
-                            userSaves[post.id] ? "text-[color:var(--honey-gold)]" : "text-[color:var(--text-tertiary)] hover:text-[color:var(--honey-gold)]",
-                          ].join(" ")}
-                        >
-                          {userSaves[post.id] ? "✓" : "📌"}
-                        </button>
+                        <SaveButton
+                          itemType="post"
+                          itemId={post.id.toString()}
+                          size="sm"
+                        />
                       </div>
 
                       {/* REACTIONS */}

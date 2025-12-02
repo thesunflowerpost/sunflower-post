@@ -3,6 +3,7 @@
 import React, { useState, type FormEvent } from "react";
 import { matchesSearch } from "@/lib/search";
 import CommunitySidebar from "./CommunitySidebar";
+import AddToListButton from "./AddToListButton";
 import { ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -831,6 +832,15 @@ export default function BookClubRoom() {
                               }
                             />
                           </div>
+                          <AddToListButton
+                            itemType="book"
+                            title={book.title}
+                            subtitle={book.author}
+                            imageUrl={book.coverUrl}
+                            defaultStatus={book.status}
+                            size="sm"
+                            showLabel={false}
+                          />
                           <a
                             href={`/book-club/${book.id}`}
                             className="text-center px-3 py-1.5 bg-[#FFD52A] hover:bg-[#ffcc00] rounded-full text-xs font-medium text-[#111111] transition-all shadow-sm whitespace-nowrap"
