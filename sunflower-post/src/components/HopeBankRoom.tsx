@@ -4,6 +4,7 @@ import { matchesSearch } from "@/lib/search";
 import { useState } from "react";
 import Link from "next/link";
 import CommunitySidebar from "./CommunitySidebar";
+import UserHoverCard from "./UserHoverCard";
 import { BouncyButton, ShimmerIcon, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -14,6 +15,7 @@ type HopeStory = {
   category: "Career" | "Health" | "Family" | "Money" | "Faith" | "Other";
   turningPoint: string;
   author: string;
+  authorId?: string; // User ID for profile linking
   isAnon: boolean;
   timeAgo: string;
   saves: number;
@@ -27,7 +29,7 @@ const STORIES: HopeStory[] = [
     id: 1,
     title: "I got rejected from 12 roles… and then landed the one that actually fit",
     summary:
-      "I was convinced I’d missed my moment. The role I finally got didn’t even exist when I started applying.",
+      "I was convinced I'd missed my moment. The role I finally got didn't even exist when I started applying.",
     category: "Career",
     turningPoint: "A friend made me apply for a role I felt underqualified for.",
     author: "S.",
@@ -41,15 +43,16 @@ const STORIES: HopeStory[] = [
     summary:
       "I ignored symptoms for months. The diagnosis was early enough to change everything.",
     category: "Health",
-    turningPoint: "A nurse quietly told me, “I’m glad you came in today.”",
-    author: "Leah",
+    turningPoint: "A nurse quietly told me, "I'm glad you came in today."",
+    author: "Maya Bloom",
+    authorId: "c3d4e5f6-3333-3333-3333-333333333333",
     isAnon: false,
     timeAgo: "1 week ago",
     saves: 25,
   },
   {
     id: 3,
-    title: "We were sure we’d never get out of overdraft",
+    title: "We were sure we'd never get out of overdraft",
     summary:
       "It felt impossible to imagine a month without dread. It took longer than we hoped, but it did shift.",
     category: "Money",
@@ -252,9 +255,17 @@ export default function HopeBankRoom() {
                         </div>
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs font-medium text-[#5C4A33]">
-                              {story.isAnon ? "Anon" : story.author}
-                            </span>
+                            {story.isAnon ? (
+                              <span className="text-xs font-medium text-[#5C4A33]">
+                                Anon
+                              </span>
+                            ) : (
+                              <UserHoverCard
+                                userId={story.authorId}
+                                userName={story.author}
+                                className="text-xs font-medium text-[#5C4A33]"
+                              />
+                            )}
                             <span className="text-[10px] text-[#A08960]">
                               {story.timeAgo}
                             </span>

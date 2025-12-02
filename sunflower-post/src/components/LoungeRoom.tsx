@@ -6,6 +6,7 @@ import { matchesSearch } from "@/lib/search";
 import { useAuth } from "@/contexts/AuthContext";
 import CommunitySidebar from "./CommunitySidebar";
 import AnonymousToggle from "./AnonymousToggle";
+import UserHoverCard from "./UserHoverCard";
 import { BouncyButton, ShimmerIcon, LoadingState, ReactionBar } from "./ui";
 import type { ReactionId } from "@/config/reactions";
 
@@ -17,6 +18,7 @@ type LoungePost = {
   title: string;
   body: string;
   author: string;
+  authorId?: string; // User ID for profile linking
   timeAgo: string;
   replies: number;
   imageUrl?: string;
@@ -30,7 +32,8 @@ const INITIAL_POSTS: LoungePost[] = [
     type: "joy",
     title: "Tiny win: I actually folded my laundry the same day",
     body: "It's been staring at me for 4 days and today I just did it while on a call. 10/10 recommend low-stakes multitasking.",
-    author: "Dani",
+    author: "Sarah Garden",
+    authorId: "a1b2c3d4-1111-1111-1111-111111111111",
     timeAgo: "2 hours ago",
     replies: 3,
     imageUrl: "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=400&fit=crop", // Clean folded laundry
@@ -49,7 +52,8 @@ const INITIAL_POSTS: LoungePost[] = [
     type: "softrant",
     title: "Everyone else seems to be 'thriving' online",
     body: "Logically I know it's curated, but lately social media has felt loud, performative and exhausting. Grateful this space exists tbh.",
-    author: "Leah",
+    author: "Alex Sunshine",
+    authorId: "b2c3d4e5-2222-2222-2222-222222222222",
     timeAgo: "Yesterday",
     replies: 5,
   },
@@ -551,9 +555,11 @@ export default function LoungeRoom() {
                         </div>
                         <div className="flex-1 min-w-0 space-y-2">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-semibold text-[#5C4A33]">
-                              {post.author}
-                            </span>
+                            <UserHoverCard
+                              userId={post.authorId}
+                              userName={post.author}
+                              className="text-sm font-semibold text-[#5C4A33]"
+                            />
                             <span className="text-[10px] text-[#A08960]">
                               {post.timeAgo}
                             </span>
