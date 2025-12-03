@@ -96,7 +96,7 @@ async function callAIService(prompt: string): Promise<string> {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini', // Using GPT-4o-mini: fast, affordable, and widely available
         messages: [
           {
             role: 'system',
