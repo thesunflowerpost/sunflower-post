@@ -71,6 +71,12 @@ const ROOMS: Room[] = [
     label: "Inspo Wall",
     description: "Visual inspo & saved sunshine",
   },
+  {
+    href: "/journal",
+    icon: "📝",
+    label: "The Journal",
+    description: "Stories & insights from our community",
+  },
 ];
 
 export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}) {

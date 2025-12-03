@@ -46,12 +46,12 @@ export default function HomePage() {
               >
                 Login
               </Link>
-              <a
-                href="#journals"
+              <Link
+                href="/journal"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-white/60 text-[10px] font-medium text-white hover:bg-white/10 transition-all"
               >
-                Read journals
-              </a>
+                Read The Journal
+              </Link>
             </div>
 
             <p className="text-[10px] text-white/80 pt-0.5">
@@ -293,120 +293,122 @@ export default function HomePage() {
           </div>
         </section>
 
-                {/* SUNFLOWER JOURNALS - Enhanced with reading badges */}
-        <section id="journals" className="space-y-6">
+                {/* THE JOURNAL - Editorial articles and stories */}
+        <section id="journal" className="space-y-6">
           <div className="space-y-2">
             <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
-              Sunflower Journals 🪞
+              The Journal 📝
             </h2>
             <p className="text-sm md:text-base text-[color:var(--text-warm-medium)] max-w-3xl leading-relaxed">
-              Long-form reflections, essays and interviews from selected writers,
-              educators and community members.
+              Stories, insights, and reflections from our community. The real work of healing, growing, and showing up.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {/* Journal 1 */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
+            {/* Featured Article 1 */}
+            <Link href="/journal/finding-light-in-small-moments" className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
               <div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=600&h=400&fit=crop"
-                  alt="Journal cover"
+                  src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&h=400&fit=crop"
+                  alt="Finding Light in Small Moments"
                   className="w-full h-full object-cover opacity-90"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50 shadow-md">
-                    Long Read • 12 min
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-green-700 text-green-50 shadow-md">
+                    Self-Care • 4 min
                   </span>
                 </div>
               </div>
               <div className="p-4 space-y-2.5">
-                {/* Author Info */}
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-[10px] font-semibold text-[color:var(--text-warm-dark)] ring-2 ring-white shadow-sm">
-                    E
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-lg ring-2 ring-white shadow-sm">
+                    🌻
                   </div>
                   <div className="text-[10px] text-[color:var(--text-warm-light)]">
-                    <span className="font-semibold">Emma R.</span>
-                    <span className="text-[color:var(--text-warm-lighter)]"> • Essay • Culture</span>
+                    <span className="font-semibold">The Sunflower Team</span>
                   </div>
                 </div>
                 <h3 className="text-sm font-bold text-[color:var(--deep-soil)] group-hover:text-[color:var(--deep-soil)]/80 transition-colors leading-snug">
-                  On feeling invisible in a loud world
+                  Finding Light in Small Moments
                 </h3>
                 <p className="text-xs text-[color:var(--text-warm-light)] leading-relaxed">
-                  A gentle piece on being present, even when you don&apos;t feel seen.
+                  When everything feels heavy, the smallest victories become our greatest teachers.
                 </p>
               </div>
-            </div>
+            </Link>
 
-            {/* Journal 2 */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-rose-100 to-pink-200 overflow-hidden">
+            {/* Featured Article 2 */}
+            <Link href="/journal/when-healing-isnt-linear" className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1499728603263-13726abce5fd?w=600&h=400&fit=crop"
-                  alt="Journal cover"
+                  src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop"
+                  alt="When Healing Isn't Linear"
                   className="w-full h-full object-cover opacity-85"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-rose-700 text-rose-50 shadow-md">
-                    Short Read • 4 min
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-blue-700 text-blue-50 shadow-md">
+                    Mental Health • 5 min
                   </span>
                 </div>
               </div>
               <div className="p-4 space-y-2.5">
-                {/* Author Info */}
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-rose-200 to-pink-300 flex items-center justify-center text-[10px] font-semibold text-[color:var(--text-warm-dark)] ring-2 ring-white shadow-sm">
-                    L
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-lg ring-2 ring-white shadow-sm">
+                    🌻
                   </div>
                   <div className="text-[10px] text-[color:var(--text-warm-light)]">
-                    <span className="font-semibold">Leah M.</span>
-                    <span className="text-[color:var(--text-warm-lighter)]"> • Essay • Community</span>
+                    <span className="font-semibold">The Sunflower Team</span>
                   </div>
                 </div>
                 <h3 className="text-sm font-bold text-[color:var(--deep-soil)] group-hover:text-[color:var(--deep-soil)]/80 transition-colors leading-snug">
-                  Joy as quiet resistance
+                  When Healing Isn&apos;t Linear
                 </h3>
                 <p className="text-xs text-[color:var(--text-warm-light)] leading-relaxed">
-                  Why softness and laughter still matter in heavy times.
+                  Progress isn&apos;t always forward. Sometimes it&apos;s sideways, backwards, or just standing still.
                 </p>
               </div>
-            </div>
+            </Link>
 
-            {/* Journal 3 */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
-              <div className="relative h-48 bg-gradient-to-br from-cyan-100 to-blue-200 overflow-hidden">
+            {/* Featured Article 3 */}
+            <Link href="/journal/community-story-sarahs-journey" className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
+              <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&h=400&fit=crop"
-                  alt="Journal cover"
+                  src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop"
+                  alt="Community Story"
                   className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-cyan-700 text-cyan-50 shadow-md">
-                    Medium Read • 8 min
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-purple-700 text-purple-50 shadow-md">
+                    Community Stories • 5 min
                   </span>
                 </div>
               </div>
               <div className="p-4 space-y-2.5">
-                {/* Author Info */}
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-200 to-blue-300 flex items-center justify-center text-[10px] font-semibold text-[color:var(--text-warm-dark)] ring-2 ring-white shadow-sm">
-                    T
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-lg ring-2 ring-white shadow-sm">
+                    🌸
                   </div>
                   <div className="text-[10px] text-[color:var(--text-warm-light)]">
-                    <span className="font-semibold">The Team</span>
-                    <span className="text-[color:var(--text-warm-lighter)]"> • Behind the Scenes</span>
+                    <span className="font-semibold">Sarah (Community Member)</span>
                   </div>
                 </div>
                 <h3 className="text-sm font-bold text-[color:var(--deep-soil)] group-hover:text-[color:var(--deep-soil)]/80 transition-colors leading-snug">
-                  Soft tech: building gentler online spaces
+                  How I Found My People
                 </h3>
                 <p className="text-xs text-[color:var(--text-warm-light)] leading-relaxed">
-                  Notes from behind the scenes of The Sunflower Post.
+                  A member shares their journey from isolation to connection.
                 </p>
               </div>
-            </div>
+            </Link>
+          </div>
+
+          <div className="text-center pt-4">
+            <Link
+              href="/journal"
+              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-xs font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-gentle)] transition-all hover:shadow-[var(--shadow-soft)] hover:scale-105"
+            >
+              View All Articles →
+            </Link>
           </div>
         </section>
 
