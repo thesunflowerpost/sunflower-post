@@ -38,10 +38,10 @@ export default function Navigation() {
         Community
       </a>
       <a
-        href="#journals"
+        href="/journal"
         className="px-2.5 py-1.5 rounded-full hover:bg-yellow-50 hover:text-yellow-900 transition hidden md:inline-flex"
       >
-        Journals
+        Journal
       </a>
 
       {user ? (
@@ -91,6 +91,12 @@ export default function Navigation() {
                   className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
                 >
                   My Posts
+                </a>
+                <a
+                  href="/personal-journals"
+                  className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
+                >
+                  My Journals
                 </a>
                 <div className="border-t border-yellow-100 mt-1 pt-1">
                   <button

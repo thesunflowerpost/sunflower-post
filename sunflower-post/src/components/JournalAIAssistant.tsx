@@ -75,14 +75,16 @@ export default function JournalAIAssistant({ journalEntry, onClose }: JournalAIA
       });
 
       if (!res.ok) {
-        throw new Error('Failed to get AI response');
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to get AI response');
       }
 
       const data: AIJournalResponse = await res.json();
       setResponse(data);
     } catch (error) {
       console.error('AI assistant error:', error);
-      alert('Sorry, something went wrong. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
+      alert(`Sorry, ${errorMessage}. Please make sure your dev server is running and API key is configured.`);
     } finally {
       setLoading(false);
     }
