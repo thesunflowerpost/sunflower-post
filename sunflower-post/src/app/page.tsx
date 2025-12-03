@@ -600,23 +600,23 @@ export default function HomePage() {
             How it works
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--text-warm-dark)]">1. Join</p>
-              <p className="text-[color:var(--text-warm-medium)] leading-relaxed">
+            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">1. Join</p>
+              <p className="text-white/90 leading-relaxed">
                 Enter the Circle, create a gentle profile, choose a few interests,
                 and we&apos;ll show you rooms that feel like home.
               </p>
             </div>
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--text-warm-dark)]">2. Share</p>
-              <p className="text-[color:var(--text-warm-medium)] leading-relaxed">
+            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">2. Share</p>
+              <p className="text-white/90 leading-relaxed">
                 Plant sunflowers: post small joys, ask for a pick-me-up, join
                 book chats or explore the Pinterest-style wall of inspiration.
               </p>
             </div>
-            <div className="bg-white border border-[color:var(--border-soft)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--text-warm-dark)]">3. Contribute</p>
-              <p className="text-[color:var(--text-warm-medium)] leading-relaxed">
+            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
+              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">3. Contribute</p>
+              <p className="text-white/90 leading-relaxed">
                 Take part in Solution Rooms and Speak Up sessions that feed into
                 annual Sunflower Reports.
               </p>

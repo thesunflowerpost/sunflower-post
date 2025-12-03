@@ -123,26 +123,26 @@
   --font-display: var(--font-serif);
   --font-mono: ui-monospace, "SF Mono", monospace;
 
-  /* FONT SIZES - Clear hierarchy */
-  --text-xs: 0.75rem;      /* 12px */
-  --text-sm: 0.875rem;     /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.25rem;      /* 20px */
-  --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 1.875rem;    /* 30px */
-  --text-4xl: 2.25rem;     /* 36px */
-  --text-5xl: 3rem;        /* 48px */
+  /* FONT SIZES - Compact, Twitter/Substack-style */
+  --text-xs: 0.6875rem;    /* 11px */
+  --text-sm: 0.8125rem;    /* 13px */
+  --text-base: 0.9375rem;  /* 15px - base body text */
+  --text-lg: 1rem;         /* 16px */
+  --text-xl: 1.125rem;     /* 18px */
+  --text-2xl: 1.25rem;     /* 20px */
+  --text-3xl: 1.5rem;      /* 24px */
+  --text-4xl: 1.875rem;    /* 30px */
+  --text-5xl: 2.25rem;     /* 36px */
 
   /* LINE HEIGHTS */
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.6;  /* Body text */
+  --leading-relaxed: 1.625;  /* Body text */
   --leading-loose: 1.75;
 }
 
-/* GLOBAL STYLES - Warm, grounded, welcoming */
+/* GLOBAL STYLES - Clean and minimal */
 * {
   box-sizing: border-box;
 }
@@ -150,21 +150,22 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 15px; /* Base font size like Substack */
 }
 
 body {
-  background: var(--soft-cream);
+  background: white;
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: var(--text-base);
+  font-size: 1rem; /* 15px */
   line-height: var(--leading-relaxed);
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* TYPOGRAPHY HIERARCHY - Sans-serif primary, Serif for emphasis */
+/* TYPOGRAPHY HIERARCHY - Smaller, tighter */
 h1 {
   font-family: var(--font-sans);
-  font-size: var(--text-4xl);
+  font-size: 1.75rem; /* 26px */
   font-weight: 700;
   line-height: var(--leading-tight);
   letter-spacing: -0.02em;
@@ -221,57 +222,57 @@ p {
   font-style: italic;
 }
 
-/* BUTTON STYLES - Following new design system */
+/* BUTTON STYLES - Classic yellow */
 .btn-primary {
-  background: var(--sunflower-gold);
-  color: var(--text-on-gold);
+  background: #facc15; /* yellow-400 */
+  color: #1f2937; /* gray-800 */
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   font-weight: 600;
-  font-size: var(--text-base);
+  font-size: 0.9375rem;
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
 .btn-primary:hover {
-  background: #E5B84D;
-  box-shadow: var(--shadow-medium);
+  background: #eab308; /* yellow-500 */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: var(--sage-green);
-  color: var(--text-primary);
+  background: #f3f4f6; /* gray-100 */
+  color: #1f2937; /* gray-800 */
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   font-weight: 600;
-  font-size: var(--text-base);
+  font-size: 0.9375rem;
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background: var(--color-sage-dark);
+  background: #e5e7eb; /* gray-200 */
 }
 
 .btn-tertiary {
   background: transparent;
-  color: var(--text-primary);
+  color: #1f2937;
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   font-weight: 600;
-  font-size: var(--text-base);
-  border: 2px solid var(--border-medium);
+  font-size: 0.9375rem;
+  border: 2px solid #d1d5db; /* gray-300 */
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .btn-tertiary:hover {
-  border-color: var(--text-primary);
-  background: rgba(92, 74, 62, 0.04);
+  border-color: #9ca3af; /* gray-400 */
+  background: rgba(243, 244, 246, 0.5);
 }
 
 /* CARD STYLES - Soft, rounded, welcoming */

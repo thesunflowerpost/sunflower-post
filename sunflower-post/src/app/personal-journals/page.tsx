@@ -188,7 +188,7 @@ export default function JournalsPage() {
   const uniqueMoods = ['All', ...Array.from(new Set(journals.map(j => j.mood).filter(Boolean)))];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--soft-cream)' }}>
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <header
         className="sticky top-0 z-40"

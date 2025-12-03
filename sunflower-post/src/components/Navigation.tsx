@@ -76,55 +76,50 @@ export default function Navigation() {
 
             {isDropdownOpen && (
               <div
-                className="absolute right-0 mt-2 w-52 rounded-lg py-1 z-[100]"
+                className="absolute right-0 mt-2 w-52 rounded-lg py-1 z-[9999]"
                 style={{
-                  background: 'var(--soft-cream)',
-                  boxShadow: 'var(--shadow-large)',
-                  border: '1px solid var(--border-soft)'
+                  background: 'white',
+                  boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+                  border: '1px solid #e5e7eb'
                 }}
               >
-                <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-soft)' }}>
-                  <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+                <div className="px-4 py-3" style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <p className="text-sm font-semibold truncate text-gray-900">
                     {user.name}
                   </p>
-                  <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>{user.email}</p>
+                  <p className="text-xs truncate text-gray-500">{user.email}</p>
                 </div>
                 <a
                   href="/profile"
-                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 transition text-gray-700"
                 >
                   My Profile
                 </a>
                 <a
                   href="/settings"
-                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 transition text-gray-700"
                 >
                   Settings
                 </a>
                 <a
                   href="/my-posts"
-                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 transition text-gray-700"
                 >
                   My Posts
                 </a>
                 <a
                   href="/personal-journals"
-                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 transition text-gray-700"
                 >
                   My Journals
                 </a>
-                <div style={{ borderTop: '1px solid var(--border-soft)' }} className="mt-1 pt-1">
+                <div style={{ borderTop: '1px solid #e5e7eb' }} className="mt-1 pt-1">
                   <button
                     onClick={() => {
                       logout();
                       setIsDropdownOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm transition"
-                    style={{ color: 'var(--error)' }}
+                    className="block w-full text-left px-4 py-2 text-sm transition hover:bg-red-50 text-red-600"
                   >
                     Log out
                   </button>
