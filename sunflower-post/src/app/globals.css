@@ -301,11 +301,52 @@ p {
   color: var(--text-primary);
 }
 
-/* FOCUS STATES - Warm and accessible */
+/* GLOBAL TRANSITIONS - Smooth and polished */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+.card,
+.tag {
+  transition: all 150ms ease-in-out;
+}
+
+/* FOCUS STATES - Clean and accessible */
 *:focus-visible {
-  outline: 2px solid var(--sunflower-gold);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #facc15;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #facc15 !important;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2) !important;
+}
+
+/* HOVER STATES - Subtle and interactive */
+button:not(:disabled):hover,
+a:hover,
+[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transform: scale(1.01);
+}
+
+/* Ensure disabled states don't transition */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: none;
 }
 
 /* SELECTION - Warm sunflower gold */
