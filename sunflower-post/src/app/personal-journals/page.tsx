@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import JournalEntryModal from '@/components/JournalEntryModal';
-import { Calendar, Tag, Smile, Search, Plus } from 'lucide-react';
+import { Calendar, Tag, Smile, Search, Plus, Sparkles } from 'lucide-react';
 
 interface JournalEntry {
   id: string;
@@ -11,6 +11,7 @@ interface JournalEntry {
   body: string;
   mood?: string;
   tags?: string[];
+  ai_insights?: any[];
   created_at: string;
   updated_at: string;
 }
@@ -128,7 +129,9 @@ export default function JournalsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save journal entry');
+        const errorData = await response.json();
+        console.error('Save error:', errorData);
+        throw new Error(errorData.error || 'Failed to save journal entry');
       }
 
       // Reload journals
@@ -332,6 +335,59 @@ export default function JournalsPage() {
                       </button>
                     )}
                   </div>
+
+                  {/* AI Insights */}
+                  {entry.ai_insights && entry.ai_insights.length > 0 && (
+                    <div className="mb-4 space-y-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="w-4 h-4 text-purple-600" />
+                        <p className="text-xs font-semibold text-purple-900 uppercase tracking-wide">
+                          AI Companion Notes
+                        </p>
+                      </div>
+                      {entry.ai_insights.map((insight: any, idx: number) => {
+                        const modeLabels: Record<string, string> = {
+                          'understand-feelings': '🌈 Emotion Understanding',
+                          'emotion-wheel': '🎨 Emotion Wheel',
+                          'make-sense': '🧩 Thought Summary',
+                          'uplift': '✨ Uplifting Reflection',
+                          'compassion-rewrite': '💛 Compassion Rewrite',
+                          'deeper-questions': '💭 Reflection Questions',
+                        };
+
+                        return (
+                          <div
+                            key={idx}
+                            className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200"
+                          >
+                            <p className="text-xs font-semibold text-purple-800 mb-1">
+                              {modeLabels[insight.mode] || insight.mode}
+                            </p>
+                            <div className="text-xs text-gray-700">
+                              {insight.mode === 'understand-feelings' && insight.data.primaryEmotion && (
+                                <p>Primary emotion: <span className="font-semibold">{insight.data.primaryEmotion}</span></p>
+                              )}
+                              {insight.mode === 'make-sense' && insight.data.summary && (
+                                <p className="italic">&quot;{insight.data.summary}&quot;</p>
+                              )}
+                              {insight.mode === 'uplift' && insight.data.reflection && (
+                                <p className="italic">&quot;{insight.data.reflection}&quot;</p>
+                              )}
+                              {insight.mode === 'compassion-rewrite' && insight.data.rewrittenEntry && (
+                                <p className="italic">&quot;{insight.data.rewrittenEntry.slice(0, 100)}...&quot;</p>
+                              )}
+                              {insight.mode === 'deeper-questions' && insight.data.questions && (
+                                <p>Asked {insight.data.questions.length} reflection question(s)</p>
+                              )}
+                              {insight.mode === 'emotion-wheel' && insight.data.emotions && (
+                                <p>Explored {insight.data.emotions.length} emotions</p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   {/* Tags */}
                   {entry.tags && entry.tags.length > 0 && (
