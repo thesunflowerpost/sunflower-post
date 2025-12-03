@@ -13,6 +13,7 @@ interface JournalEntryModalProps {
     body: string;
     mood?: string;
     tags?: string[];
+    ai_insights?: any[];
   }) => Promise<void>;
   initialEntry?: {
     id?: string;
@@ -79,6 +80,7 @@ export default function JournalEntryModal({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [aiInsights, setAiInsights] = useState<any[]>([]);
 
   // Auto-save to localStorage
   const saveDraft = useCallback(() => {
@@ -189,6 +191,7 @@ export default function JournalEntryModal({
         body: body.trim(),
         mood: mood || undefined,
         tags: tags.length > 0 ? tags : undefined,
+        ai_insights: aiInsights.length > 0 ? aiInsights : undefined,
       });
 
       // Clear draft after successful save
@@ -382,6 +385,15 @@ export default function JournalEntryModal({
                   <JournalAIAssistant
                     journalEntry={body}
                     onClose={() => setShowAIAssistant(false)}
+                    onResponseReceived={(response) => {
+                      // Save AI response to insights array
+                      setAiInsights(prev => [...prev, {
+                        mode: response.mode,
+                        timestamp: new Date().toISOString(),
+                        data: response.data,
+                        hasCrisisLanguage: response.hasCrisisLanguage,
+                      }]);
+                    }}
                   />
                 )}
 
