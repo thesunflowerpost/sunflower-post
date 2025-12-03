@@ -227,12 +227,13 @@ export default function JournalPage() {
                           {/* Meta */}
                           <div className="flex items-center justify-between text-xs text-gray-500">
                             <span>{article.author.name}</span>
-                          <SaveButton
-                            itemType="post"
-                            itemId={article.id}
-                            size="sm"
-                            showLabel={false}
-                          />
+                            <SaveButton
+                              itemType="post"
+                              itemId={article.id}
+                              size="sm"
+                              showLabel={false}
+                            />
+                          </div>
                         </div>
                       </div>
                     </article>
