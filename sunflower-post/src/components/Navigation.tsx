@@ -67,7 +67,7 @@ export default function Navigation() {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-yellow-100 py-1 z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-yellow-100 py-1 z-[100]">
                 <div className="px-4 py-2 border-b border-yellow-100">
                   <p className="text-xs font-semibold text-[#3A2E1F] truncate">
                     {user.name}

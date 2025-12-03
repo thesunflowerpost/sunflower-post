@@ -184,23 +184,20 @@ export default function JournalsPage() {
   const uniqueMoods = ['All', ...Array.from(new Set(journals.map(j => j.mood).filter(Boolean)))];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-yellow-200/60 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between gap-4">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-3xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-[#3A2E1F] flex items-center gap-2">
-                <span>📔</span>
-                <span>My Journal</span>
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Your private space for reflection and growth
+              <h1 className="text-2xl font-semibold text-gray-900">My Journal</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Private reflections
               </p>
             </div>
             <button
               onClick={handleNewEntry}
-              className="px-5 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+              className="px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               New Entry
@@ -209,19 +206,19 @@ export default function JournalsPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-6 py-8">
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-md p-4 mb-6 border-2 border-yellow-200/60">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-3 mb-6">
+          <div className="flex flex-col md:flex-row gap-3">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search journals..."
-                className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:outline-none transition-colors"
+                placeholder="Search entries..."
+                className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-200 rounded-md focus:border-gray-400 focus:outline-none transition-colors"
               />
             </div>
 
@@ -229,7 +226,7 @@ export default function JournalsPage() {
             <select
               value={selectedMood}
               onChange={(e) => setSelectedMood(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:outline-none transition-colors"
+              className="px-3 py-1.5 text-sm border border-gray-200 rounded-md focus:border-gray-400 focus:outline-none transition-colors"
             >
               {uniqueMoods.map((mood) => (
                 <option key={mood} value={mood}>
@@ -243,25 +240,24 @@ export default function JournalsPage() {
         {/* Journal Entries */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
           </div>
         ) : filteredJournals.length === 0 ? (
-          <div className="text-center py-12 space-y-3">
-            <p className="text-3xl">📔</p>
-            <p className="text-gray-600 font-medium">
+          <div className="text-center py-16 space-y-2">
+            <p className="text-gray-600 text-base">
               {searchQuery || selectedMood !== 'All'
-                ? 'No journal entries match your filters'
-                : 'Your journal is empty'}
+                ? 'No entries found'
+                : 'No entries yet'}
             </p>
             <p className="text-sm text-gray-500 max-w-md mx-auto">
               {searchQuery || selectedMood !== 'All'
                 ? 'Try adjusting your search or filters'
-                : 'Journal entries are private and only visible to you. Use this space to reflect, process, and track your thoughts.'}
+                : 'Start writing to capture your thoughts and reflections.'}
             </p>
             {!searchQuery && selectedMood === 'All' && (
               <button
                 onClick={handleNewEntry}
-                className="mt-4 px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                className="mt-4 px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors"
               >
                 Write your first entry
               </button>
@@ -277,28 +273,21 @@ export default function JournalsPage() {
               return (
                 <article
                   key={entry.id}
-                  className="bg-white rounded-2xl shadow-md p-6 border-2 border-gray-100 hover:border-yellow-200 hover:shadow-lg transition-all"
+                  className="bg-white border-b border-gray-200 py-6 last:border-b-0"
                 >
                   {/* Header */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
-                      <h2 className="text-xl font-bold text-[#3A2E1F] mb-2">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">
                         {entry.title}
                       </h2>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{formatDate(entry.created_at)}</span>
-                          <span className="text-gray-400">at</span>
-                          <span>{formatTime(entry.created_at)}</span>
-                        </div>
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <span>{formatDate(entry.created_at)}</span>
                         {entry.mood && (
-                          <div className="flex items-center gap-1">
-                            <Smile className="w-4 h-4" />
-                            <span>
-                              {MOOD_EMOJIS[entry.mood]} {entry.mood}
-                            </span>
-                          </div>
+                          <>
+                            <span className="text-gray-300">·</span>
+                            <span>{MOOD_EMOJIS[entry.mood]} {entry.mood}</span>
+                          </>
                         )}
                       </div>
                     </div>
@@ -307,13 +296,13 @@ export default function JournalsPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEditEntry(entry)}
-                        className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeleteEntry(entry.id)}
-                        className="px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                        className="px-2 py-1 text-xs font-medium text-gray-400 hover:text-red-600 transition-colors"
                       >
                         Delete
                       </button>
@@ -321,15 +310,15 @@ export default function JournalsPage() {
                   </div>
 
                   {/* Body */}
-                  <div className="prose prose-sm max-w-none mb-4">
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                  <div className="prose prose-sm max-w-none mb-3">
+                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-base">
                       {isExpanded ? entry.body : preview}
                       {needsExpansion && !isExpanded && '...'}
                     </p>
                     {needsExpansion && (
                       <button
                         onClick={() => setExpandedId(isExpanded ? null : entry.id)}
-                        className="text-sm text-yellow-700 hover:text-yellow-900 font-medium mt-2"
+                        className="text-xs text-gray-500 hover:text-gray-900 font-medium mt-2"
                       >
                         {isExpanded ? 'Show less' : 'Read more'}
                       </button>
@@ -338,11 +327,11 @@ export default function JournalsPage() {
 
                   {/* AI Insights */}
                   {entry.ai_insights && entry.ai_insights.length > 0 && (
-                    <div className="mb-4 space-y-2">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Sparkles className="w-4 h-4 text-purple-600" />
-                        <p className="text-xs font-semibold text-purple-900 uppercase tracking-wide">
-                          AI Companion Notes
+                    <div className="mb-3 space-y-2">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-gray-400" />
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          AI Notes
                         </p>
                       </div>
                       {entry.ai_insights.map((insight: any, idx: number) => {
@@ -358,14 +347,14 @@ export default function JournalsPage() {
                         return (
                           <div
                             key={idx}
-                            className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200"
+                            className="p-2.5 bg-gray-50 rounded-md border border-gray-200"
                           >
-                            <p className="text-xs font-semibold text-purple-800 mb-1">
+                            <p className="text-xs font-medium text-gray-700 mb-1">
                               {modeLabels[insight.mode] || insight.mode}
                             </p>
-                            <div className="text-xs text-gray-700">
+                            <div className="text-xs text-gray-600">
                               {insight.mode === 'understand-feelings' && insight.data.primaryEmotion && (
-                                <p>Primary emotion: <span className="font-semibold">{insight.data.primaryEmotion}</span></p>
+                                <p>Primary emotion: <span className="font-medium">{insight.data.primaryEmotion}</span></p>
                               )}
                               {insight.mode === 'make-sense' && insight.data.summary && (
                                 <p className="italic">&quot;{insight.data.summary}&quot;</p>
@@ -391,12 +380,11 @@ export default function JournalsPage() {
 
                   {/* Tags */}
                   {entry.tags && entry.tags.length > 0 && (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Tag className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       {entry.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-2 py-1 bg-yellow-50 text-yellow-800 rounded-full text-xs font-medium"
+                          className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs"
                         >
                           #{tag}
                         </span>
