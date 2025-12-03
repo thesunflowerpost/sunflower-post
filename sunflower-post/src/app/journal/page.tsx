@@ -72,9 +72,9 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-yellow-50/30">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-4 gap-6">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid md:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="md:col-span-1">
             <CommunitySidebar />
@@ -83,24 +83,24 @@ export default function JournalPage() {
           {/* Main Content */}
           <div className="md:col-span-3 space-y-8">
             {/* Header */}
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-5xl font-bold text-[#3A2E1F]">
+            <div className="border-b border-gray-200 pb-8">
+              <h1 className="text-3xl font-semibold text-gray-900 mb-2">
                 The Journal
               </h1>
-              <p className="text-lg text-[#7A674C] max-w-2xl mx-auto">
-                Stories, insights, and reflections from our community. Here, we share the real work of healing, growing, and showing up.
+              <p className="text-base text-gray-600 max-w-2xl">
+                Stories, insights, and reflections from our community
               </p>
             </div>
 
             {/* Search and Filter */}
-            <div className="bg-white rounded-3xl border border-yellow-200/60 p-6 shadow-sm space-y-4">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
               {/* Search */}
               <input
                 type="text"
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-yellow-200 rounded-xl focus:border-yellow-400 focus:outline-none text-[#3A2E1F] placeholder-[#A08960]"
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:border-gray-400 focus:outline-none text-gray-900 placeholder-gray-400"
               />
 
               {/* Category Filter */}
@@ -109,10 +109,10 @@ export default function JournalPage() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                    className={`px-3 py-1 text-xs font-medium transition-colors rounded-md ${
                       selectedCategory === category
-                        ? 'bg-yellow-400 text-[#3A2E1F] shadow-md'
-                        : 'bg-yellow-50 border border-yellow-200 text-[#7A674C] hover:bg-yellow-100'
+                        ? 'bg-yellow-400 text-gray-900'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     {category}
@@ -123,52 +123,49 @@ export default function JournalPage() {
 
             {/* Featured Articles */}
             {featuredArticles.length > 0 && (
-              <section className="space-y-6">
-                <h2 className="text-2xl font-bold text-[#3A2E1F] flex items-center gap-2">
-                  <span>⭐</span>
-                  Featured Stories
+              <section className="space-y-5">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Featured
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {featuredArticles.map((article) => (
                     <article
                       key={article.id}
-                      className="bg-white rounded-3xl border border-yellow-200/60 overflow-hidden hover:shadow-xl transition-all group"
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-all group"
                     >
                       {/* Cover Image */}
                       <Link href={`/journal/${article.slug}`}>
-                        <div className="relative h-64 overflow-hidden">
+                        <div className="relative h-48 overflow-hidden">
                           <img
                             src={article.coverImage}
                             alt={article.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                          <div className="absolute bottom-4 left-4 right-4">
-                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getCategoryColor(article.category)}`}>
-                              {article.category}
-                            </span>
-                          </div>
                         </div>
                       </Link>
 
                       {/* Content */}
-                      <div className="p-6 space-y-4">
+                      <div className="p-5 space-y-3">
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className="text-gray-500">{article.category}</span>
+                          <span className="text-gray-300">·</span>
+                          <span className="text-gray-500">{article.readTimeMinutes} min read</span>
+                        </div>
+
                         <Link href={`/journal/${article.slug}`}>
-                          <h3 className="text-xl font-bold text-[#3A2E1F] group-hover:text-yellow-700 transition-colors line-clamp-2">
+                          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-600 transition-colors line-clamp-2">
                             {article.title}
                           </h3>
                         </Link>
 
-                        <p className="text-sm text-[#5C4A33] line-clamp-3">
+                        <p className="text-sm text-gray-600 line-clamp-2">
                           {article.excerpt}
                         </p>
 
                         {/* Meta */}
-                        <div className="flex items-center justify-between text-xs text-[#A08960]">
-                          <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <div className="flex items-center gap-2">
                             <span>{article.author.name}</span>
-                            <span>•</span>
-                            <span>{article.readTimeMinutes} min read</span>
                           </div>
                           <SaveButton
                             itemType="post"
@@ -178,17 +175,6 @@ export default function JournalPage() {
                           />
                         </div>
 
-                        {/* Stats */}
-                        <div className="flex items-center gap-4 text-xs text-[#7A674C] pt-2 border-t border-yellow-100">
-                          <span className="flex items-center gap-1">
-                            <span>💬</span>
-                            {article.commentCount}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <span>❤️</span>
-                            {article.reactionCount}
-                          </span>
-                        </div>
                       </div>
                     </article>
                   ))}
@@ -198,46 +184,49 @@ export default function JournalPage() {
 
             {/* Recent Articles */}
             {recentArticles.length > 0 && (
-              <section className="space-y-6">
-                <h2 className="text-2xl font-bold text-[#3A2E1F]">
-                  Recent Articles
+              <section className="space-y-5">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Recent
                 </h2>
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-6">
                   {recentArticles.map((article) => (
                     <article
                       key={article.id}
-                      className="bg-white rounded-3xl border border-yellow-200/60 overflow-hidden hover:shadow-xl transition-all group"
+                      className="pb-6 border-b border-gray-200 last:border-b-0 group"
                     >
-                      {/* Cover Image */}
-                      <Link href={`/journal/${article.slug}`}>
-                        <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={article.coverImage}
-                            alt={article.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      </Link>
-
-                      {/* Content */}
-                      <div className="p-5 space-y-3">
-                        <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold border ${getCategoryColor(article.category)}`}>
-                          {article.category}
-                        </span>
-
-                        <Link href={`/journal/${article.slug}`}>
-                          <h3 className="text-base font-bold text-[#3A2E1F] group-hover:text-yellow-700 transition-colors line-clamp-2">
-                            {article.title}
-                          </h3>
+                      <div className="flex gap-4">
+                        {/* Cover Image */}
+                        <Link href={`/journal/${article.slug}`} className="flex-shrink-0">
+                          <div className="w-32 h-24 overflow-hidden rounded-md">
+                            <img
+                              src={article.coverImage}
+                              alt={article.title}
+                              className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
+                            />
+                          </div>
                         </Link>
 
-                        <p className="text-xs text-[#5C4A33] line-clamp-2">
-                          {article.excerpt}
-                        </p>
+                        {/* Content */}
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span>{article.category}</span>
+                            <span className="text-gray-300">·</span>
+                            <span>{article.readTimeMinutes} min read</span>
+                          </div>
 
-                        {/* Meta */}
-                        <div className="flex items-center justify-between text-[10px] text-[#A08960] pt-2 border-t border-yellow-100">
-                          <span>{article.readTimeMinutes} min read</span>
+                          <Link href={`/journal/${article.slug}`}>
+                            <h3 className="text-base font-semibold text-gray-900 group-hover:text-gray-600 transition-colors line-clamp-2">
+                              {article.title}
+                            </h3>
+                          </Link>
+
+                          <p className="text-sm text-gray-600 line-clamp-2">
+                            {article.excerpt}
+                          </p>
+
+                          {/* Meta */}
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <span>{article.author.name}</span>
                           <SaveButton
                             itemType="post"
                             itemId={article.id}

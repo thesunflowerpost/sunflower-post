@@ -35,15 +35,18 @@ export async function GET(request: NextRequest) {
       .eq('user_id', payload.userId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error getting journals:', error);
+      throw error;
+    }
 
     return NextResponse.json({
       entries: data || [],
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in GET /api/journal:', error);
     return NextResponse.json(
-      { error: 'Failed to get journal entries' },
+      { error: error?.message || 'Failed to get journal entries' },
       { status: 500 }
     );
   }
@@ -110,16 +113,19 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error creating journal:', error);
+      throw error;
+    }
 
     return NextResponse.json({
       message: 'Journal entry created successfully',
       entry: data,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in POST /api/journal:', error);
     return NextResponse.json(
-      { error: 'Failed to create journal entry' },
+      { error: error?.message || 'Failed to create journal entry' },
       { status: 500 }
     );
   }
@@ -192,7 +198,10 @@ export async function PUT(request: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error updating journal:', error);
+      throw error;
+    }
 
     if (!data) {
       return NextResponse.json(
@@ -205,10 +214,10 @@ export async function PUT(request: NextRequest) {
       message: 'Journal entry updated successfully',
       entry: data,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in PUT /api/journal:', error);
     return NextResponse.json(
-      { error: 'Failed to update journal entry' },
+      { error: error?.message || 'Failed to update journal entry' },
       { status: 500 }
     );
   }
@@ -258,15 +267,18 @@ export async function DELETE(request: NextRequest) {
       .eq('id', id)
       .eq('user_id', payload.userId);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error deleting journal:', error);
+      throw error;
+    }
 
     return NextResponse.json({
       message: 'Journal entry deleted successfully',
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in DELETE /api/journal:', error);
     return NextResponse.json(
-      { error: 'Failed to delete journal entry' },
+      { error: error?.message || 'Failed to delete journal entry' },
       { status: 500 }
     );
   }
