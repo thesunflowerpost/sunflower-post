@@ -292,10 +292,22 @@ export default function JournalEntryModal({
                         <button
                           key={template.id}
                           onClick={() => applyTemplate(template)}
-                          className="p-4 rounded-xl border-2 border-gray-200 hover:border-yellow-400 hover:bg-yellow-50 transition-all text-center"
+                          className="p-4 rounded-xl border-2 transition-all text-center"
+                          style={{
+                            borderColor: 'var(--border-soft)',
+                            background: 'white'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--sunflower-gold)';
+                            e.currentTarget.style.background = 'var(--soft-cream)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--border-soft)';
+                            e.currentTarget.style.background = 'white';
+                          }}
                         >
-                          <template.icon className="w-6 h-6 mx-auto mb-2 text-yellow-600" />
-                          <div className="text-sm font-semibold text-[#3A2E1F]">
+                          <template.icon className="w-6 h-6 mx-auto mb-2" style={{ color: 'var(--sunflower-gold)' }} />
+                          <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
                             {template.name}
                           </div>
                         </button>
@@ -330,11 +342,12 @@ export default function JournalEntryModal({
                       <button
                         key={moodOption}
                         onClick={() => setMood(mood === moodOption ? '' : moodOption)}
-                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                          mood === moodOption
-                            ? 'bg-yellow-400 text-[#3A2E1F] shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
+                        className="px-3 py-2 rounded-full text-sm font-medium transition-all"
+                        style={{
+                          background: mood === moodOption ? 'var(--sunflower-gold)' : 'var(--sage-green)',
+                          color: mood === moodOption ? 'var(--deep-soil)' : 'var(--text-secondary)',
+                          boxShadow: mood === moodOption ? 'var(--shadow-soft)' : 'none'
+                        }}
                       >
                         {moodOption}
                       </button>
@@ -359,20 +372,27 @@ export default function JournalEntryModal({
 
                 {/* AI Assistant Toggle */}
                 {body.trim().length > 50 && !showAIAssistant && (
-                  <div className="border-2 border-yellow-200/60 rounded-2xl p-4 bg-gradient-to-br from-yellow-50/50 to-white">
+                  <div
+                    className="rounded-2xl p-4"
+                    style={{
+                      border: '2px solid var(--sunflower-gold)',
+                      background: 'linear-gradient(135deg, var(--soft-cream) 0%, white 100%)'
+                    }}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-[#3A2E1F] mb-1 flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-yellow-600" />
+                        <p className="text-sm font-semibold mb-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                          <Sparkles className="w-4 h-4" style={{ color: 'var(--sunflower-gold)' }} />
                           Want some gentle support?
                         </p>
-                        <p className="text-xs text-[#7A674C]">
+                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
                           Get optional AI assistance to explore your feelings, make sense of your thoughts, or find encouragement.
                         </p>
                       </div>
                       <button
                         onClick={() => setShowAIAssistant(true)}
-                        className="ml-4 px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-sm hover:shadow-md transition-all whitespace-nowrap"
+                        className="ml-4 btn-primary whitespace-nowrap"
+                        style={{ fontSize: '0.875rem' }}
                       >
                         Try AI Support
                       </button>
@@ -399,7 +419,7 @@ export default function JournalEntryModal({
 
                 {/* Tags */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-[#3A2E1F]">
+                  <label className="block text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
                     Tags (optional)
                   </label>
                   <div className="flex gap-2">
@@ -409,12 +429,22 @@ export default function JournalEntryModal({
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={handleTagInputKeyDown}
                       placeholder="Add a tag..."
-                      className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:outline-none transition-colors"
+                      className="flex-1 px-4 py-2 border-2 rounded-xl focus:outline-none transition-colors"
+                      style={{
+                        borderColor: 'var(--border-soft)',
+                        color: 'var(--text-primary)'
+                      }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--sunflower-gold)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border-soft)'}
                       disabled={isSaving}
                     />
                     <button
                       onClick={handleAddTag}
-                      className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition-all"
+                      className="px-4 py-2 rounded-xl font-semibold transition-all"
+                      style={{
+                        background: 'var(--sage-green)',
+                        color: 'var(--text-secondary)'
+                      }}
                       disabled={isSaving}
                     >
                       Add
@@ -425,12 +455,16 @@ export default function JournalEntryModal({
                       {tags.map((tag) => (
                         <span
                           key={tag}
-                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm"
+                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm"
+                          style={{
+                            background: 'var(--rose-beige)',
+                            color: 'var(--text-primary)'
+                          }}
                         >
                           #{tag}
                           <button
                             onClick={() => handleRemoveTag(tag)}
-                            className="hover:text-yellow-900"
+                            style={{ color: 'var(--text-secondary)' }}
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -442,22 +476,28 @@ export default function JournalEntryModal({
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-3xl">
-                <p className="text-xs text-gray-500">
+              <div
+                className="flex items-center justify-between gap-3 p-6 rounded-b-3xl"
+                style={{
+                  borderTop: '1px solid var(--border-soft)',
+                  background: 'var(--soft-cream)'
+                }}
+              >
+                <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
                   <Sparkles className="w-3 h-3 inline mr-1" />
                   Journal entries are private and only visible to you
                 </p>
                 <div className="flex gap-3">
                   <button
                     onClick={handleClose}
-                    className="px-6 py-3 rounded-xl border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold transition-all"
+                    className="px-6 py-3 rounded-xl border-2 font-semibold transition-all btn-tertiary"
                     disabled={isSaving}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSave}
-                    className="px-6 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-3 btn-primary font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isSaving || !title.trim() || !body.trim()}
                   >
                     <Save className="w-5 h-5 inline mr-2" />
