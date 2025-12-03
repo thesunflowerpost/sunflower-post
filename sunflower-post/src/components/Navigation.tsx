@@ -24,33 +24,41 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className="flex items-center gap-1.5 text-[10px] text-[#7A674C]">
+    <nav className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
       <a
         href="/"
-        className="px-2.5 py-1.5 rounded-full bg-yellow-50 text-yellow-900 font-medium shadow-sm"
+        className="px-3 py-1.5 rounded-lg font-medium transition-colors"
+        style={{
+          background: 'var(--sunflower-gold)',
+          color: 'var(--deep-soil)'
+        }}
       >
         Home
       </a>
       <a
         href="/lounge"
-        className="px-2.5 py-1.5 rounded-full hover:bg-yellow-50 hover:text-yellow-900 transition"
+        className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition-colors font-medium"
       >
         Community
       </a>
       <a
         href="/journal"
-        className="px-2.5 py-1.5 rounded-full hover:bg-yellow-50 hover:text-yellow-900 transition hidden md:inline-flex"
+        className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition-colors font-medium hidden md:inline-flex"
       >
         Journal
       </a>
 
       {user ? (
         <>
-          <div className="w-px h-4 bg-yellow-200 mx-1 hidden md:block" />
+          <div className="w-px h-5 mx-2 hidden md:block" style={{ background: 'var(--border-soft)' }} />
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-8 h-8 rounded-full bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center shadow-sm transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none"
+              style={{
+                background: 'var(--sunflower-gold)',
+                boxShadow: 'var(--shadow-soft)'
+              }}
               aria-label="User menu"
             >
               {user.profilePicture ? (
@@ -60,51 +68,63 @@ export default function Navigation() {
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-semibold text-[#3A2E1F]">
+                <span className="text-sm font-semibold" style={{ color: 'var(--deep-soil)' }}>
                   {user.name.charAt(0).toUpperCase()}
                 </span>
               )}
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-yellow-100 py-1 z-[100]">
-                <div className="px-4 py-2 border-b border-yellow-100">
-                  <p className="text-xs font-semibold text-[#3A2E1F] truncate">
+              <div
+                className="absolute right-0 mt-2 w-52 rounded-lg py-1 z-[100]"
+                style={{
+                  background: 'var(--soft-cream)',
+                  boxShadow: 'var(--shadow-large)',
+                  border: '1px solid var(--border-soft)'
+                }}
+              >
+                <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-soft)' }}>
+                  <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                     {user.name}
                   </p>
-                  <p className="text-[9px] text-[#7A674C] truncate">{user.email}</p>
+                  <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>{user.email}</p>
                 </div>
                 <a
                   href="/profile"
-                  className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
+                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   My Profile
                 </a>
                 <a
                   href="/settings"
-                  className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
+                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   Settings
                 </a>
                 <a
                   href="/my-posts"
-                  className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
+                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   My Posts
                 </a>
                 <a
                   href="/personal-journals"
-                  className="block px-4 py-2 text-[10px] text-[#7A674C] hover:bg-yellow-50 transition"
+                  className="block px-4 py-2 text-sm hover:bg-[var(--sage-green)] transition"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   My Journals
                 </a>
-                <div className="border-t border-yellow-100 mt-1 pt-1">
+                <div style={{ borderTop: '1px solid var(--border-soft)' }} className="mt-1 pt-1">
                   <button
                     onClick={() => {
                       logout();
                       setIsDropdownOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-[10px] text-red-600 hover:bg-red-50 transition"
+                    className="block w-full text-left px-4 py-2 text-sm transition"
+                    style={{ color: 'var(--error)' }}
                   >
                     Log out
                   </button>
@@ -115,16 +135,17 @@ export default function Navigation() {
         </>
       ) : (
         <>
-          <div className="w-px h-4 bg-yellow-200 mx-1 hidden md:block" />
+          <div className="w-px h-5 mx-2 hidden md:block" style={{ background: 'var(--border-soft)' }} />
           <Link
             href="/login"
-            className="px-2.5 py-1.5 rounded-full hover:bg-yellow-50 hover:text-yellow-900 transition font-medium"
+            className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition font-medium text-sm"
+            style={{ color: 'var(--text-secondary)' }}
           >
             Login
           </Link>
           <Link
             href="/signup"
-            className="px-2.5 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] font-semibold shadow-sm transition-all hover:shadow-md"
+            className="px-4 py-1.5 rounded-lg font-semibold text-sm transition-all btn-primary"
           >
             Sign up
           </Link>

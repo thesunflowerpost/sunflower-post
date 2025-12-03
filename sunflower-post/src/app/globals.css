@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* GOOGLE FONTS IMPORT - Must come first */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
+
 /* 🌻 THE SUNFLOWER POST DESIGN SYSTEM */
 /* Warm, emotionally safe, grounded, soft-life wellness aesthetic */
 
@@ -141,9 +144,6 @@
   --leading-relaxed: 1.6;  /* Body text */
   --leading-loose: 1.75;
 }
-
-/* GOOGLE FONTS IMPORT */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
 
 /* GLOBAL STYLES - Warm, grounded, welcoming */
 * {
