@@ -129,9 +129,13 @@ export default function JournalsPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Save error:', errorData);
-        throw new Error(errorData.error || 'Failed to save journal entry');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Save error:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        throw new Error(errorData.error || `Failed to save: ${response.status} ${response.statusText}`);
       }
 
       // Reload journals
