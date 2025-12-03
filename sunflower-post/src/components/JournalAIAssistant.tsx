@@ -15,9 +15,10 @@ import type {
 interface JournalAIAssistantProps {
   journalEntry: string;
   onClose?: () => void;
+  onResponseReceived?: (response: AIJournalResponse) => void;
 }
 
-export default function JournalAIAssistant({ journalEntry, onClose }: JournalAIAssistantProps) {
+export default function JournalAIAssistant({ journalEntry, onClose, onResponseReceived }: JournalAIAssistantProps) {
   const [selectedMode, setSelectedMode] = useState<AIJournalMode | null>(null);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<AIJournalResponse | null>(null);
@@ -81,6 +82,11 @@ export default function JournalAIAssistant({ journalEntry, onClose }: JournalAIA
 
       const data: AIJournalResponse = await res.json();
       setResponse(data);
+
+      // Notify parent component of the response
+      if (onResponseReceived) {
+        onResponseReceived(data);
+      }
     } catch (error) {
       console.error('AI assistant error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong';

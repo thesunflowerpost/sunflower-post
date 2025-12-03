@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     // Get entry data from request body
     const body = await request.json();
-    const { title, body: entryBody, mood, tags } = body;
+    const { title, body: entryBody, mood, tags, ai_insights } = body;
 
     // Validate
     if (!title || !title.trim()) {
@@ -104,6 +104,7 @@ export async function POST(request: NextRequest) {
           body: entryBody.trim(),
           mood: mood || null,
           tags: tags || null,
+          ai_insights: ai_insights || null,
         },
       ])
       .select()
@@ -152,7 +153,7 @@ export async function PUT(request: NextRequest) {
 
     // Get entry data from request body
     const body = await request.json();
-    const { id, title, body: entryBody, mood, tags } = body;
+    const { id, title, body: entryBody, mood, tags, ai_insights } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -184,6 +185,7 @@ export async function PUT(request: NextRequest) {
         body: entryBody.trim(),
         mood: mood || null,
         tags: tags || null,
+        ai_insights: ai_insights || null,
       })
       .eq('id', id)
       .eq('user_id', payload.userId)
