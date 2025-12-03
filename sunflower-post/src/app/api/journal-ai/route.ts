@@ -60,8 +60,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error('Error in journal AI endpoint:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to process journal entry';
     return NextResponse.json(
-      { error: 'Failed to process journal entry' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
