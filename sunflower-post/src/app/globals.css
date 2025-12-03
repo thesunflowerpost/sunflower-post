@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* GOOGLE FONTS IMPORT - Must come first */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
-
 /* 🌻 THE SUNFLOWER POST DESIGN SYSTEM */
 /* Warm, emotionally safe, grounded, soft-life wellness aesthetic */
 
@@ -118,10 +115,10 @@
   --shadow-xl: var(--shadow-xl);
 
   /* TYPOGRAPHY - Warm, welcoming type system */
-  /* Sans-serif: Nunito for UI elements */
-  --font-sans: "Nunito", "Inter", system-ui, -apple-system, sans-serif;
-  /* Serif: DM Serif Display for emotional headings */
-  --font-serif: "DM Serif Display", "Playfair Display", Georgia, serif;
+  /* Sans-serif: Nunito for UI elements (loaded via next/font) */
+  --font-sans: var(--font-nunito), system-ui, -apple-system, sans-serif;
+  /* Serif: DM Serif Display for emotional headings (loaded via next/font) */
+  --font-serif: var(--font-dm-serif), Georgia, serif;
   --font-body: var(--font-sans);
   --font-display: var(--font-serif);
   --font-mono: ui-monospace, "SF Mono", monospace;
