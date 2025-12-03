@@ -72,7 +72,7 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--soft-cream)' }}>
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Sidebar */}
@@ -83,11 +83,18 @@ export default function JournalPage() {
           {/* Main Content */}
           <div className="md:col-span-3 space-y-8">
             {/* Header */}
-            <div className="border-b border-gray-200 pb-8">
-              <h1 className="text-3xl font-semibold text-gray-900 mb-2">
+            <div className="pb-8" style={{ borderBottom: '1px solid var(--border-soft)' }}>
+              <h1
+                className="font-semibold mb-2"
+                style={{
+                  fontSize: '1.5rem',
+                  color: 'var(--text-primary)',
+                  fontFamily: 'var(--font-serif)'
+                }}
+              >
                 The Journal
               </h1>
-              <p className="text-base text-gray-600 max-w-2xl">
+              <p className="max-w-2xl" style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>
                 Stories, insights, and reflections from our community
               </p>
             </div>

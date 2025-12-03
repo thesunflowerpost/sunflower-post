@@ -188,20 +188,43 @@ export default function JournalsPage() {
   const uniqueMoods = ['All', ...Array.from(new Set(journals.map(j => j.mood).filter(Boolean)))];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--soft-cream)' }}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      <header
+        className="sticky top-0 z-40"
+        style={{
+          background: 'var(--forest-green)',
+          borderBottom: '1px solid var(--forest-green-light)',
+          boxShadow: 'var(--shadow-soft)'
+        }}
+      >
         <div className="max-w-3xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900">My Journal</h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <h1
+                className="font-semibold"
+                style={{
+                  color: 'var(--soft-cream)',
+                  fontSize: '1rem',
+                  fontFamily: 'var(--font-sans)'
+                }}
+              >
+                My Journal
+              </h1>
+              <p
+                className="mt-0.5"
+                style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--sage-green)'
+                }}
+              >
                 Private reflections
               </p>
             </div>
             <button
               onClick={handleNewEntry}
-              className="px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors flex items-center gap-2"
+              className="btn-primary flex items-center gap-2"
+              style={{ fontSize: '0.875rem' }}
             >
               <Plus className="w-4 h-4" />
               New Entry
@@ -212,17 +235,30 @@ export default function JournalsPage() {
 
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* Filters */}
-        <div className="bg-white border border-gray-200 rounded-lg p-3 mb-6">
+        <div
+          className="rounded-xl p-4 mb-6"
+          style={{
+            background: 'white',
+            border: '1px solid var(--border-soft)',
+            boxShadow: 'var(--shadow-soft)'
+          }}
+        >
           <div className="flex flex-col md:flex-row gap-3">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-tertiary)' }} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search entries..."
-                className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-200 rounded-md focus:border-gray-400 focus:outline-none transition-colors"
+                className="w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none transition-all"
+                style={{
+                  fontSize: '0.875rem',
+                  border: '1px solid var(--border-soft)',
+                  color: 'var(--text-primary)',
+                  background: 'var(--soft-cream)'
+                }}
               />
             </div>
 
@@ -230,7 +266,13 @@ export default function JournalsPage() {
             <select
               value={selectedMood}
               onChange={(e) => setSelectedMood(e.target.value)}
-              className="px-3 py-1.5 text-sm border border-gray-200 rounded-md focus:border-gray-400 focus:outline-none transition-colors"
+              className="px-3 py-2 rounded-lg focus:outline-none transition-all"
+              style={{
+                fontSize: '0.875rem',
+                border: '1px solid var(--border-soft)',
+                color: 'var(--text-primary)',
+                background: 'var(--soft-cream)'
+              }}
             >
               {uniqueMoods.map((mood) => (
                 <option key={mood} value={mood}>
@@ -244,16 +286,16 @@ export default function JournalsPage() {
         {/* Journal Entries */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2" style={{ borderColor: 'var(--sunflower-gold)' }}></div>
           </div>
         ) : filteredJournals.length === 0 ? (
-          <div className="text-center py-16 space-y-2">
-            <p className="text-gray-600 text-base">
+          <div className="text-center py-16 space-y-3">
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>
               {searchQuery || selectedMood !== 'All'
                 ? 'No entries found'
                 : 'No entries yet'}
             </p>
-            <p className="text-sm text-gray-500 max-w-md mx-auto">
+            <p className="max-w-md mx-auto" style={{ fontSize: '0.875rem', color: 'var(--text-tertiary)' }}>
               {searchQuery || selectedMood !== 'All'
                 ? 'Try adjusting your search or filters'
                 : 'Start writing to capture your thoughts and reflections.'}
@@ -261,7 +303,7 @@ export default function JournalsPage() {
             {!searchQuery && selectedMood === 'All' && (
               <button
                 onClick={handleNewEntry}
-                className="mt-4 px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors"
+                className="mt-4 btn-primary"
               >
                 Write your first entry
               </button>
@@ -277,19 +319,31 @@ export default function JournalsPage() {
               return (
                 <article
                   key={entry.id}
-                  className="bg-white border-b border-gray-200 py-6 last:border-b-0"
+                  className="rounded-xl p-6 mb-4"
+                  style={{
+                    background: 'white',
+                    border: '1px solid var(--border-soft)',
+                    boxShadow: 'var(--shadow-soft)'
+                  }}
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
-                      <h2 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">
+                      <h2
+                        className="font-semibold mb-2 leading-tight"
+                        style={{
+                          fontSize: '1rem',
+                          color: 'var(--text-primary)',
+                          fontFamily: 'var(--font-sans)'
+                        }}
+                      >
                         {entry.title}
                       </h2>
-                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-3" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
                         <span>{formatDate(entry.created_at)}</span>
                         {entry.mood && (
                           <>
-                            <span className="text-gray-300">·</span>
+                            <span style={{ color: 'var(--border-medium)' }}>·</span>
                             <span>{MOOD_EMOJIS[entry.mood]} {entry.mood}</span>
                           </>
                         )}
@@ -300,13 +354,24 @@ export default function JournalsPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEditEntry(entry)}
-                        className="px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                        className="px-3 py-1.5 rounded-lg font-medium transition-all"
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--text-secondary)',
+                          background: 'var(--sage-green)',
+                        }}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeleteEntry(entry.id)}
-                        className="px-2 py-1 text-xs font-medium text-gray-400 hover:text-red-600 transition-colors"
+                        className="px-3 py-1.5 rounded-lg font-medium transition-all"
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--text-tertiary)',
+                          background: 'var(--soft-cream)',
+                          border: '1px solid var(--border-soft)'
+                        }}
                       >
                         Delete
                       </button>
@@ -314,15 +379,26 @@ export default function JournalsPage() {
                   </div>
 
                   {/* Body */}
-                  <div className="prose prose-sm max-w-none mb-3">
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-base">
+                  <div className="max-w-none mb-3">
+                    <p
+                      className="whitespace-pre-wrap"
+                      style={{
+                        color: 'var(--text-secondary)',
+                        lineHeight: '1.6',
+                        fontSize: '0.9375rem'
+                      }}
+                    >
                       {isExpanded ? entry.body : preview}
                       {needsExpansion && !isExpanded && '...'}
                     </p>
                     {needsExpansion && (
                       <button
                         onClick={() => setExpandedId(isExpanded ? null : entry.id)}
-                        className="text-xs text-gray-500 hover:text-gray-900 font-medium mt-2"
+                        className="font-medium mt-2 transition-colors"
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--text-tertiary)'
+                        }}
                       >
                         {isExpanded ? 'Show less' : 'Read more'}
                       </button>
@@ -333,8 +409,14 @@ export default function JournalsPage() {
                   {entry.ai_insights && entry.ai_insights.length > 0 && (
                     <div className="mb-3 space-y-2">
                       <div className="flex items-center gap-1.5 mb-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-gray-400" />
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--sunflower-gold)' }} />
+                        <p
+                          className="font-medium uppercase tracking-wide"
+                          style={{
+                            fontSize: '0.75rem',
+                            color: 'var(--text-tertiary)'
+                          }}
+                        >
                           AI Notes
                         </p>
                       </div>
@@ -351,12 +433,22 @@ export default function JournalsPage() {
                         return (
                           <div
                             key={idx}
-                            className="p-2.5 bg-gray-50 rounded-md border border-gray-200"
+                            className="p-3 rounded-lg"
+                            style={{
+                              background: 'var(--lavender-dust)',
+                              border: '1px solid var(--border-soft)'
+                            }}
                           >
-                            <p className="text-xs font-medium text-gray-700 mb-1">
+                            <p
+                              className="font-medium mb-1"
+                              style={{
+                                fontSize: '0.75rem',
+                                color: 'var(--text-primary)'
+                              }}
+                            >
                               {modeLabels[insight.mode] || insight.mode}
                             </p>
-                            <div className="text-xs text-gray-600">
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                               {insight.mode === 'understand-feelings' && insight.data.primaryEmotion && (
                                 <p>Primary emotion: <span className="font-medium">{insight.data.primaryEmotion}</span></p>
                               )}
@@ -384,11 +476,17 @@ export default function JournalsPage() {
 
                   {/* Tags */}
                   {entry.tags && entry.tags.length > 0 && (
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {entry.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs"
+                          className="px-3 py-1 rounded-full"
+                          style={{
+                            background: 'var(--rose-beige)',
+                            color: 'var(--text-primary)',
+                            fontSize: '0.75rem',
+                            fontWeight: '500'
+                          }}
                         >
                           #{tag}
                         </span>
@@ -403,7 +501,13 @@ export default function JournalsPage() {
 
         {/* Stats */}
         {journals.length > 0 && (
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div
+            className="mt-8 text-center"
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--text-tertiary)'
+            }}
+          >
             Showing {filteredJournals.length} of {journals.length} entries
           </div>
         )}
