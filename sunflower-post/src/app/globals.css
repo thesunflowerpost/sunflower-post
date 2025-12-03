@@ -1,132 +1,342 @@
 @import "tailwindcss";
 
-/* 🌻 THE SUNFLOWER POST DESIGN TOKENS */
-/* Editorial white interface with vibrant sunflower yellow (#FDDA0D) */
+/* 🌻 THE SUNFLOWER POST DESIGN SYSTEM */
+/* Warm, emotionally safe, grounded, soft-life wellness aesthetic */
 
 :root {
-  /* PRIMARY COLORS - Editorial yellow palette */
-  --sunflower-gold: #FDDA0D;        /* Primary bright yellow */
-  --honey-gold: #E5C400;            /* Darker yellow for hover states */
-  --sun-light: #FEE84D;             /* Lighter yellow for accents */
-  --sun-glow: #FFFBEB;              /* Very light yellow for backgrounds */
-  --deep-soil: #1F2937;
-  --soft-cream: #FFFFFF;
+  /* PRIMARY BRAND COLORS - Warm & Welcoming */
+  --soft-cream: #FAF6F0;               /* Main background, cards, panels */
+  --sunflower-gold: #F3C969;           /* Primary accent, CTAs, highlights */
+  --honey-gold: #F5D98C;               /* Lighter gold for subtle accents */
+  --deep-soil: #5C4A3E;                /* Primary text - warm brown instead of black */
 
-  /* SECONDARY COLORS - Clean neutrals */
-  --sage-green: #F3F4F6;
-  --deep-sage: #E5E7EB;
-  --lavender-dust: #F9FAFB;
-  --deep-lavender: #D1D5DB;
-  --rose-beige: #F9FAFB;
+  /* GROUNDING COLOR - Nature-inspired calm */
+  --forest-green: #254331;             /* Nav bars, footers, premium moments */
+  --forest-green-light: #2F5A42;       /* Lighter variant for hover states */
+  --forest-green-subtle: rgba(37, 67, 49, 0.08); /* Very light tint for sections */
 
-  /* ACCENT COLORS */
-  --rainy-grey: #6B7280;
+  /* SUPPORTING COLORS - Gentle accents */
+  --sage-green: #C7D7C1;               /* Tag backgrounds, section alternation */
+  --rose-beige: #E7D4CE;               /* Soft accent, alternating sections */
+  --lavender-dust: #C9C3D8;            /* Gentle UI accents */
+  --soft-grey: #8E8E8E;                /* Muted text, secondary information */
 
-  /* TEXT COLORS - Editorial blacks and grays */
-  --text-primary: #0A0A0A;          /* Deep black for strong contrast */
-  --text-secondary: #374151;
-  --text-tertiary: #6B7280;
-  --text-warm-dark: #1F2937;
-  --text-warm-medium: #374151;
-  --text-warm-light: #6B7280;
-  --text-warm-lighter: #9CA3AF;
-  --text-warm-lightest: #D1D5DB;
+  /* TEXT COLORS - Warm hierarchy */
+  --text-primary: var(--deep-soil);           /* Main text */
+  --text-secondary: #7A6A5D;                  /* Secondary text - lighter brown */
+  --text-tertiary: var(--soft-grey);          /* Tertiary text */
+  --text-on-dark: var(--soft-cream);          /* Text on dark backgrounds */
+  --text-on-gold: var(--deep-soil);           /* Text on gold buttons */
 
-  /* SEMANTIC COLORS - Modern, clean tones */
-  --success: #D1FAE5;
-  --warning: #FEF3C7;
-  --error: #FEE2E2;
+  /* SEMANTIC COLORS - Warm tones */
+  --success: #C7D7C1;                  /* Sage green for success */
+  --warning: #F5D98C;                  /* Honey gold for warnings */
+  --error: #D4A5A5;                    /* Warm terracotta for errors */
+  --info: var(--lavender-dust);        /* Lavender for info */
 
-  /* SHADOWS - Editorial shadows with more presence */
-  --shadow-gentle: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
-  --shadow-soft: 0 2px 4px -1px rgba(0, 0, 0, 0.12), 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-  --shadow-medium: 0 4px 8px -2px rgba(0, 0, 0, 0.14), 0 6px 12px -2px rgba(0, 0, 0, 0.10);
-  --shadow-large: 0 8px 16px -4px rgba(0, 0, 0, 0.16), 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+  /* SHADOWS - Very soft, welcoming */
+  --shadow-soft: 0 1px 3px 0 rgba(92, 74, 62, 0.06),
+                 0 1px 2px -1px rgba(92, 74, 62, 0.04);
+  --shadow-medium: 0 4px 6px -1px rgba(92, 74, 62, 0.08),
+                   0 2px 4px -2px rgba(92, 74, 62, 0.06);
+  --shadow-large: 0 10px 15px -3px rgba(92, 74, 62, 0.10),
+                  0 4px 6px -4px rgba(92, 74, 62, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(92, 74, 62, 0.12),
+               0 8px 10px -6px rgba(92, 74, 62, 0.10);
 
-  /* BORDERS - Stronger borders for editorial clarity */
-  --border-soft: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.15);
-  --border-strong: rgba(0, 0, 0, 0.25);
+  /* BORDERS - Soft, natural */
+  --border-soft: rgba(92, 74, 62, 0.10);
+  --border-medium: rgba(92, 74, 62, 0.15);
+  --border-strong: rgba(92, 74, 62, 0.20);
 
-  /* BORDER RADIUS - Simple, clean shapes */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
+  /* BORDER RADIUS - Rounded, welcoming */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;               /* Pills and circular elements */
 
-  /* SPACING - Generous, breathable */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-
-  /* Default theme */
-  --background: #FFFFFF;
-  --foreground: #0A0A0A;
+  /* SPACING - Generous, breathable (8,12,16,24,32,48px scale) */
+  --space-2xs: 0.25rem;    /* 4px */
+  --space-xs: 0.5rem;      /* 8px */
+  --space-sm: 0.75rem;     /* 12px */
+  --space-md: 1rem;        /* 16px */
+  --space-lg: 1.5rem;      /* 24px */
+  --space-xl: 2rem;        /* 32px */
+  --space-2xl: 3rem;       /* 48px */
+  --space-3xl: 4rem;       /* 64px */
 }
 
 @theme inline {
-  /* COLORS */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  /* PRIMARY PALETTE */
-  --color-sunflower: var(--sunflower-gold);
-  --color-honey: var(--honey-gold);
-  --color-sun-light: var(--sun-light);
-  --color-soil: var(--deep-soil);
+  /* BRAND COLORS */
   --color-cream: var(--soft-cream);
+  --color-cream-dark: #F5EFE7;
+  --color-gold: var(--sunflower-gold);
+  --color-gold-light: var(--honey-gold);
+  --color-gold-dark: #E5B84D;
+  --color-soil: var(--deep-soil);
+  --color-soil-light: #7A6A5D;
+  --color-forest: var(--forest-green);
+  --color-forest-light: var(--forest-green-light);
+  --color-forest-subtle: var(--forest-green-subtle);
 
-  /* SECONDARY PALETTE */
+  /* SUPPORTING COLORS */
   --color-sage: var(--sage-green);
-  --color-sage-deep: var(--deep-sage);
-  --color-lavender: var(--lavender-dust);
-  --color-lavender-deep: var(--deep-lavender);
+  --color-sage-light: #D9E5D4;
+  --color-sage-dark: #A8BCA2;
   --color-rose: var(--rose-beige);
-
-  /* ACCENT PALETTE */
-  --color-glow: var(--sun-glow);
-  --color-grey: var(--rainy-grey);
+  --color-rose-light: #F0E4DF;
+  --color-rose-dark: #D9C0B9;
+  --color-lavender: var(--lavender-dust);
+  --color-lavender-light: #E0DCE8;
+  --color-lavender-dark: #AEA8BC;
+  --color-grey: var(--soft-grey);
+  --color-grey-light: #BABABA;
+  --color-grey-dark: #6B6B6B;
 
   /* SEMANTIC COLORS */
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  --color-info: var(--info);
+
+  /* TEXT COLORS */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-on-dark: var(--text-on-dark);
+  --color-text-on-gold: var(--text-on-gold);
 
   /* SHADOWS */
-  --shadow-gentle: var(--shadow-gentle);
   --shadow-soft: var(--shadow-soft);
-  --shadow-medium: var(--shadow-medium);
-  --shadow-large: var(--shadow-large);
+  --shadow-md: var(--shadow-medium);
+  --shadow-lg: var(--shadow-large);
+  --shadow-xl: var(--shadow-xl);
 
-  /* TYPOGRAPHY - Clean, editorial, modern */
-  --font-display: "DM Serif Display", Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: ui-monospace, monospace;
+  /* TYPOGRAPHY - Warm, welcoming type system */
+  /* Sans-serif: Nunito for UI elements */
+  --font-sans: "Nunito", "Inter", system-ui, -apple-system, sans-serif;
+  /* Serif: DM Serif Display for emotional headings */
+  --font-serif: "DM Serif Display", "Playfair Display", Georgia, serif;
+  --font-body: var(--font-sans);
+  --font-display: var(--font-serif);
+  --font-mono: ui-monospace, "SF Mono", monospace;
+
+  /* FONT SIZES - Clear hierarchy */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+
+  /* LINE HEIGHTS */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;  /* Body text */
+  --leading-loose: 1.75;
 }
 
-/* GLOBAL STYLES - Clean, crisp, modern */
-body {
-  background: #FFFFFF;
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-feature-settings: "kern" 1, "liga" 1;
+/* GOOGLE FONTS IMPORT */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
+
+/* GLOBAL STYLES - Warm, grounded, welcoming */
+* {
+  box-sizing: border-box;
+}
+
+html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* TYPOGRAPHY HIERARCHY */
-h1, h2, h3, h4, h5, h6 {
+body {
+  background: var(--soft-cream);
   color: var(--text-primary);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* GENTLE ANIMATIONS */
+/* TYPOGRAPHY HIERARCHY - Sans-serif primary, Serif for emphasis */
+h1 {
+  font-family: var(--font-sans);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 500;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+h4 {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+}
+
+h5, h6 {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+}
+
+p {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+/* SPECIAL TYPOGRAPHY CLASSES */
+.font-display {
+  font-family: var(--font-serif);
+}
+
+.font-emphasis {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* BUTTON STYLES - Following new design system */
+.btn-primary {
+  background: var(--sunflower-gold);
+  color: var(--text-on-gold);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--text-base);
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover {
+  background: #E5B84D;
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--sage-green);
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--text-base);
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--color-sage-dark);
+}
+
+.btn-tertiary {
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--text-base);
+  border: 2px solid var(--border-medium);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-tertiary:hover {
+  border-color: var(--text-primary);
+  background: rgba(92, 74, 62, 0.04);
+}
+
+/* CARD STYLES - Soft, rounded, welcoming */
+.card {
+  background: var(--soft-cream);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-soft);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+  transition: box-shadow 0.2s ease;
+}
+
+/* TAG STYLES - Pill-shaped */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  background: var(--sage-green);
+  color: var(--text-primary);
+}
+
+/* FOCUS STATES - Warm and accessible */
+*:focus-visible {
+  outline: 2px solid var(--sunflower-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* SELECTION - Warm sunflower gold */
+::selection {
+  background-color: var(--sunflower-gold);
+  color: var(--text-primary);
+}
+
+/* SCROLLBAR - Warm and minimal */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--soft-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sunflower-gold);
+  border-radius: 5px;
+  border: 2px solid var(--soft-cream);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E5B84D;
+}
+
+/* ANIMATIONS - Gentle and welcoming */
 @keyframes gentle-fade-in {
   from {
     opacity: 0;
@@ -156,6 +366,17 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@keyframes grow {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* UTILITY CLASSES */
 .animate-gentle-fade-in {
   animation: gentle-fade-in 0.4s ease-out;
@@ -169,35 +390,37 @@ h1, h2, h3, h4, h5, h6 {
   animation: heartbeat 1.5s ease-in-out infinite;
 }
 
-/* FOCUS STATES - Accessible and gentle */
-*:focus-visible {
-  outline: 2px solid var(--sunflower-gold);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+.animate-grow {
+  animation: grow 0.3s ease-out;
 }
 
-/* SELECTION - Clean and welcoming */
-::selection {
-  background-color: var(--sunflower-gold);
-  color: var(--text-primary);
+/* SECTION BACKGROUNDS - Alternating for visual interest */
+.section-cream {
+  background: var(--soft-cream);
 }
 
-/* SCROLLBAR - Clean and minimal */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.section-sage {
+  background: var(--sage-green);
 }
 
-::-webkit-scrollbar-track {
-  background: #FFFFFF;
+.section-rose {
+  background: var(--rose-beige);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--sunflower-gold);
-  border-radius: 5px;
-  border: 2px solid #FFFFFF;
+.section-forest-subtle {
+  background: var(--forest-green-subtle);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--honey-gold);
+.section-forest {
+  background: var(--forest-green);
+  color: var(--text-on-dark);
+}
+
+/* UTILITY: Generous Spacing */
+.space-y-generous > * + * {
+  margin-top: var(--space-lg);
+}
+
+.space-y-very-generous > * + * {
+  margin-top: var(--space-2xl);
 }
