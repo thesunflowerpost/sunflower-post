@@ -72,7 +72,7 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--soft-cream)' }}>
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Sidebar */}
