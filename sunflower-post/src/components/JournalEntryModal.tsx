@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Save, Sparkles, Heart, Brain, FileText } from 'lucide-react';
+import JournalAIAssistant from './JournalAIAssistant';
 
 interface JournalEntryModalProps {
   isOpen: boolean;
@@ -77,6 +78,7 @@ export default function JournalEntryModal({
   const [showTemplates, setShowTemplates] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
 
   // Auto-save to localStorage
   const saveDraft = useCallback(() => {
@@ -351,6 +353,37 @@ export default function JournalEntryModal({
                     disabled={isSaving}
                   />
                 </div>
+
+                {/* AI Assistant Toggle */}
+                {body.trim().length > 50 && !showAIAssistant && (
+                  <div className="border-2 border-yellow-200/60 rounded-2xl p-4 bg-gradient-to-br from-yellow-50/50 to-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-[#3A2E1F] mb-1 flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-yellow-600" />
+                          Want some gentle support?
+                        </p>
+                        <p className="text-xs text-[#7A674C]">
+                          Get optional AI assistance to explore your feelings, make sense of your thoughts, or find encouragement.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setShowAIAssistant(true)}
+                        className="ml-4 px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-[#3A2E1F] text-sm font-semibold shadow-sm hover:shadow-md transition-all whitespace-nowrap"
+                      >
+                        Try AI Support
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Assistant Component */}
+                {showAIAssistant && body.trim().length > 50 && (
+                  <JournalAIAssistant
+                    journalEntry={body}
+                    onClose={() => setShowAIAssistant(false)}
+                  />
+                )}
 
                 {/* Tags */}
                 <div className="space-y-2">
