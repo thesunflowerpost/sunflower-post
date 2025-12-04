@@ -4,22 +4,25 @@
 /* Warm, emotionally safe, grounded, soft-life wellness aesthetic */
 
 :root {
-  /* PRIMARY BRAND COLORS - Warm & Welcoming */
-  --soft-cream: #FAF6F0;               /* Main background, cards, panels */
-  --sunflower-gold: #F3C969;           /* Primary accent, CTAs, highlights */
-  --honey-gold: #F5D98C;               /* Lighter gold for subtle accents */
-  --deep-soil: #5C4A3E;                /* Primary text - warm brown instead of black */
+  /* PRIMARY BRAND COLORS - Bright & Refreshing */
+  --soft-cream: #FAF6F0;               /* Legacy - gradually remove */
+  --sunflower-gold: #facc15;           /* Primary yellow - bright and energetic */
+  --honey-gold: #F5D98C;               /* Legacy - gradually remove */
+  --deep-soil: #5C4A3E;                /* Legacy - gradually remove */
 
   /* GROUNDING COLOR - Nature-inspired calm */
-  --forest-green: #254331;             /* Nav bars, footers, premium moments */
+  --forest-green: #254331;             /* Secondary accent, premium moments */
   --forest-green-light: #2F5A42;       /* Lighter variant for hover states */
   --forest-green-subtle: rgba(37, 67, 49, 0.08); /* Very light tint for sections */
 
-  /* SUPPORTING COLORS - Gentle accents */
-  --sage-green: #C7D7C1;               /* Tag backgrounds, section alternation */
-  --rose-beige: #E7D4CE;               /* Soft accent, alternating sections */
-  --lavender-dust: #C9C3D8;            /* Gentle UI accents */
-  --soft-grey: #8E8E8E;                /* Muted text, secondary information */
+  /* FRESH SUPPORTING COLORS - Light & Airy */
+  --mint-green: #d4f1dd;               /* Light refreshing backgrounds */
+  --sky-blue: #e0f2fe;                 /* Bright accent for info, links */
+  --soft-peach: #fef3c7;               /* Warm highlight, subtle accents */
+  --sage-green: #C7D7C1;               /* Legacy - replace with mint */
+  --rose-beige: #E7D4CE;               /* Legacy - gradually remove */
+  --lavender-dust: #C9C3D8;            /* Legacy - gradually remove */
+  --soft-grey: #8E8E8E;                /* Legacy - gradually remove */
 
   /* TEXT COLORS - Warm hierarchy */
   --text-primary: var(--deep-soil);           /* Main text */
@@ -69,19 +72,27 @@
 }
 
 @theme inline {
-  /* BRAND COLORS */
-  --color-cream: var(--soft-cream);
-  --color-cream-dark: #F5EFE7;
+  /* PRIMARY BRAND COLORS */
   --color-gold: var(--sunflower-gold);
-  --color-gold-light: var(--honey-gold);
-  --color-gold-dark: #E5B84D;
-  --color-soil: var(--deep-soil);
-  --color-soil-light: #7A6A5D;
   --color-forest: var(--forest-green);
   --color-forest-light: var(--forest-green-light);
   --color-forest-subtle: var(--forest-green-subtle);
 
-  /* SUPPORTING COLORS */
+  /* FRESH SUPPORTING COLORS */
+  --color-mint: var(--mint-green);
+  --color-mint-dark: #b8e6c9;
+  --color-sky: var(--sky-blue);
+  --color-sky-dark: #bae6fd;
+  --color-peach: var(--soft-peach);
+  --color-peach-dark: #fde68a;
+
+  /* LEGACY COLORS (gradually removing) */
+  --color-cream: var(--soft-cream);
+  --color-cream-dark: #F5EFE7;
+  --color-gold-light: var(--honey-gold);
+  --color-gold-dark: #E5B84D;
+  --color-soil: var(--deep-soil);
+  --color-soil-light: #7A6A5D;
   --color-sage: var(--sage-green);
   --color-sage-light: #D9E5D4;
   --color-sage-dark: #A8BCA2;
