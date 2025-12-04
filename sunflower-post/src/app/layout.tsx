@@ -35,37 +35,25 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${nunito.variable} ${dmSerifDisplay.variable}`}>
       <body
-        className="min-h-screen antialiased"
+        className="min-h-screen antialiased bg-white text-gray-900"
         style={{
-          fontFamily: 'var(--font-nunito)',
-          background: 'var(--soft-cream)',
-          color: 'var(--text-primary)'
+          fontFamily: 'var(--font-nunito)'
         }}
       >
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
-            {/* TOP STRIP / NAV */}
-            <header className="sticky top-0 z-30 backdrop-blur" style={{
-              borderBottom: '1px solid var(--border-soft)',
-              background: 'rgba(250, 246, 240, 0.9)',
-              boxShadow: 'var(--shadow-soft)'
-            }}>
+            {/* TOP STRIP / NAV - Bright Yellow */}
+            <header className="sticky top-0 z-30 bg-yellow-400 border-b border-yellow-500 shadow-sm">
               <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
                 <a href="/" className="flex items-center gap-2 group">
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-105"
-                    style={{
-                      background: 'var(--sunflower-gold)',
-                      boxShadow: 'var(--shadow-soft)'
-                    }}
-                  >
+                  <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-lg transition-transform group-hover:scale-105 shadow-sm">
                     🌻
                   </div>
                   <div className="hidden sm:block">
-                    <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-800 font-medium">
                       A softer corner of the internet
                     </p>
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    <p className="text-sm font-semibold text-gray-900">
                       The Sunflower Post
                     </p>
                   </div>
@@ -76,23 +64,16 @@ export default function RootLayout({
             </header>
 
             {/* MAIN APP CONTAINER */}
-            <main className="flex-1 py-8 md:py-12">
+            <main className="flex-1 py-8 md:py-12 bg-white">
               <div className="max-w-6xl mx-auto px-4">
-                <div
-                  className="rounded-3xl md:rounded-[32px] overflow-hidden"
-                  style={{
-                    background: 'var(--soft-cream)',
-                    border: '1px solid var(--border-soft)',
-                    boxShadow: 'var(--shadow-medium)'
-                  }}
-                >
+                <div className="rounded-3xl md:rounded-[32px] overflow-hidden bg-white border border-gray-200 shadow-sm">
                   {children}
                 </div>
               </div>
             </main>
 
             {/* FOOTER */}
-            <footer className="pb-6 pt-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <footer className="pb-6 pt-2 text-xs text-gray-500 bg-white">
               <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2">
                 <p>
                   © {new Date().getFullYear()} The Sunflower Post. All rights

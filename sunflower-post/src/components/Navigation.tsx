@@ -24,33 +24,33 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600">
+    <nav className="flex items-center gap-2 text-sm">
       <a
         href="/"
-        className="px-3 py-1.5 rounded-lg font-medium transition-colors bg-yellow-400 text-gray-900 hover:bg-yellow-500"
+        className="px-3 py-1.5 rounded-lg font-medium transition-colors text-gray-900 hover:bg-white/40"
       >
         Home
       </a>
       <a
         href="/lounge"
-        className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors font-medium"
+        className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition-colors font-medium text-gray-900"
       >
         Community
       </a>
       <a
         href="/journal"
-        className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors font-medium hidden md:inline-flex"
+        className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition-colors font-medium text-gray-900 hidden md:inline-flex"
       >
         Journal
       </a>
 
       {user ? (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block bg-gray-200" />
+          <div className="w-px h-5 mx-2 hidden md:block bg-yellow-600/30" />
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none bg-yellow-400 shadow-sm"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none bg-white shadow-sm hover:scale-105"
               aria-label="User menu"
             >
               {user.profilePicture ? (
@@ -122,16 +122,16 @@ export default function Navigation() {
         </>
       ) : (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block bg-gray-200" />
+          <div className="w-px h-5 mx-2 hidden md:block bg-yellow-600/30" />
           <Link
             href="/login"
-            className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm text-gray-600"
+            className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition font-medium text-sm text-gray-900"
           >
             Login
           </Link>
           <Link
             href="/signup"
-            className="btn-primary"
+            className="px-4 py-2 rounded-lg font-semibold text-sm bg-[#254331] text-white hover:bg-[#2F5A42] transition-colors shadow-sm"
           >
             Sign up
           </Link>

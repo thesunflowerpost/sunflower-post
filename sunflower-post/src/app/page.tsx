@@ -64,21 +64,21 @@ export default function HomePage() {
       <div className="px-4 py-8 md:py-12 space-y-10 md:space-y-14">
         {/* THIS WEEK'S SUNFLOWER POST */}
         <section className="max-w-4xl">
-          <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border-2 border-[color:var(--sunflower-gold)]/20 rounded-3xl p-6 md:p-8 space-y-4 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-all">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--sunflower-gold)]/10 border border-[color:var(--sunflower-gold)]/30">
+          <div className="bg-gradient-to-br from-white via-[#fef3c7]/30 to-white border-2 border-yellow-400/20 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30">
               <span className="text-lg">💌</span>
-              <p className="text-xs font-semibold text-[color:var(--deep-soil)] uppercase tracking-wide">
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wide">
                 This Week&apos;s Sunflower Post
               </p>
             </div>
-            <h2 className="font-[family-name:var(--font-display)] text-xl md:text-2xl font-normal text-[color:var(--text-warm-dark)] leading-snug">
+            <h2 className="font-serif text-xl md:text-2xl font-normal text-gray-900 leading-snug">
               Twelve tiny joys that don&apos;t depend on your productivity levels.
             </h2>
-            <p className="text-sm md:text-base text-[color:var(--text-warm-medium)] leading-relaxed max-w-2xl">
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed max-w-2xl">
               A gentle list of everyday moments you&apos;re still allowed to enjoy,
               even when you&apos;re tired, behind or figuring things out.
             </p>
-            <button className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-xs font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-gentle)] transition-all hover:shadow-[var(--shadow-soft)] hover:scale-105">
+            <button className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-xs font-semibold text-gray-900 shadow-sm transition-all hover:shadow-md hover:scale-105">
               Preview the bulletin →
             </button>
           </div>
@@ -97,16 +97,16 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {/* Featured Journal */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
+            <div className="bg-gradient-to-br from-white to-[#d4f1dd]/20 border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-all hover:scale-[1.02] group">
               {/* Image */}
-              <div className="relative h-40 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+              <div className="relative h-40 bg-gradient-to-br from-emerald-50 to-teal-50 overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=600&h=400&fit=crop"
                   alt="Journal"
                   className="w-full h-full object-cover opacity-90"
                 />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-slate-700 text-slate-50 shadow-md">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-[#254331] text-white shadow-md">
                     Long Read
                   </span>
                 </div>
@@ -114,38 +114,38 @@ export default function HomePage() {
               <div className="p-3 space-y-2">
                 {/* Author Info */}
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-[10px] font-semibold text-[color:var(--text-warm-dark)] ring-2 ring-white shadow-sm">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center text-[10px] font-semibold text-gray-900 ring-2 ring-white shadow-sm">
                     E
                   </div>
-                  <div className="flex items-center gap-2 text-[9px] text-[color:var(--text-warm-light)]">
+                  <div className="flex items-center gap-2 text-[9px] text-gray-600">
                     <span className="font-semibold">Emma R.</span>
                     <span>•</span>
                     <span>12 min read</span>
                   </div>
                 </div>
-                <h3 className="text-xs font-bold text-[color:var(--deep-soil)] group-hover:text-[color:var(--deep-soil)]/80 transition-colors leading-snug">
+                <h3 className="text-xs font-bold text-gray-900 group-hover:text-gray-700 transition-colors leading-snug">
                   On feeling invisible in a loud world
                 </h3>
-                <p className="text-[11px] text-[color:var(--text-warm-light)] leading-relaxed">
+                <p className="text-[11px] text-gray-600 leading-relaxed">
                   A gentle piece on being present, even when you don&apos;t feel seen.
                 </p>
-                <div className="pt-1 text-[10px] text-[color:var(--text-warm-lighter)]">
+                <div className="pt-1 text-[10px] text-gray-500">
                   💬 24 comments
                 </div>
               </div>
             </div>
 
             {/* Featured Book Club */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-2xl overflow-hidden hover:shadow-[var(--shadow-medium)] transition-all hover:scale-[1.02] group">
+            <div className="bg-gradient-to-br from-white to-[#e0f2fe]/30 border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-all hover:scale-[1.02] group">
               {/* Book Cover Image */}
-              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
+              <div className="relative h-40 bg-gradient-to-br from-sky-50 to-blue-50 overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&h=400&fit=crop"
                   alt="Book"
                   className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-blue-900 text-blue-50 shadow-md">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-sky-600 text-white shadow-md">
                     Now Reading
                   </span>
                 </div>

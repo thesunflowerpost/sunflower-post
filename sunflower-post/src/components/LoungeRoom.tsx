@@ -200,8 +200,8 @@ export default function LoungeRoom() {
   return (
     <div className="min-h-screen bg-white">
       {/* HEADER */}
-      <header className="bg-white border-b border-[color:var(--border-medium)] sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold text-[color:var(--text-primary)] flex items-center gap-2">
@@ -224,10 +224,10 @@ export default function LoungeRoom() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* SIDEBAR */}
-          <aside className="lg:w-64 flex-shrink-0">
+          <aside className="lg:w-72 flex-shrink-0">
             <CommunitySidebar
               filters={[
                 {
@@ -494,9 +494,9 @@ export default function LoungeRoom() {
           )}
 
           {/* MAIN LAYOUT */}
-          <section className="grid lg:grid-cols-3 gap-6 text-xs">
+          <section className="grid lg:grid-cols-3 gap-8 text-xs">
             {/* LEFT / CENTER: FEED */}
-            <div className="lg:col-span-2 space-y-5">
+            <div className="lg:col-span-2 space-y-6">
               {/* FEED INFO */}
               <p className="text-[10px] text-[#A08960]">
                 Posts with no replies are gently bumped so no-one feels ignored.
