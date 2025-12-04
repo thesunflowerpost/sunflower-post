@@ -24,41 +24,33 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+    <nav className="flex items-center gap-2 text-sm text-gray-600">
       <a
         href="/"
-        className="px-3 py-1.5 rounded-lg font-medium transition-colors"
-        style={{
-          background: 'var(--sunflower-gold)',
-          color: 'var(--deep-soil)'
-        }}
+        className="px-3 py-1.5 rounded-lg font-medium transition-colors bg-yellow-400 text-gray-900 hover:bg-yellow-500"
       >
         Home
       </a>
       <a
         href="/lounge"
-        className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition-colors font-medium"
+        className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors font-medium"
       >
         Community
       </a>
       <a
         href="/journal"
-        className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition-colors font-medium hidden md:inline-flex"
+        className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors font-medium hidden md:inline-flex"
       >
         Journal
       </a>
 
       {user ? (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block" style={{ background: 'var(--border-soft)' }} />
+          <div className="w-px h-5 mx-2 hidden md:block bg-gray-200" />
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none"
-              style={{
-                background: 'var(--sunflower-gold)',
-                boxShadow: 'var(--shadow-soft)'
-              }}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none bg-yellow-400 shadow-sm"
               aria-label="User menu"
             >
               {user.profilePicture ? (
@@ -68,7 +60,7 @@ export default function Navigation() {
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-semibold" style={{ color: 'var(--deep-soil)' }}>
+                <span className="text-sm font-semibold text-gray-900">
                   {user.name.charAt(0).toUpperCase()}
                 </span>
               )}
@@ -130,17 +122,16 @@ export default function Navigation() {
         </>
       ) : (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block" style={{ background: 'var(--border-soft)' }} />
+          <div className="w-px h-5 mx-2 hidden md:block bg-gray-200" />
           <Link
             href="/login"
-            className="px-3 py-1.5 rounded-lg hover:bg-[var(--sage-green)] transition font-medium text-sm"
-            style={{ color: 'var(--text-secondary)' }}
+            className="px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm text-gray-600"
           >
             Login
           </Link>
           <Link
             href="/signup"
-            className="px-4 py-1.5 rounded-lg font-semibold text-sm transition-all btn-primary"
+            className="btn-primary"
           >
             Sign up
           </Link>

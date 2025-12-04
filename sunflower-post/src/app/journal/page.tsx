@@ -83,44 +83,24 @@ export default function JournalPage() {
           {/* Main Content */}
           <div className="md:col-span-3 space-y-8">
             {/* Header */}
-            <div className="pb-8" style={{ borderBottom: '1px solid var(--border-soft)' }}>
-              <h1
-                className="font-semibold mb-2"
-                style={{
-                  fontSize: '1.5rem',
-                  color: 'var(--text-primary)',
-                  fontFamily: 'var(--font-serif)'
-                }}
-              >
+            <div className="pb-8 border-b border-gray-200">
+              <h1 className="font-serif font-semibold mb-2 text-2xl text-gray-900">
                 The Journal
               </h1>
-              <p className="max-w-2xl" style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>
+              <p className="max-w-2xl text-[0.9375rem] text-gray-600">
                 Stories, insights, and reflections from our community
               </p>
             </div>
 
             {/* Search and Filter */}
-            <div
-              className="rounded-xl p-4 space-y-3"
-              style={{
-                background: 'white',
-                border: '1px solid var(--border-soft)',
-                boxShadow: 'var(--shadow-soft)'
-              }}
-            >
+            <div className="rounded-xl p-4 space-y-3 bg-white border border-gray-200 shadow-sm">
               {/* Search */}
               <input
                 type="text"
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg focus:outline-none"
-                style={{
-                  fontSize: '0.875rem',
-                  border: '1px solid var(--border-soft)',
-                  color: 'var(--text-primary)',
-                  background: 'var(--soft-cream)'
-                }}
+                className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg text-gray-900 bg-gray-50 placeholder-gray-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 focus:outline-none transition-all"
               />
 
               {/* Category Filter */}
@@ -129,12 +109,11 @@ export default function JournalPage() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className="px-3 py-1.5 rounded-full font-medium transition-all"
-                    style={{
-                      fontSize: '0.75rem',
-                      background: selectedCategory === category ? 'var(--sunflower-gold)' : 'var(--sage-green)',
-                      color: selectedCategory === category ? 'var(--deep-soil)' : 'var(--text-secondary)',
-                    }}
+                    className={`px-3 py-1.5 rounded-full font-medium text-xs transition-all ${
+                      selectedCategory === category
+                        ? 'bg-yellow-400 text-gray-900'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                   >
                     {category}
                   </button>
@@ -145,26 +124,14 @@ export default function JournalPage() {
             {/* Featured Articles */}
             {featuredArticles.length > 0 && (
               <section className="space-y-5">
-                <h2
-                  className="font-semibold"
-                  style={{
-                    fontSize: '1rem',
-                    color: 'var(--text-primary)',
-                    fontFamily: 'var(--font-sans)'
-                  }}
-                >
+                <h2 className="font-semibold text-[1rem] text-gray-900">
                   Featured
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {featuredArticles.map((article) => (
                     <article
                       key={article.id}
-                      className="rounded-xl overflow-hidden transition-all group"
-                      style={{
-                        background: 'white',
-                        border: '1px solid var(--border-soft)',
-                        boxShadow: 'var(--shadow-soft)'
-                      }}
+                      className="rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group"
                     >
                       {/* Cover Image */}
                       <Link href={`/journal/${article.slug}`}>
@@ -179,31 +146,24 @@ export default function JournalPage() {
 
                       {/* Content */}
                       <div className="p-5 space-y-3">
-                        <div className="flex items-center gap-2" style={{ fontSize: '0.75rem' }}>
-                          <span style={{ color: 'var(--text-tertiary)' }}>{article.category}</span>
-                          <span style={{ color: 'var(--border-medium)' }}>·</span>
-                          <span style={{ color: 'var(--text-tertiary)' }}>{article.readTimeMinutes} min read</span>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span>{article.category}</span>
+                          <span className="text-gray-300">·</span>
+                          <span>{article.readTimeMinutes} min read</span>
                         </div>
 
                         <Link href={`/journal/${article.slug}`}>
-                          <h3
-                            className="font-semibold group-hover:opacity-70 transition-opacity line-clamp-2"
-                            style={{
-                              fontSize: '1rem',
-                              color: 'var(--text-primary)',
-                              fontFamily: 'var(--font-sans)'
-                            }}
-                          >
+                          <h3 className="font-semibold text-[1rem] text-gray-900 group-hover:opacity-70 transition-opacity line-clamp-2">
                             {article.title}
                           </h3>
                         </Link>
 
-                        <p className="line-clamp-2" style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                        <p className="line-clamp-2 text-sm text-gray-600">
                           {article.excerpt}
                         </p>
 
                         {/* Meta */}
-                        <div className="flex items-center justify-between" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                        <div className="flex items-center justify-between text-xs text-gray-500">
                           <div className="flex items-center gap-2">
                             <span>{article.author.name}</span>
                           </div>
@@ -225,22 +185,14 @@ export default function JournalPage() {
             {/* Recent Articles */}
             {recentArticles.length > 0 && (
               <section className="space-y-5">
-                <h2
-                  className="font-semibold"
-                  style={{
-                    fontSize: '1rem',
-                    color: 'var(--text-primary)',
-                    fontFamily: 'var(--font-sans)'
-                  }}
-                >
+                <h2 className="font-semibold text-[1rem] text-gray-900">
                   Recent
                 </h2>
                 <div className="space-y-6">
                   {recentArticles.map((article) => (
                     <article
                       key={article.id}
-                      className="pb-6 last:border-b-0 group"
-                      style={{ borderBottom: '1px solid var(--border-soft)' }}
+                      className="pb-6 border-b border-gray-200 last:border-b-0 group"
                     >
                       <div className="flex gap-4">
                         {/* Cover Image */}
@@ -256,31 +208,24 @@ export default function JournalPage() {
 
                         {/* Content */}
                         <div className="flex-1 min-w-0 space-y-2">
-                          <div className="flex items-center gap-2" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
                             <span>{article.category}</span>
-                            <span style={{ color: 'var(--border-medium)' }}>·</span>
+                            <span className="text-gray-300">·</span>
                             <span>{article.readTimeMinutes} min read</span>
                           </div>
 
                           <Link href={`/journal/${article.slug}`}>
-                            <h3
-                              className="font-semibold group-hover:opacity-70 transition-opacity line-clamp-2"
-                              style={{
-                                fontSize: '1rem',
-                                color: 'var(--text-primary)',
-                                fontFamily: 'var(--font-sans)'
-                              }}
-                            >
+                            <h3 className="font-semibold text-[1rem] text-gray-900 group-hover:opacity-70 transition-opacity line-clamp-2">
                               {article.title}
                             </h3>
                           </Link>
 
-                          <p className="line-clamp-2" style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          <p className="line-clamp-2 text-sm text-gray-600">
                             {article.excerpt}
                           </p>
 
                           {/* Meta */}
-                          <div className="flex items-center justify-between" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                          <div className="flex items-center justify-between text-xs text-gray-500">
                             <span>{article.author.name}</span>
                             <SaveButton
                               itemType="post"
@@ -299,10 +244,13 @@ export default function JournalPage() {
 
             {/* Empty State */}
             {filteredArticles.length === 0 && (
-              <div className="text-center py-16 space-y-4">
-                <p className="text-4xl">📝</p>
-                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
-                  No articles found matching your search.
+              <div className="text-center py-20">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No articles found
+                </h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  Try adjusting your search or filters
                 </p>
                 <button
                   onClick={() => {
