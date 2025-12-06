@@ -2,141 +2,117 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* HERO SECTION - Magazine-style with full-width image */}
-      <section className="relative w-full h-[360px] md:h-[420px] overflow-hidden rounded-b-3xl shadow-[var(--shadow-medium)]">
-        {/* Hero Image Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--sunflower-gold)]/60 via-[color:var(--honey-gold)]/40 to-[color:var(--sun-glow)]/70">
-          {/* Placeholder for hero image - replace with actual image */}
-          <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,_var(--sunflower-gold)_0,_transparent_50%)]" />
-        </div>
-
-        {/* Soft gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--deep-soil)]/80 via-[color:var(--deep-soil)]/20 to-transparent" />
-
-        {/* Hero Text Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-6 md:pb-8">
-          <div className="max-w-2xl space-y-3">
-            <div className="inline-block px-3 py-1.5 rounded-full bg-[color:var(--sunflower-gold)]/90 backdrop-blur-sm border border-[color:var(--honey-gold)]">
-              <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--deep-soil)] font-semibold">
-                A softer corner of the internet
+    <div>
+      {/* HERO SECTION - Clean & Modern */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-28">
+          <div className="max-w-3xl space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 text-sm text-gray-600">
+                <span className="text-2xl">🌻</span>
+                <span>A softer corner of the internet</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                Good news still exists.
+                <br />
+                You just needed a room to find it.
+              </h1>
+              <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
+                The Sunflower Post is a joy-first community and journal space where
+                people share small joys, kind ideas and real solutions for a kinder world.
               </p>
             </div>
-            <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl lg:text-4xl font-normal text-white leading-tight">
-              Good news still exists.
-              <br />
-              You just needed a room to find it.
-            </h1>
-            <p className="text-xs md:text-sm text-white/90 max-w-xl leading-relaxed">
-              The Sunflower Post is a joy-first community and journal space where
-              people share small joys, kind ideas and real solutions for a kinder
-              world – outside the noise of social media.
-            </p>
 
-            <div className="flex flex-wrap gap-2 pt-1">
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-[10px] font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-medium)] transition-all hover:shadow-[var(--shadow-large)] hover:scale-105"
+                className="px-6 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-base font-semibold text-gray-900 transition-colors"
               >
-                Sign up
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm text-[10px] font-semibold text-white hover:bg-white/20 transition-all"
-              >
-                Login
+                Get started
               </Link>
               <Link
                 href="/journal"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-white/60 text-[10px] font-medium text-white hover:bg-white/10 transition-all"
+                className="px-6 py-3 rounded-lg bg-white border border-gray-300 hover:border-gray-400 text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
-                Read The Journal
+                Read the journal
               </Link>
             </div>
 
-            <p className="text-[10px] text-white/80 pt-0.5">
+            <p className="text-sm text-gray-500">
               No algorithms. No doomscrolling. Just letters, laughter and light.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="px-4 py-8 md:py-12 space-y-10 md:space-y-14">
-        {/* THIS WEEK'S SUNFLOWER POST */}
-        <section className="max-w-4xl">
-          <div className="bg-gradient-to-br from-white via-[#fef3c7]/30 to-white border-2 border-yellow-400/20 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30">
-              <span className="text-lg">💌</span>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wide">
-                This Week&apos;s Sunflower Post
+      <div className="bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 space-y-16">
+          {/* THIS WEEK'S SUNFLOWER POST */}
+          <section>
+            <div className="bg-white rounded-xl p-8 md:p-10 space-y-6 border border-gray-200 max-w-3xl">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span className="text-xl">💌</span>
+                <span className="font-medium">This Week's Post</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                Twelve tiny joys that don&apos;t depend on your productivity levels
+              </h2>
+              <p className="text-base text-gray-600 leading-relaxed">
+                A gentle list of everyday moments you&apos;re still allowed to enjoy,
+                even when you&apos;re tired, behind or figuring things out.
               </p>
+              <button className="px-6 py-3 rounded-lg bg-gray-900 hover:bg-gray-800 text-sm font-semibold text-white transition-colors">
+                Read more →
+              </button>
             </div>
-            <h2 className="font-serif text-xl md:text-2xl font-normal text-gray-900 leading-snug">
-              Twelve tiny joys that don&apos;t depend on your productivity levels.
-            </h2>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed max-w-2xl">
-              A gentle list of everyday moments you&apos;re still allowed to enjoy,
-              even when you&apos;re tired, behind or figuring things out.
-            </p>
-            <button className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-xs font-semibold text-gray-900 shadow-sm transition-all hover:shadow-md hover:scale-105">
-              Preview the bulletin →
-            </button>
-          </div>
-        </section>
+          </section>
 
         {/* WHAT'S BLOOMING THIS WEEK - Featured Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-normal text-[color:var(--deep-soil)]">
-              What&apos;s Blooming This Week 🌻
+        <section className="space-y-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+              What&apos;s Blooming This Week
             </h2>
-            <p className="text-sm text-[color:var(--text-warm-light)]">
-              Highlights from across the Circle
+            <p className="text-base text-gray-600">
+              Highlights from across the community
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Featured Journal */}
-            <div className="bg-gradient-to-br from-white to-[#d4f1dd]/20 border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-all hover:scale-[1.02] group">
-              {/* Image */}
-              <div className="relative h-40 bg-gradient-to-br from-emerald-50 to-teal-50 overflow-hidden">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all group">
+              <div className="relative h-48 bg-gray-100 overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=600&h=400&fit=crop"
                   alt="Journal"
-                  className="w-full h-full object-cover opacity-90"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wide bg-[#254331] text-white shadow-md">
+                <div className="absolute top-3 left-3">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-900 text-white">
                     Long Read
                   </span>
                 </div>
               </div>
-              <div className="p-3 space-y-2">
-                {/* Author Info */}
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center text-[10px] font-semibold text-gray-900 ring-2 ring-white shadow-sm">
-                    E
-                  </div>
-                  <div className="flex items-center gap-2 text-[9px] text-gray-600">
-                    <span className="font-semibold">Emma R.</span>
-                    <span>•</span>
-                    <span>12 min read</span>
-                  </div>
+              <div className="p-5 space-y-3">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span className="font-medium">Emma R.</span>
+                  <span>·</span>
+                  <span>12 min read</span>
                 </div>
-                <h3 className="text-xs font-bold text-gray-900 group-hover:text-gray-700 transition-colors leading-snug">
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-gray-700 transition-colors leading-tight">
                   On feeling invisible in a loud world
                 </h3>
-                <p className="text-[11px] text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   A gentle piece on being present, even when you don&apos;t feel seen.
                 </p>
-                <div className="pt-1 text-[10px] text-gray-500">
+                <div className="pt-2 text-sm text-gray-500">
                   💬 24 comments
                 </div>
               </div>
             </div>
 
             {/* Featured Book Club */}
-            <div className="bg-gradient-to-br from-white to-[#e0f2fe]/30 border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-all hover:scale-[1.02] group">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all group">
               {/* Book Cover Image */}
               <div className="relative h-40 bg-gradient-to-br from-sky-50 to-blue-50 overflow-hidden">
                 <img
@@ -595,28 +571,37 @@ export default function HomePage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="space-y-5 text-xs md:text-sm">
-          <h2 className="font-[family-name:var(--font-display)] text-base md:text-lg font-normal text-[color:var(--deep-soil)]">
+        <section className="space-y-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             How it works
           </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">1. Join</p>
-              <p className="text-white/90 leading-relaxed">
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-[#254331] rounded-xl p-6 space-y-3 hover:shadow-lg transition-shadow">
+              <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-xl font-bold text-gray-900">
+                1
+              </div>
+              <h3 className="text-lg font-semibold text-white">Join</h3>
+              <p className="text-sm text-white/90 leading-relaxed">
                 Enter the Circle, create a gentle profile, choose a few interests,
                 and we&apos;ll show you rooms that feel like home.
               </p>
             </div>
-            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">2. Share</p>
-              <p className="text-white/90 leading-relaxed">
+            <div className="bg-[#254331] rounded-xl p-6 space-y-3 hover:shadow-lg transition-shadow">
+              <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-xl font-bold text-gray-900">
+                2
+              </div>
+              <h3 className="text-lg font-semibold text-white">Share</h3>
+              <p className="text-sm text-white/90 leading-relaxed">
                 Plant sunflowers: post small joys, ask for a pick-me-up, join
                 book chats or explore the Pinterest-style wall of inspiration.
               </p>
             </div>
-            <div className="bg-[color:var(--forest-green)] border border-[color:var(--forest-green-light)] rounded-2xl p-4 space-y-2 hover:shadow-[var(--shadow-soft)] transition-shadow">
-              <p className="text-xs font-semibold text-[color:var(--sunflower-gold)]">3. Contribute</p>
-              <p className="text-white/90 leading-relaxed">
+            <div className="bg-[#254331] rounded-xl p-6 space-y-3 hover:shadow-lg transition-shadow">
+              <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-xl font-bold text-gray-900">
+                3
+              </div>
+              <h3 className="text-lg font-semibold text-white">Contribute</h3>
+              <p className="text-sm text-white/90 leading-relaxed">
                 Take part in Solution Rooms and Speak Up sessions that feed into
                 annual Sunflower Reports.
               </p>
@@ -625,24 +610,18 @@ export default function HomePage() {
         </section>
 
         {/* CALL TO ACTION */}
-        <section
-          id="join-circle"
-          className="mt-4 bg-white border border-[color:var(--border-soft)] rounded-3xl p-6 md:p-8 space-y-4 text-xs md:text-sm hover:shadow-[var(--shadow-medium)] transition-shadow"
-        >
-          <h2 className="font-[family-name:var(--font-display)] text-base md:text-xl font-normal text-[color:var(--deep-soil)]">
+        <section className="bg-white rounded-xl p-8 md:p-12 space-y-6 border border-gray-200">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
             Ready for a different kind of internet?
           </h2>
-          <p className="text-[color:var(--text-warm-medium)] max-w-2xl leading-relaxed">
+          <p className="text-base text-gray-600 max-w-2xl leading-relaxed">
             Join the waitlist for the first cohort of Sunflower Circle members
             and help us shape this space from the ground up.
           </p>
-          <div className="flex flex-wrap gap-3 items-center">
-            <button className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[color:var(--sunflower-gold)] hover:bg-[color:var(--honey-gold)] text-xs font-semibold text-[color:var(--deep-soil)] shadow-[var(--shadow-gentle)] transition-all hover:shadow-[var(--shadow-soft)] hover:scale-105">
+          <div>
+            <button className="px-6 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-base font-semibold text-gray-900 transition-colors">
               Join the waitlist
             </button>
-            <p className="text-[11px] text-[color:var(--text-warm-light)]">
-              No spam. Just the occasional ray of sunshine.
-            </p>
           </div>
         </section>
       </div>

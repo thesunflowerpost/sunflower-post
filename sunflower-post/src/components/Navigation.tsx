@@ -24,33 +24,33 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className="flex items-center gap-2 text-sm">
+    <nav className="flex items-center gap-1 text-sm">
       <a
         href="/"
-        className="px-3 py-1.5 rounded-lg font-medium transition-colors text-gray-900 hover:bg-white/40"
+        className="px-4 py-2 rounded-lg font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       >
         Home
       </a>
       <a
         href="/lounge"
-        className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition-colors font-medium text-gray-900"
+        className="px-4 py-2 rounded-lg font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       >
         Community
       </a>
       <a
         href="/journal"
-        className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition-colors font-medium text-gray-900 hidden md:inline-flex"
+        className="px-4 py-2 rounded-lg font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900 hidden md:inline-flex"
       >
         Journal
       </a>
 
       {user ? (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block bg-yellow-600/30" />
+          <div className="w-px h-6 mx-2 bg-gray-200 hidden md:block" />
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:shadow-md focus:outline-none bg-white shadow-sm hover:scale-105"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:ring-2 hover:ring-gray-200 focus:outline-none bg-gray-100"
               aria-label="User menu"
             >
               {user.profilePicture ? (
@@ -122,16 +122,16 @@ export default function Navigation() {
         </>
       ) : (
         <>
-          <div className="w-px h-5 mx-2 hidden md:block bg-yellow-600/30" />
+          <div className="w-px h-6 mx-2 bg-gray-200 hidden md:block" />
           <Link
             href="/login"
-            className="px-3 py-1.5 rounded-lg hover:bg-white/40 transition font-medium text-sm text-gray-900"
+            className="px-4 py-2 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
           >
             Login
           </Link>
           <Link
             href="/signup"
-            className="px-4 py-2 rounded-lg font-semibold text-sm bg-[#254331] text-white hover:bg-[#2F5A42] transition-colors shadow-sm"
+            className="px-5 py-2 rounded-lg font-semibold text-sm bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition-colors"
           >
             Sign up
           </Link>

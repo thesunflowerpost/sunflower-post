@@ -34,27 +34,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${nunito.variable} ${dmSerifDisplay.variable}`}>
-      <body
-        className="min-h-screen antialiased bg-white text-gray-900"
-        style={{
-          fontFamily: 'var(--font-nunito)'
-        }}
-      >
+      <body className="min-h-screen antialiased bg-gray-50 text-gray-900">
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
-            {/* TOP STRIP / NAV - Bright Yellow */}
-            <header className="sticky top-0 z-30 bg-yellow-400 border-b border-yellow-500 shadow-sm">
-              <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-                <a href="/" className="flex items-center gap-2 group">
-                  <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-lg transition-transform group-hover:scale-105 shadow-sm">
+            {/* MODERN CLEAN HEADER */}
+            <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+                <a href="/" className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center text-xl transition-transform group-hover:scale-105">
                     🌻
                   </div>
                   <div className="hidden sm:block">
-                    <p className="text-[10px] uppercase tracking-wider text-gray-800 font-medium">
-                      A softer corner of the internet
-                    </p>
                     <p className="text-sm font-semibold text-gray-900">
                       The Sunflower Post
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      A softer corner of the internet
                     </p>
                   </div>
                 </a>
@@ -63,23 +58,18 @@ export default function RootLayout({
               </div>
             </header>
 
-            {/* MAIN APP CONTAINER */}
-            <main className="flex-1 py-8 md:py-12 bg-white">
-              <div className="max-w-6xl mx-auto px-4">
-                <div className="rounded-3xl md:rounded-[32px] overflow-hidden bg-white border border-gray-200 shadow-sm">
-                  {children}
-                </div>
-              </div>
+            {/* MAIN CONTAINER */}
+            <main className="flex-1">
+              {children}
             </main>
 
             {/* FOOTER */}
-            <footer className="pb-6 pt-2 text-xs text-gray-500 bg-white">
-              <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2">
+            <footer className="py-8 text-sm text-gray-600 bg-white border-t border-gray-200">
+              <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3">
                 <p>
-                  © {new Date().getFullYear()} The Sunflower Post. All rights
-                  reserved.
+                  © {new Date().getFullYear()} The Sunflower Post. All rights reserved.
                 </p>
-                <p className="text-[11px]">
+                <p className="text-xs text-gray-500">
                   No spam. Just the occasional ray of sunshine.
                 </p>
               </div>
