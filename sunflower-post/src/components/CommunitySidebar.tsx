@@ -84,10 +84,10 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
 
   return (
     <div className="space-y-4">
-      <nav className="bg-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-xl p-3 space-y-1 shadow-[var(--shadow-gentle)]">
+      <nav className="bg-white border border-gray-200 rounded-xl p-3 space-y-1 shadow-md">
         {/* HEADER */}
         <div className="px-2 py-2 mb-2">
-          <h2 className="text-xs font-semibold text-[color:var(--text-warm-lighter)] uppercase tracking-wide">
+          <h2 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
             Rooms
           </h2>
         </div>
@@ -101,13 +101,13 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
             // COMING SOON (NO LINK)
             <div
               key={room.href}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[color:var(--text-tertiary)] cursor-not-allowed group relative"
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-gray-400 cursor-not-allowed group relative"
             >
               <span className="text-lg flex-shrink-0 opacity-60">{room.icon}</span>
               <div className="flex-1 min-w-0">
                 <span className="text-sm font-medium block truncate">{room.label}</span>
               </div>
-              <span className="text-[10px] bg-[color:var(--border-soft)] text-[color:var(--text-tertiary)] px-1.5 py-0.5 rounded">Soon</span>
+              <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Soon</span>
             </div>
           ) : (
             // ACTIVE / CLICKABLE ROOM
@@ -117,8 +117,8 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
               className={[
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all group relative",
                 isActive
-                  ? "bg-[color:var(--sunflower-gold)] text-[color:var(--deep-soil)] font-medium shadow-[var(--shadow-gentle)]"
-                  : "text-[color:var(--text-warm-medium)] hover:bg-white/60 hover:text-[color:var(--deep-soil)] hover:shadow-sm",
+                  ? "bg-yellow-400 text-gray-900 font-medium shadow-sm"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
               ].join(" ")}
             >
               <span className="text-lg flex-shrink-0">{room.icon}</span>
@@ -126,7 +126,7 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
                 <span className="text-sm font-medium block truncate">{room.label}</span>
               </div>
               {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[color:var(--honey-gold)] rounded-r" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-yellow-500 rounded-r" />
               )}
             </Link>
           );
@@ -134,8 +134,8 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
       </div>
 
         {/* FOOTER NOTE */}
-        <div className="pt-3 mt-3 border-t border-[color:var(--border-soft)]">
-          <p className="text-[11px] text-[color:var(--text-warm-light)] px-2 leading-relaxed">
+        <div className="pt-3 mt-3 border-t border-gray-200">
+          <p className="text-[11px] text-gray-600 px-2 leading-relaxed">
             More rooms open as the community grows 🌻
           </p>
         </div>
@@ -143,11 +143,11 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
 
       {/* FILTERS SECTION */}
       {filters && filters.length > 0 && (
-        <nav className="bg-[color:var(--soft-cream)] border border-[color:var(--border-soft)] rounded-xl p-3 space-y-4 shadow-[var(--shadow-gentle)]">
+        <nav className="bg-white border border-gray-200 rounded-xl p-3 space-y-4 shadow-md">
           {filters.map((filterGroup, index) => (
             <div key={index} className="space-y-2">
               <div className="px-2 py-1">
-                <h3 className="text-xs font-semibold text-[color:var(--text-warm-lighter)] uppercase tracking-wide">
+                <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   {filterGroup.title}
                 </h3>
               </div>
@@ -161,13 +161,13 @@ export default function CommunitySidebar({ filters }: CommunitySidebarProps = {}
                       className={[
                         "w-full text-left rounded-lg px-3 py-2 text-sm transition-all relative",
                         isActive
-                          ? "bg-[color:var(--sunflower-gold)] text-[color:var(--deep-soil)] font-medium shadow-[var(--shadow-gentle)]"
-                          : "text-[color:var(--text-warm-medium)] hover:bg-white/60 hover:text-[color:var(--deep-soil)] hover:shadow-sm",
+                          ? "bg-yellow-400 text-gray-900 font-medium shadow-sm"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
                       ].join(" ")}
                     >
                       {option.label}
                       {isActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[color:var(--honey-gold)] rounded-r" />
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-yellow-500 rounded-r" />
                       )}
                     </button>
                   );
