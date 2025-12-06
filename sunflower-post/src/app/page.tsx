@@ -231,6 +231,7 @@ export default function HomePage() {
             </button>
           </div>
         </section>
+        </div>
       </div>
     </div>
   );
